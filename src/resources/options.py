@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 sys.path.append(dirname(dirname(dirname(__file__))))
 from src.resources.db_engine import engine
+from src.species import SpeciesTrie, SpeciesNames
 import src.model as model
 
 
@@ -78,3 +79,32 @@ class Projects(Resource):
                 model.Projects.name,
             ).all()
         return [result._asdict() for result in results]
+
+
+class Behaviors(Resource):
+    def get(self):
+        with Session(engine) as session:
+            results = session.query(
+                model.Behaviors.behavior_id, model.Behaviors.chinese_name
+            ).all()
+        return [result._asdict() for result in results]
+
+
+class SpeciesTrie(Resource):
+    trie = SpeciesTrie()
+
+    def get(self, word: str = None):
+        return self.trie.search(word)
+
+
+class SpeciesTaxonOrders(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument("chinese_common_names", action="append")
+
+    species_names = SpeciesNames()
+
+    def post(self):
+        arg = self.parser.parse_args()
+        if not arg.chinese_common_names:
+            return []
+        return self.species_names.get_taxon_orders(arg.chinese_common_names)

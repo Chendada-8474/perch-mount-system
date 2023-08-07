@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h1">
+            棲架資料庫管理系統
+            {% if current_user.is_admin() %}
+            <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle border-0" data-bs-toggle="dropdown" aria-expanded="false">
+                <i data-feather="edit-2"></i>
+            </button>
+            <ul class="dropdown-menu">
+                <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#newPerchMountModal">新增棲架</button></li>
+            </ul>
+            {% endif %}
+        </h1>
+        <div class="d-flex">
+            <select id="project_filter" class="form-select" aria-label="Default select example">
+                <option value="" selected>-- 篩選計畫 --</option>
+                {% for project in projects %}
+                <option value="{{ project['project_id'] }}">{{ project['name'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="shadow-sm bg-light p-3 rounded-2">
+        <h4 class="text-secondary mb-3">運作中棲架</h4>
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            {% for perch_mount in perch_mounts %}
+            {% if not perch_mount["terminated"] %}
+            <div id="perch_mount_{{ perch_mount['perch_mount_id'] }}" class="col project_{{ perch_mount['project_id'] }} habitat_{{ perch_mount['habitat_id'] }} filt-target">
+                <div class="card shadow border-0">
+                    <div class="card-body">
+                        <a href="{{ url_for('perch_mount', perch_mount_id=perch_mount['perch_mount_id']) }}" class="text-decoration-none text-black fw-bolder">
+                            <h5 class="card-title">
+                                {{ perch_mount["perch_mount_id"] }}. {{ perch_mount["perch_mount_name"] }}
+                                {% if perch_mount["layer"] %}
+                                ( {{ perch_mount["layer"] }} )
+                                {% endif %}
+                            </h5>
+                        </a>
+                        {% if perch_mount["habitat_id"] == 1 %}
+                        <span class="badge rounded-pill text-bg-success">{{ perch_mount["habitat"] }}</span>
+                        {% elif perch_mount["habitat_id"] == 2 %}
+                        <span class="badge rounded-pill text-bg-primary">{{ perch_mount["habitat"] }}</span>
+                        {% else %}
+                        <span class="badge rounded-pill text-bg-dark">{{ perch_mount["habitat"] }}</span>
+                        {% endif %}
+                        <span class="badge rounded-pill text-bg-secondary">{{ perch_mount["project"] }}</span>
+                        {% if perch_mount["latest_note"] %}
+                        <span class="badge rounded-pill text-bg-light">{{ perch_mount["latest_note"] }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="shadow-sm bg-light p-3 rounded-2 mt-5">
+        <h4 class="text-secondary mb-3">已撤收棲架</h4>
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            {% for perch_mount in perch_mounts %}
+            {% if perch_mount["terminated"] %}
+            <div id="perch_mount_{{ perch_mount['perch_mount_id'] }}" class="col project_{{ perch_mount['project_id'] }} habitat_{{ perch_mount['habitat_id'] }} filt-target">
+                <div class="card shadow border-0">
+                    <div class="card-body">
+                        <a href="{{ url_for('perch_mount', perch_mount_id=perch_mount['perch_mount_id']) }}" class="text-decoration-none text-black fw-bolder">
+                            <h5 class="card-title">
+                                {{ perch_mount["perch_mount_id"] }}. {{ perch_mount["perch_mount_name"] }}
+                                {% if perch_mount["layer"] %}
+                                ( {{ perch_mount["layer"] }} )
+                                {% endif %}
+                            </h5>
+                        </a>
+                        <span class="badge rounded-pill text-bg-light">{{ perch_mount["habitat"] }}</span>
+                        <span class="badge rounded-pill text-bg-light">{{ perch_mount["project"] }}</span>
+                        {% if perch_mount["latest_note"] %}
+                        <span class="badge rounded-pill text-bg-light text-light">{{ perch_mount["latest_note"] }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- New Perch Mount Modal -->
+    <div class="modal fade" id="newPerchMountModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">新增棲架</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form action="" method="post" id="newPerchMount">
+
+                    <div class="modal-body">
+                        <div class="row mb-3">
+                            <div class="col">
+                                <div class="form-floating">
+                                    {{ perch_mount_form.perch_mount_name(class="form-control", placeholder="") }}
+                                    {{ perch_mount_form.perch_mount_name.label }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <div class="form-floating">
+                                    {{ perch_mount_form.latitude(class="form-control", placeholder="") }}
+                                    {{ perch_mount_form.latitude.label }}
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-floating">
+                                    {{ perch_mount_form.longitude(class="form-control", placeholder="") }}
+                                    {{ perch_mount_form.longitude.label }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <div class="form-floating">
+                                    {{ perch_mount_form.project(class="form-select") }}
+                                    {{ perch_mount_form.project.label }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <div class="form-floating">
+                                    {{ perch_mount_form.habitat(class="form-select") }}
+                                    {{ perch_mount_form.habitat.label }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <div class="form-floating">
+                                    {{ perch_mount_form.layer(class="form-select") }}
+                                    {{ perch_mount_form.layer.label }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        {{ perch_mount_form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</main>
+<script src="{{ url_for('static', filename='js/components/filter.js')}}"></script>
+<script src="{{ url_for('static', filename='js/api/patch_perch_mount.js')}}"></script>
+<script src="{{ url_for('static', filename='js/api/post_perch_mount.js')}}"></script>
+{% endblock %}

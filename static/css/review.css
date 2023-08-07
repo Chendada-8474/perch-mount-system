@@ -1,0 +1,71 @@
+.ui-front {
+  z-index: 10000 !important;
+}
+
+.pm-image:hover {
+  transform: scale(1.02);
+}
+
+.pm-image {
+  transition: 0.1s;
+}
+
+#pm-modal {
+  display: none;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+#back-medium:hover,
+#next-medium:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+#back-medium,
+#next-medium {
+  transition: 0.1s;
+}
+
+#close-pm-modal:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+  color: white;
+}
+
+#close-pm-modal {
+  transition: 0.1s;
+}
+
+.hover-pointer:hover {
+  cursor: pointer;
+}
+
+.delete-individual {
+  color: #dc3545;
+  transition: 0.1s;
+}
+
+.delete-individual:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+#bounding-box-painter {
+  cursor: crosshair;
+  background-color: rgba(255, 255, 255, 0);
+}
+
+#full_screen_image {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-size: contain;
+  background-repeat: no-repeat no-repeat;
+  background-position: center center;
+  background-color: black;
+}
+
+/*# sourceMappingURL=review.css.map */

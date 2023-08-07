@@ -1,11 +1,54 @@
 import sys
 from os.path import dirname
-from flask_restful import Resource, reqparse
+from sqlalchemy import func, and_, or_
 from sqlalchemy.orm import Session
+from flask_restful import Resource, reqparse
 
 sys.path.append(dirname(dirname(dirname(__file__))))
 from src.resources.db_engine import engine
 import src.model as model
+
+
+class PerchMounts(Resource):
+    def get(self):
+        with Session(engine) as session:
+            results = (
+                session.query(
+                    model.PerchMounts.perch_mount_id,
+                    model.PerchMounts.perch_mount_name,
+                    model.PerchMounts.latitude,
+                    model.PerchMounts.longitude,
+                    model.PerchMounts.terminated,
+                    model.PerchMounts.latest_note,
+                    model.PerchMounts.is_priority,
+                    model.Habitats.habitat_id,
+                    model.Habitats.chinese_name.label("habitat"),
+                    model.Projects.project_id,
+                    model.Projects.name.label("project"),
+                    model.Layers.name.label("layer"),
+                    model.Members.first_name.label("claim_by"),
+                )
+                .join(
+                    model.Habitats,
+                    model.Habitats.habitat_id == model.PerchMounts.habitat,
+                    isouter=True,
+                )
+                .join(
+                    model.Projects,
+                    model.Projects.project_id == model.PerchMounts.project,
+                )
+                .join(
+                    model.Layers,
+                    model.Layers.layer_id == model.PerchMounts.layer,
+                    isouter=True,
+                )
+                .join(
+                    model.Members,
+                    model.Members.member_id == model.PerchMounts.claim_by,
+                    isouter=True,
+                )
+            ).all()
+        return [result._asdict() for result in results]
 
 
 class PerchMount(Resource):
@@ -19,6 +62,7 @@ class PerchMount(Resource):
     parser.add_argument("latest_note", type=str)
     parser.add_argument("claim_by", type=int)
     parser.add_argument("is_priority", type=bool)
+    parser.add_argument("terminated", type=bool)
 
     def get(self, perch_mount_id: int):
         return self._get_perch_mount(perch_mount_id)
@@ -68,8 +112,8 @@ class PerchMount(Resource):
 
     def _get_perch_mount(self, perch_mount_id: int) -> dict:
         with Session(engine) as session:
-            query = (
-                model.PerchMounts.query.with_entities(
+            result = (
+                session.query(
                     model.PerchMounts.perch_mount_id,
                     model.PerchMounts.perch_mount_name,
                     model.PerchMounts.latitude,
@@ -103,14 +147,76 @@ class PerchMount(Resource):
                     isouter=True,
                 )
                 .filter(model.PerchMounts.perch_mount_id == perch_mount_id)
+                .first()
             )
-            result = session.execute(query).one()
-        return result._asdict()
+
+        return result._asdict() if result else None
 
 
 class PendingPerchMounts(Resource):
     def get(self):
-        return
+        with Session(engine) as session:
+            empty_count = (
+                session.query(
+                    func.count(model.EmptyMedia.empty_medium_id).label("count"),
+                    model.Sections.perch_mount,
+                )
+                .join(
+                    model.Sections,
+                    model.Sections.section_id == model.EmptyMedia.section,
+                )
+                .group_by(model.Sections.perch_mount)
+                .filter(model.EmptyMedia.checked == 0)
+                .subquery()
+            )
+            detected_count = (
+                session.query(
+                    func.count(model.DetectedMedia.detected_medium_id).label("count"),
+                    model.Sections.perch_mount,
+                )
+                .join(
+                    model.Sections,
+                    model.Sections.section_id == model.DetectedMedia.section,
+                )
+                .group_by(model.Sections.perch_mount)
+                .filter(model.DetectedMedia.reviewed == 0)
+                .subquery()
+            )
+            results = (
+                session.query(
+                    model.PerchMounts.perch_mount_id,
+                    model.PerchMounts.perch_mount_name,
+                    model.PerchMounts.project.label("project_id"),
+                    model.Members.first_name.label("claim_by"),
+                    model.Projects.name.label("project"),
+                    empty_count.c.count.label("empty_count"),
+                    detected_count.c.count.label("detected_count"),
+                    model.PerchMounts.latest_note,
+                )
+                .join(
+                    empty_count,
+                    empty_count.c.perch_mount == model.PerchMounts.perch_mount_id,
+                    isouter=True,
+                )
+                .join(
+                    detected_count,
+                    detected_count.c.perch_mount == model.PerchMounts.perch_mount_id,
+                    isouter=True,
+                )
+                .join(
+                    model.Members,
+                    model.Members.member_id == model.PerchMounts.claim_by,
+                    isouter=True,
+                )
+                .join(
+                    model.Projects,
+                    model.Projects.project_id == model.PerchMounts.project,
+                    isouter=True,
+                )
+                .filter(or_(empty_count.c.count > 0, detected_count.c.count > 0))
+                .all()
+            )
+        return [result._asdict() for result in results]
 
 
 class ClaimedPerchMounts(Resource):
@@ -124,3 +230,47 @@ class ClaimedPerchMounts(Resource):
                 .all()
             )
         return [result._asdict() for result in results]
+
+
+class PerchMountMediaCount(Resource):
+    def get(self, perch_mount_id: int):
+        with Session(engine) as session:
+            count = (
+                session.query(func.count(model.Media.medium_id))
+                .join(model.Sections, model.Sections.section_id == model.Media.section)
+                .filter(model.Sections.perch_mount == perch_mount_id)
+                .one()
+            )[0]
+            detected_count = (
+                session.query(func.count(model.DetectedMedia.detected_medium_id))
+                .join(
+                    model.Sections,
+                    model.Sections.section_id == model.DetectedMedia.section,
+                )
+                .filter(
+                    and_(
+                        model.Sections.perch_mount == perch_mount_id,
+                        model.DetectedMedia.reviewed == 0,
+                    )
+                )
+                .one()
+            )[0]
+            empty_count = (
+                session.query(func.count(model.EmptyMedia.empty_medium_id))
+                .join(
+                    model.Sections,
+                    model.Sections.section_id == model.EmptyMedia.section,
+                )
+                .filter(
+                    and_(
+                        model.Sections.perch_mount == perch_mount_id,
+                        model.EmptyMedia.checked == 0,
+                    )
+                )
+                .one()
+            )[0]
+        return {
+            "count": count,
+            "detected_count": detected_count,
+            "empty_count": empty_count,
+        }

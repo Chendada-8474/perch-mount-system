@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h1">
+            {{ perch_mount["perch_mount_name"] }}
+            {% if perch_mount["terminated"] %}
+            <span class=" text-secondary">
+                ( 已撤收 )
+            </span>
+            {% endif %}
+            {% if current_user.is_admin() %}
+            <div class="btn-group ms-3" role="group">
+                <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle border-0" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i data-feather="edit-2"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li class="mb-1">
+                        <button id="updateCoordination" class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#coordinationModal">
+                            <i data-feather="map-pin" class="me-2"></i>編輯座標
+                        </button>
+                    </li>
+                    <li class="mb-1">
+                        <button id="updateProject" class="dropdown-item" type="button" value="{{ perch_mount['perch_mount_id'] }}">
+                            <i data-feather="book" class="me-2"></i>變更計畫
+                        </button>
+                    </li>
+                    <li class="mb-1">
+                        <button id="updateHabitat" class="dropdown-item" type="button" value="{{ perch_mount['perch_mount_id'] }}">
+                            <i data-feather="globe" class="me-2"></i>變更棲地
+                        </button>
+                    </li>
+                    <li class="mb-1">
+                        {% if not perch_mount["terminated"] %}
+                        <button id="terminatePerchMount" class="dropdown-item" type="button" value="{{ perch_mount['perch_mount_id'] }}">
+                            <i data-feather="x-circle" class="me-2"></i>撤收棲架
+                        </button>
+                        {% else %}
+                        <button id="resetPerchMount" class="dropdown-item" type="button" value="{{ perch_mount['perch_mount_id'] }}">
+                            <i data-feather="-circle" class="me-2"></i>回復棲架
+                        </button>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+            {% endif %}
+        </h1>
+        <div class="d-flex">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ perch_mount["perch_mount_name"] }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <div class="shadow-sm bg-light p-3 rounded-2 mb-3">
+        <div class="row">
+            <div class="col-2">
+                <ol class="list-group">
+                    <li class="list-group-item">棲架編號：{{ perch_mount['perch_mount_id'] }}</li>
+                    <li class="list-group-item">
+                        座標：
+                        {{ perch_mount['latitude'] }}, {{ perch_mount['longitude'] }}
+                        <a target="_blank" class="" href="https://www.google.com/maps/search/?api=1&query={{ perch_mount['latitude'] }},{{ perch_mount['longitude'] }}">
+                            <button type="button" class="btn btn-link btn-sm"><i data-feather="map-pin"></i></button>
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        最後備註：
+                        {% if perch_mount['latest_note'] %}
+                        {{ perch_mount['latest_note'] }}
+                        {% endif %}
+                    </li>
+                </ol>
+            </div>
+            <div class="col-2">
+                <ol class="list-group">
+                    <li class="list-group-item">棲地：{{ perch_mount['habitat'] }}</li>
+                    <li class="list-group-item">計畫：{{ perch_mount['project'] }}</li>
+                    <li class="list-group-item">
+                        分層：
+                        {% if perch_mount['layer'] %}
+                        {{ perch_mount['layer'] }}
+                        {% endif %}
+                    </li>
+                </ol>
+            </div>
+            <div class="col-2">
+                <p class="text-secondary">完成檔案量</p>
+                <h3>{{ media_count["count"] }}</h3>
+            </div>
+            <div class="col-2">
+                <p class="text-secondary">完成率</p>
+                <h3>
+                    {% if complete_rate %}
+                    {{ complete_rate }} %
+                    {% else %}
+                    無資料
+                    {% endif %}
+                </h3>
+            </div>
+            <div class="col-2">
+                <p class="text-secondary">待物種檢視</p>
+                <h3>{{ media_count["detected_count"] }}</h3>
+                <a href="{{ url_for('review_perch_mount', perch_mount_id=perch_mount['perch_mount_id']) }}" class="btn btn-outline-secondary btn-sm {% if not media_count['detected_count'] %}disabled{% endif %}">去檢視物種</a>
+            </div>
+            <div class="col-2">
+                <p class="text-secondary">待空拍檢查</p>
+                <h3>{{ media_count["empty_count"] }}</h3>
+                <a href="{{ url_for('empty_check_perch_mount', perch_mount_id=perch_mount['perch_mount_id']) }}" class="btn btn-outline-secondary btn-sm {% if not media_count['empty_count'] %}disabled{% endif %}">去檢查空拍</a>
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Section ID</th>
+                <th scope="col">開始時間</th>
+                <th scope="col">結束時間</th>
+                <th scope="col">回收日期</th>
+                <th scope="col">棲架類型</th>
+                <th scope="col">相機型號</th>
+                <th scope="col">回收人員</th>
+                <th scope="col">有效紀錄</th>
+                <th scope="col">待物種檢視</th>
+                <th scope="col">待空拍檢查</th>
+                <th scope="col">備註</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for section in sections %}
+            <tr>
+                <th scope="row">{{ section["section_id"] }}</th>
+                <td>{{ section["start_time"] }}</td>
+                <td>{{ section["end_time"] }}</td>
+                <td>
+                    <a href="{{ url_for('section',perch_mount_id=perch_mount['perch_mount_id'], section_id=section['section_id']) }}">
+                        {{ section["check_date"] }}
+                    </a>
+                </td>
+                <td>{{ section["mount_type"] }}</td>
+                <td>{{ section["model_name"] }}</td>
+                <td>
+                    {% for operator in section["operators"] %}
+                    {{ operator }},
+                    {% endfor %}
+                </td>
+                <td>
+                    {% if section["valid"] %}
+                    <i data-feather="check"></i>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if section["detected_count"] %}
+                    {{ section["detected_count"] }}
+                    <a href="{{ url_for('review_section', perch_mount_id=perch_mount['perch_mount_id'], section_id=section['section_id']) }}" class="text-decoration-none ms-1">review</a>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if section["empty_count"] %}
+                    {{ section["empty_count"] }}
+                    <a href="{{ url_for('empty_check_section', perch_mount_id=perch_mount['perch_mount_id'], section_id=section['section_id']) }}" class="text-decoration-none ms-1">check</a>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if section["note"] %}
+                    {{ section["note"] }}
+                    {% endif %}
+                </td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Modal -->
+    <div class="modal fade" id="coordinationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">編輯座標</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+<script src="{{ url_for('static', filename='js/api/patch_perch_mount.js')}}"></script>
+{% endblock %}

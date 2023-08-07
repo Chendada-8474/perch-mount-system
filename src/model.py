@@ -17,8 +17,12 @@ class PerchMounts(db.Model, JsonTable):
     perch_mount_name = db.Column(db.String(15), unique=True, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
     latitude = db.Column(db.Float, nullable=False)
-    habitat = db.Column(db.Integer, db.ForeignKey("habitats.habitat_id"))
-    project = db.Column(db.Integer, db.ForeignKey("projects.project_id"))
+    habitat = db.Column(
+        db.Integer, db.ForeignKey("habitats.habitat_id"), nullable=False
+    )
+    project = db.Column(
+        db.Integer, db.ForeignKey("projects.project_id"), nullable=False
+    )
     layer = db.Column(db.Integer, db.ForeignKey("layers.layer_id"))
     terminated = db.Column(db.Boolean, default=False)
     latest_note = db.Column(db.Text)
@@ -60,6 +64,8 @@ class Media(db.Model):
     event = db.Column(db.Integer, db.ForeignKey("events.event_id"))
     featured = db.Column(db.Boolean, default=False)
     featured_by = db.Column(db.Integer, db.ForeignKey("members.member_id"))
+    featured_title = db.Column(db.String(100))
+    featured_behavior = db.Column(db.Integer, db.ForeignKey("behaviors.behavior_id"))
 
 
 class EmptyMedia(db.Model):
@@ -118,7 +124,7 @@ class Members(db.Model):
     first_name = db.Column(db.String(5))
     last_name = db.Column(db.String(5))
     position = db.Column(db.Integer, db.ForeignKey("positions.position_id"))
-    phone_number = db.Column(db.Integer, unique=True, nullable=False)
+    phone_number = db.Column(db.String(10), unique=True, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
     is_super_admin = db.Column(db.Boolean, default=False)
 
@@ -148,6 +154,21 @@ class Species(db.Model):
     pratas_status = db.Column(db.String(50))
     endemism = db.Column(db.String(50))
     conservation_status = db.Column(db.String(5))
+    usage_count = db.Column(db.Integer, default=0)
+
+
+class SpeciesCodes(db.Model):
+    __tablename__ = "species_codes"
+    taxon_order = db.Column(
+        db.Integer, db.ForeignKey("species.taxon_order"), primary_key=True
+    )
+    code = db.Column(db.String(10), primary_key=True)
+
+
+class Behaviors(db.Model):
+    __tablename__ = "behaviors"
+    behavior_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    chinese_name = db.Column(db.String(20), nullable=False)
 
 
 class Positions(db.Model):
