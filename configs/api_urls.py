@@ -17,7 +17,8 @@ PERCH_MOUNT_CLAIM_BY2 = "/api/claim_perch_mount/<int:perch_mount_id>"
 PERCH_MOUNT_PREY_COUNT = "/api/perch_mount/<int:perch_mount_id>/section_preys"
 
 
-SECTION = "/api/section/<int:section_id>"
+SECTION1 = "/api/section/<int:section_id>"
+SECTION2 = "/api/section"
 SECTIONS_OF_PERCH_MOUNT = "/api/perch_mount/<int:perch_mount_id>/sections"
 EMPTY_DAY_COUNT = "/api/perch_mount/<int:perch_mount_id>/empty_day_count"
 DETECTED_DAY_COUNT = "/api/perch_mount/<int:perch_mount_id>/detected_day_count"

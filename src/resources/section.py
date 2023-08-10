@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func, and_
 
 sys.path.append(dirname(dirname(dirname(__file__))))
-from src.resources.db_engine import slave_engine
+from src.resources.db_engine import slave_engine, master_engine
 import src.model as model
 
 
@@ -156,6 +156,16 @@ class OperatorsOfSection(Resource):
 
 
 class OneSection(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument("perch_mount", type=int, nullable=False)
+    parser.add_argument("mount_type", type=int)
+    parser.add_argument("camera", type=int)
+    parser.add_argument("start_time", type=str)
+    parser.add_argument("end_time", type=str)
+    parser.add_argument("check_date", type=str)
+    parser.add_argument("valid", type=bool)
+    parser.add_argument("note", type=str)
+
     def get(self, section_id: int):
         with Session(slave_engine) as session:
             results = (
@@ -210,3 +220,23 @@ class OneSection(Resource):
         result["operators"] = [r.operator for r in results]
         result.pop("operator")
         return result
+
+    def post(self):
+        arg = self.parser.parse_args()
+
+        new_section = model.Sections(
+            perch_mount=arg.perch_mount,
+            mount_type=arg.mount_type,
+            camera=arg.camera,
+            start_time=arg.start_time,
+            end_time=arg.end_time,
+            check_date=arg.check_date,
+            valid=arg.valid,
+            note=arg.note,
+        )
+        with Session(master_engine) as session:
+            session.add(new_section)
+            session.query(model.PerchMounts).filter(
+                model.PerchMounts.perch_mount_id == arg.perch_mount
+            ).update({"latest_note": arg.note})
+            session.commit()

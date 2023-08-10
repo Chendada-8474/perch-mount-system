@@ -518,7 +518,7 @@ api.add_resource(res_options.Event, api_urls.EVENT)
 api.add_resource(res_options.SpeciesTrie, api_urls.SPECIES_SEARCH)
 api.add_resource(res_options.SpeciesTaxonOrders, api_urls.SPECIES_TAXON_ORDERS)
 
-api.add_resource(res_section.OneSection, api_urls.SECTION)
+api.add_resource(res_section.OneSection, api_urls.SECTION1, api_urls.SECTION2)
 api.add_resource(res_section.SectionsOfPerchMount, api_urls.SECTIONS_OF_PERCH_MOUNT)
 api.add_resource(res_section.OperatorsOfSection, api_urls.SECTION_OPERATORS)
 
