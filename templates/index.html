@@ -41,6 +41,9 @@
                                 {% endif %}
                             </h5>
                         </a>
+                        {% if perch_mount["is_priority"] %}
+                        <span class="badge rounded-pill text-bg-danger">優先處裡</span>
+                        {% endif %}
                         {% if perch_mount["habitat_id"] == 1 %}
                         <span class="badge rounded-pill text-bg-success">{{ perch_mount["habitat"] }}</span>
                         {% elif perch_mount["habitat_id"] == 2 %}
@@ -51,6 +54,9 @@
                         <span class="badge rounded-pill text-bg-secondary">{{ perch_mount["project"] }}</span>
                         {% if perch_mount["latest_note"] %}
                         <span class="badge rounded-pill text-bg-light">{{ perch_mount["latest_note"] }}</span>
+                        {% endif %}
+                        {% if perch_mount["claim_by"] %}
+                        <span class="badge rounded-pill text-bg-light">by {{ perch_mount["claim_by"] }}</span>
                         {% endif %}
                     </div>
                 </div>
@@ -76,10 +82,16 @@
                                 {% endif %}
                             </h5>
                         </a>
+                        {% if perch_mount["is_priority"] %}
+                        <span class="badge rounded-pill text-bg-danger">優先處裡</span>
+                        {% endif %}
                         <span class="badge rounded-pill text-bg-light">{{ perch_mount["habitat"] }}</span>
                         <span class="badge rounded-pill text-bg-light">{{ perch_mount["project"] }}</span>
                         {% if perch_mount["latest_note"] %}
                         <span class="badge rounded-pill text-bg-light text-light">{{ perch_mount["latest_note"] }}</span>
+                        {% endif %}
+                        {% if perch_mount["claim_by"] %}
+                        <span class="badge rounded-pill text-bg-light">{{ perch_mount["claim_by"] }} 認領</span>
                         {% endif %}
                     </div>
                 </div>

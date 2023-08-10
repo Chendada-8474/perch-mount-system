@@ -15,15 +15,35 @@ def move_to_empty(path: str):
     os.rename(path, os.path.join(dir_path, file_name))
 
 
-def add_is_image(media: list[dict]):
+def add_all_is_image(media: list[dict]):
     for medium in media:
+        if medium["path"]:
+            _, ext = os.path.splitext(medium["path"])
+            ext = ext[1:].lower()
+            medium["is_image"] = ext in config.IMAGE_EXTENSIONS
+        else:
+            medium["is_image"] = None
+    return media
+
+
+def add_is_image(medium: dict):
+    if medium["path"]:
         _, ext = os.path.splitext(medium["path"])
         ext = ext[1:].lower()
         medium["is_image"] = ext in config.IMAGE_EXTENSIONS
-    return media
+    else:
+        medium["is_image"] = None
+    return medium
 
 
-def add_file_name(media: list[dict]):
+def add_all_file_name(media: list[dict]):
     for medium in media:
-        medium["file_name"] = os.path.basename(medium["path"])
+        medium["file_name"] = (
+            os.path.basename(medium["path"]) if medium["path"] else None
+        )
     return media
+
+
+def add_file_name(medium: dict):
+    medium["file_name"] = os.path.basename(medium["path"]) if medium["path"] else None
+    return medium

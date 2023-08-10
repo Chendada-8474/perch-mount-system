@@ -60,26 +60,38 @@
                     {% for perch_mount in pending_perch_mounts %}
                     <tr id="perch_mount_{{ perch_mount['perch_mount_id'] }}" class="project_{{ perch_mount['project_id'] }}">
                         <th>
-                            {% if current_user.super_admin %}
-                            <input class="form-check-input set-priority" type="checkbox" value="{{ perch_mount['perch_mount_id'] }}" {% if perch_mount['is_priority'] %}checked{% endif %}>
+
+                            {% if current_user.is_super_admin() %}
+                            <div>
+                                {% if perch_mount["is_priority"] %}
+                                <button type="button" class="btn btn-sm btn-outline-danger unprior-perch-mount" value="{{ perch_mount['perch_mount_id'] }}">取消優先</button>
+                                {% else %}
+                                <button type="button" class="btn btn-sm btn-outline-secondary prior-perch-mount" value="{{ perch_mount['perch_mount_id'] }}">設為優先</button>
+                                {% endif %}
+                            </div>
                             {% else %}
-                            {% endif %}
-                            {% if perch_mount["is_priority"] %}
-                            <i data-feather="check"></i>
+                            <div>
+                                {% if perch_mount["is_priority"] %}
+                                <i data-feather="check"></i>
+                                {% endif %}
+                            </div>
                             {% endif %}
                         </th>
                         <td>
-
                             {% if perch_mount["claim_by"] %}
-                            {% if perch_mount["user_name"] == current_user.id %}
-                            <input class="form-check-input claim" type="checkbox" value="{{ perch_mount['perch_mount_id'] }}" checked>
-                            {% endif %}
-                            {{ perch_mount["claim_by"] }}
+                            <div>
+                                {% if perch_mount["claim_by"] == current_user.first_name %}
+                                <button type="button" class="btn btn-sm btn-outline-primary unclaim-perch-mount" value="{{ perch_mount['perch_mount_id'] }}">取消認領</button>
+                                {% else %}
+                                {{ perch_mount["claim_by"] }}
+                                {% endif %}
+                            </div>
                             {% else %}
-                            <input class="form-check-input claim" type="checkbox" value="{{ perch_mount['perch_mount_id'] }}">
+                            <button type="button" class="btn btn-sm btn-outline-primary claim-perch-mount" value="{{ perch_mount['perch_mount_id'] }}">認領</button>
                             {% endif %}
                         </td>
-                        <td>{{ perch_mount["perch_mount_name"] }}
+                        <td>
+                            <a class="text-decoration-none" href="{{ url_for('perch_mount', perch_mount_id=perch_mount['perch_mount_id']) }}">{{ perch_mount["perch_mount_name"] }}</a>
                         </td>
                         <td>
                             {{ perch_mount["project"] }}
@@ -106,9 +118,9 @@
                                     檢視物種
                                 </a>
                             </button>
-                            <button class="btn btn-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop" name="show_trand" value="{{ perch_mount['perch_mount_id'] }}">
+                            <!-- <button class="btn btn-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop" name="show_trand" value="{{ perch_mount['perch_mount_id'] }}">
                                 <i data-feather="trending-up"></i>
-                            </button>
+                            </button> -->
                         </td>
                     </tr>
                     {% endfor %}
@@ -141,8 +153,11 @@
         </div>
     </div>
 
+    <input type="number" id="member" value="{{ current_user.member_id }}" hidden>
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.2/echarts.min.js"></script>
 <script src="{{ url_for('static', filename='js/components/pending.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/gh/tofsjonas/sortable@latest/sortable.min.js"></script>
+<script src="{{ url_for('static', filename='js/api/priority_perch_mount.js')}}"></script>
+<script src="{{ url_for('static', filename='js/api/claim_perch_mount.js')}}"></script>
 {% endblock %}

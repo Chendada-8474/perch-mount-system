@@ -102,6 +102,7 @@ class Individuals(db.Model):
     xmax = db.Column(db.Float)
     ymin = db.Column(db.Float)
     ymax = db.Column(db.Float)
+    prey_identify_by = db.Column(db.Integer, db.ForeignKey("members.member_id"))
 
 
 class DetectedIndividuals(db.Model):

@@ -7,7 +7,7 @@ from sqlalchemy import func, and_, select
 
 
 sys.path.append(dirname(dirname(dirname(__file__))))
-from src.resources.db_engine import engine
+from src.resources.db_engine import master_engine, slave_engine
 import src.model as model
 import src.file as file
 
@@ -15,7 +15,8 @@ import src.file as file
 class Medium(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument("event", type=int)
-    parser.add_argument("featured", type=bool)
+    parser.add_argument("featured_behavior", type=int)
+    parser.add_argument("featured_title", type=str)
     parser.add_argument("featured_by", type=int)
 
     def get(self, medium_id: str):
@@ -24,7 +25,7 @@ class Medium(Resource):
     def patch(self, medium_id):
         arg = self.parser.parse_args()
 
-        with Session(engine) as session:
+        with Session(master_engine) as session:
             session.query(model.Media).filter(
                 model.Media.medium_id == medium_id
             ).update(dict(arg))
@@ -35,8 +36,9 @@ class Medium(Resource):
     def _get_medium_by_id(self, medium_id: str):
         reviewer = aliased(model.Members)
         featured_by = aliased(model.Members)
+        empty_checker = aliased(model.Members)
 
-        with Session(engine) as session:
+        with Session(master_engine) as session:
             result = (
                 (
                     session.query(
@@ -46,10 +48,12 @@ class Medium(Resource):
                             model.Media.medium_datetime, "%Y-%m-%d %H:%i:%S"
                         ).label("medium_datetime"),
                         model.Media.path,
-                        model.Media.featured,
+                        model.Media.featured_title,
+                        model.Behaviors.chinese_name.label("featured_behavior"),
                         model.Events.chinese_name.label("event"),
                         reviewer.first_name.label("reviewer"),
                         featured_by.first_name.label("featured_by"),
+                        empty_checker.first_name.label("empty_checker"),
                     )
                     .join(
                         reviewer,
@@ -62,15 +66,24 @@ class Medium(Resource):
                         isouter=True,
                     )
                     .join(
+                        empty_checker,
+                        empty_checker.member_id == model.Media.empty_checker,
+                        isouter=True,
+                    )
+                    .join(
                         model.Events,
                         model.Events.event_id == model.Media.event,
+                        isouter=True,
+                    )
+                    .join(
+                        model.Behaviors,
+                        model.Behaviors.behavior_id == model.Media.featured_behavior,
                         isouter=True,
                     )
                 )
                 .filter(model.Media.medium_id == medium_id)
                 .one()
             )
-
         return result._asdict()
 
 
@@ -78,7 +91,7 @@ class SectionMedia(Resource):
     def get(self, section_id: int):
         empty_checker = aliased(model.Members)
 
-        with Session(engine) as session:
+        with Session(slave_engine) as session:
             results = (
                 session.query(
                     model.Media.medium_id,
@@ -87,7 +100,8 @@ class SectionMedia(Resource):
                         model.Media.medium_datetime, "%Y-%m-%d %H:%i:%S"
                     ).label("medium_datetime"),
                     model.Media.path,
-                    model.Media.featured_behavior,
+                    model.Behaviors.behavior_id,
+                    model.Behaviors.chinese_name.label("featured_behavior"),
                     model.Members.first_name.label("reviewer"),
                     empty_checker.first_name.label("empty_checker"),
                     model.Events.chinese_name.label("event"),
@@ -107,6 +121,12 @@ class SectionMedia(Resource):
                     empty_checker.member_id == model.Media.empty_checker,
                     isouter=True,
                 )
+                .join(
+                    model.Behaviors,
+                    model.Behaviors.behavior_id == model.Media.featured_behavior,
+                    isouter=True,
+                )
+                .order_by(model.Media.medium_datetime)
                 .filter(model.Media.section == section_id)
             ).all()
         return [result._asdict() for result in results]
@@ -114,11 +134,12 @@ class SectionMedia(Resource):
 
 class SectionEmptyMedia(Resource):
     def get(self, section_id: int):
-        with Session(engine) as session:
+        with Session(slave_engine) as session:
             results = (
                 session.query(
                     model.EmptyMedia.empty_medium_id,
                     model.EmptyMedia.section,
+                    model.EmptyMedia.path,
                     func.date_format(
                         model.EmptyMedia.medium_datetime, "%Y-%m-%d %H:%i:%S"
                     ).label("medium_datetime"),
@@ -129,6 +150,7 @@ class SectionEmptyMedia(Resource):
                         model.EmptyMedia.checked == 0,
                     )
                 )
+                .order_by(model.EmptyMedia.medium_datetime)
                 .all()
             )
         return [result._asdict() for result in results]
@@ -136,11 +158,12 @@ class SectionEmptyMedia(Resource):
 
 class SectionDetectedMedia(Resource):
     def get(self, section_id: int):
-        with Session(engine) as session:
+        with Session(slave_engine) as session:
             results = (
                 session.query(
                     model.DetectedMedia.detected_medium_id,
                     model.DetectedMedia.section,
+                    model.DetectedMedia.path,
                     func.date_format(
                         model.DetectedMedia.medium_datetime, "%Y-%m-%d %H:%i:%S"
                     ).label("medium_datetime"),
@@ -157,6 +180,7 @@ class SectionDetectedMedia(Resource):
                         model.DetectedMedia.reviewed == 0,
                     )
                 )
+                .order_by(model.DetectedMedia.medium_datetime)
                 .all()
             )
         return [result._asdict() for result in results]
@@ -164,7 +188,7 @@ class SectionDetectedMedia(Resource):
 
 class EmptyDayCountOfPerchMount(Resource):
     def get(self, perch_mount_id: int):
-        with Session(engine) as session:
+        with Session(slave_engine) as session:
             results = (
                 session.query(
                     func.date_format(
@@ -196,7 +220,7 @@ class EmptyDayCountOfPerchMount(Resource):
 
 class DetectedDayCountOfPerchMount(Resource):
     def get(self, perch_mount_id: int):
-        with Session(engine) as session:
+        with Session(slave_engine) as session:
             results = (
                 session.query(
                     func.date_format(
@@ -231,7 +255,7 @@ class EmptyMedia(Resource):
     parser.add_argument("media", action="append")
 
     def get(self, section_id: int):
-        with Session(engine) as session:
+        with Session(master_engine) as session:
             results = (
                 session.query(
                     model.EmptyMedia.section,
@@ -264,7 +288,7 @@ class EmptyMedia(Resource):
                 )
             )
 
-        with Session(engine) as session:
+        with Session(master_engine) as session:
             session.add_all(media)
             session.commit()
 
@@ -274,7 +298,7 @@ class EmptyCheckPerchMount(Resource):
     parser.add_argument("media", action="append")
 
     def get(self, perch_mount_id: int, limit: int):
-        with Session(engine) as session:
+        with Session(master_engine) as session:
             results = (
                 session.query(
                     model.EmptyMedia.empty_medium_id,
@@ -325,7 +349,7 @@ class EmptyCheckPerchMount(Resource):
         if self._is_media_checked(medium_ids):
             return {"message": "there is medium has been checked."}
 
-        with Session(engine) as session:
+        with Session(master_engine) as session:
             session.query(model.EmptyMedia).filter(
                 model.EmptyMedia.empty_medium_id.in_(medium_ids)
             ).update({"checked": True})
@@ -349,7 +373,7 @@ class EmptyCheckPerchMount(Resource):
         if self._is_media_checked(medium_ids):
             return {"message": "There is medium has been checked."}
 
-        with Session(engine) as session:
+        with Session(master_engine) as session:
             session.query(model.EmptyMedia).filter(
                 model.EmptyMedia.empty_medium_id.in_(medium_ids)
             ).update({"checked": True})
@@ -361,7 +385,7 @@ class EmptyCheckPerchMount(Resource):
         return {"message": None}
 
     def _is_media_checked(self, medium_ids: list[str]) -> bool:
-        with Session(engine) as session:
+        with Session(master_engine) as session:
             results = (
                 session.query(model.EmptyMedia.checked)
                 .filter(model.EmptyMedia.empty_medium_id.in_(medium_ids))
@@ -400,7 +424,7 @@ class ReviewPerchMount(Resource):
             .limit(limit)
             .subquery()
         )
-        with Session(engine) as session:
+        with Session(master_engine) as session:
             results = (
                 session.query(
                     model.DetectedIndividuals.taxon_order_by_ai,
@@ -466,8 +490,6 @@ class ReviewPerchMount(Resource):
         medium_ids = []
         individuals = []
 
-        # print(arg.media)
-
         for medium in arg.media:
             m = ast.literal_eval(medium)
             medium_ids.append(m["detected_medium_id"])
@@ -479,7 +501,6 @@ class ReviewPerchMount(Resource):
                 empty_checker=m["empty_checker"],
                 reviewer=m["reviewer"],
                 event=m["event"],
-                # featured=m["featured"],
                 featured_by=m["featured_by"],
                 featured_title=m["featured_title"],
                 featured_behavior=m["featured_behavior"],
@@ -504,14 +525,14 @@ class ReviewPerchMount(Resource):
         if self._is_media_checked(medium_ids):
             return {"message": "There is medium has been checked."}
 
-        with Session(engine) as session:
+        with Session(master_engine) as session:
             session.add_all(media)
             session.query(model.DetectedMedia).filter(
                 model.DetectedMedia.detected_medium_id.in_(medium_ids)
             ).update({"reviewed": True})
             session.commit()
 
-        with Session(engine) as session:
+        with Session(master_engine) as session:
             session.add_all(individuals)
             session.commit()
 
@@ -534,7 +555,7 @@ class ReviewPerchMount(Resource):
         if self._is_media_checked(medium_ids):
             return {"message": "There is medium has been checked."}
 
-        with Session(engine) as session:
+        with Session(master_engine) as session:
             session.query(model.DetectedMedia).filter(
                 model.DetectedMedia.detected_medium_id.in_(medium_ids)
             ).update({"reviewed": True})
@@ -546,7 +567,7 @@ class ReviewPerchMount(Resource):
         return {"message": None}
 
     def _is_media_checked(self, medium_ids: list[str]) -> bool:
-        with Session(engine) as session:
+        with Session(master_engine) as session:
             results = (
                 session.query(model.DetectedMedia.reviewed)
                 .filter(model.DetectedMedia.detected_medium_id.in_(medium_ids))
@@ -557,7 +578,7 @@ class ReviewPerchMount(Resource):
 
 class EmptyCheckSection(Resource):
     def get(self, section_id: int, limit: int):
-        with Session(engine) as session:
+        with Session(master_engine) as session:
             results = (
                 session.query(
                     model.EmptyMedia.empty_medium_id,
@@ -585,7 +606,7 @@ class EmptyCheckSection(Resource):
         return [result._asdict() for result in results]
 
 
-class ReviewPerchSection(Resource):
+class ReviewSection(Resource):
     def get(self, section_id: int, limit: int):
         media = (
             select(
@@ -612,7 +633,129 @@ class ReviewPerchSection(Resource):
             .limit(limit)
             .subquery()
         )
-        with Session(engine) as session:
+        with Session(master_engine) as session:
+            results = (
+                session.query(
+                    model.DetectedIndividuals.taxon_order_by_ai,
+                    model.DetectedIndividuals.xmin,
+                    model.DetectedIndividuals.xmax,
+                    model.DetectedIndividuals.ymin,
+                    model.DetectedIndividuals.ymax,
+                    model.Species.chinese_common_name,
+                    media.c.detected_medium_id,
+                    media.c.section,
+                    media.c.medium_datetime,
+                    media.c.path,
+                    media.c.empty_checker,
+                )
+                .join(
+                    model.DetectedIndividuals,
+                    media.c.detected_medium_id == model.DetectedIndividuals.medium,
+                    isouter=True,
+                )
+                .join(
+                    model.Species,
+                    model.Species.taxon_order
+                    == model.DetectedIndividuals.taxon_order_by_ai,
+                    isouter=True,
+                )
+                .order_by()
+                .all()
+            )
+        media_results = []
+        last_id = ""
+        for result in results:
+            if result.detected_medium_id != last_id:
+                medium = {
+                    "detected_medium_id": result.detected_medium_id,
+                    "section": result.section,
+                    "medium_datetime": result.medium_datetime,
+                    "path": result.path,
+                    "empty_checker": result.empty_checker,
+                    "individuals": [],
+                }
+                media_results.append(medium)
+                last_id = result.detected_medium_id
+            individual = {
+                "taxon_order_by_ai": result.taxon_order_by_ai,
+                "common_name_by_ai": result.chinese_common_name,
+                "xmin": result.xmin,
+                "xmax": result.xmax,
+                "ymin": result.ymin,
+                "ymax": result.ymax,
+            }
+            media_results[-1]["individuals"].append(individual)
+
+        return media_results
+
+
+class EmptyCheckMonthPerchMount(Resource):
+    def get(self, perch_mount_id: int, year_month: str, limit: int):
+        year, month = year_month.split("-")
+        with Session(master_engine) as session:
+            results = (
+                session.query(
+                    model.EmptyMedia.empty_medium_id,
+                    model.EmptyMedia.section,
+                    func.date_format(
+                        model.EmptyMedia.medium_datetime, "%Y-%m-%d %H:%i:%S"
+                    ).label("medium_datetime"),
+                    model.EmptyMedia.path,
+                )
+                .join(
+                    model.Sections,
+                    model.Sections.section_id == model.EmptyMedia.section,
+                    isouter=True,
+                )
+                .filter(
+                    and_(
+                        model.Sections.perch_mount == perch_mount_id,
+                        model.EmptyMedia.checked == False,
+                        func.date_format(model.EmptyMedia.medium_datetime, "%Y")
+                        == year,
+                        func.date_format(model.EmptyMedia.medium_datetime, "%m")
+                        == month,
+                    )
+                )
+                .order_by(model.EmptyMedia.medium_datetime)
+                .limit(limit)
+                .all()
+            )
+        return [result._asdict() for result in results]
+
+
+class ReviewMonthPerchMount(Resource):
+    def get(self, perch_mount_id: int, year_month: str, limit: int):
+        year, month = year_month.split("-")
+        media = (
+            select(
+                model.DetectedMedia.detected_medium_id,
+                model.DetectedMedia.section,
+                func.date_format(
+                    model.DetectedMedia.medium_datetime, "%Y-%m-%d %H:%i:%S"
+                ).label("medium_datetime"),
+                model.DetectedMedia.path,
+                model.DetectedMedia.empty_checker,
+            )
+            .join(
+                model.Sections,
+                model.Sections.section_id == model.DetectedMedia.section,
+                isouter=True,
+            )
+            .filter(
+                and_(
+                    model.Sections.perch_mount == perch_mount_id,
+                    model.DetectedMedia.reviewed == False,
+                    func.date_format(model.DetectedMedia.medium_datetime, "%Y") == year,
+                    func.date_format(model.DetectedMedia.medium_datetime, "%m")
+                    == month,
+                )
+            )
+            .order_by(model.DetectedMedia.medium_datetime)
+            .limit(limit)
+            .subquery()
+        )
+        with Session(master_engine) as session:
             results = (
                 session.query(
                     model.DetectedIndividuals.taxon_order_by_ai,

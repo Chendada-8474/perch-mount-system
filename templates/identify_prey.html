@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<link href="{{ url_for('static', filename='css/empty_check.css')}}" rel="stylesheet">
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <div>
+            <h1 class="h1">辨識物種</h1>
+            <a href="{{ url_for('perch_mount', perch_mount_id=perch_mount['perch_mount_id'])}}" class="text-decoration-none">
+                <h4>{{ perch_mount["perch_mount_name"] }}</h4>
+            </a>
+        </div>
+    </div>
+    {% if not media %}
+    <div class="alert alert-success" role="alert">
+        你選擇的檔案已經都檢查完空拍了。
+    </div>
+    {% else %}
+    <div class="shadow-sm bg-light p-3 rounded-2">
+        <div id="load" class="text-center">
+            <p class="text-secondary">正在讀取資料並下載所需要的照片...</p>
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+        <div id="contents">
+            <div id="empty_check_media" class="d-flex flex-wrap">
+
+                {% for medium in media %}
+                <div id="{{ medium['medium_id'] }}" class="card shadow border-0 border border-primary m-3 d-flex p-3" style="width: 20rem;">
+                    <div class="d-flex justify-content-between">
+                        <p>{{ medium['file_name'] }}</p>
+                        <div>
+                            <button class="dropdown-item download-medium" type="button" value="{{ medium['medium_id'] }}">
+                                <i data-feather="download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    {% if not medium['path'] %}
+                    <img src="{{ url_for('static', filename='img/not_found.png') }}" class="card-img-top full-screen" alt="{{ medium['path']}} " loading="lazy">
+                    {% else %}
+                    <div>
+                        {% if medium["is_image"] %}
+                        <img src="{{ url_for('send_media', path=medium['path']) }}" class="card-img-top full-screen" alt="{{ medium['path']}} " loading="lazy">
+                        {% else %}
+                        <video src="{{ url_for('send_media', path=medium['path']) }}" class="card-img-top" controls></video>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">掠食者</th>
+                                <th scope="col">
+                                    獵物
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for individual in medium["individuals"] %}
+                            <tr>
+                                <td>{{ individual["predator"] }}</td>
+                                <td>
+                                    <input class="form-control form-control-sm prey" type="text" value="{% if individual['prey_name'] %}{{ individual['prey_name'] }}{% endif %}">
+                                    <input type="number" value="{{ individual['individual_id'] }}" name="individual_id" hidden>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+    <input type="number" value="{{ current_user.member_id }}" id="identiferId" hidden>
+    <input type="number" value="{{ perch_mount['perch_mount_id'] }}" id="perchMountId" hidden>
+    {% endif %}
+</main>
+<script src="{{ url_for('static', filename='js/components/loading.js')}}"></script>
+<script src="{{ url_for('static', filename='js/components/download_medium.js')}}"></script>
+<script src="{{ url_for('static', filename='js/components/full_screen_image.js')}}"></script>
+<script src="{{ url_for('static', filename='js/api/put_prey.js')}}"></script>
+
+{% endblock %}

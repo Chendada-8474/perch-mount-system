@@ -1,6 +1,13 @@
 MEDIA_ROOT = "D:/coding/demo_nas"
 HOST = "http://127.0.0.1:5000"
-EMPTY_CHECK_LIMIT = 5
-REVIEW_LIMIT = 2
+EMPTY_CHECK_LIMIT = 250
+REVIEW_LIMIT = 100
 IMAGE_EXTENSIONS = {"bmp", "jpg", "jpeg", "png", "tif", "tiff", "dng"}
 VIDEO_EXTENSIONS = {"mov", "avi", "mp4", "mpg", "mpeg", "m4v", "wmv", "mkv"}
+NUM_MEDIA_IN_PAGE = 50
+
+
+cache = {
+    "DEBUG": True,  # some Flask specific configs
+    "CACHE_TYPE": "SimpleCache",  # Flask-Caching related configs
+}

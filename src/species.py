@@ -3,7 +3,7 @@ from os.path import dirname
 from sqlalchemy.orm import Session
 
 sys.path.append(dirname(dirname(__file__)))
-from src.resources.db_engine import engine
+from src.resources.db_engine import slave_engine
 import src.model as model
 
 
@@ -73,7 +73,7 @@ class SpeciesTrie:
         species = []
         taxon_order = 0
 
-        with Session(engine) as session:
+        with Session(slave_engine) as session:
             results = (
                 session.query(
                     model.Species.taxon_order,
@@ -113,7 +113,7 @@ class SpeciesNames:
         ]
 
     def _get_name_taxon_order_table(self):
-        with Session(engine) as session:
+        with Session(slave_engine) as session:
             results = session.query(
                 model.Species.chinese_common_name,
                 model.Species.taxon_order,

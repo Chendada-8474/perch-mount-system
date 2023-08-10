@@ -5,13 +5,13 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func, and_
 
 sys.path.append(dirname(dirname(dirname(__file__))))
-from src.resources.db_engine import engine
+from src.resources.db_engine import slave_engine
 import src.model as model
 
 
 class SectionsOfPerchMount(Resource):
     def get(self, perch_mount_id: int):
-        with Session(engine) as session:
+        with Session(slave_engine) as session:
             detected_count = (
                 session.query(
                     model.DetectedMedia.section,
@@ -138,7 +138,7 @@ class SectionsOfPerchMount(Resource):
 
 class OperatorsOfSection(Resource):
     def get(self, section_id: int):
-        with Session(engine) as session:
+        with Session(slave_engine) as session:
             results = (
                 session.query(
                     model.SectionOperators.section,
@@ -157,8 +157,8 @@ class OperatorsOfSection(Resource):
 
 class OneSection(Resource):
     def get(self, section_id: int):
-        with Session(engine) as session:
-            result = (
+        with Session(slave_engine) as session:
+            results = (
                 session.query(
                     model.Sections.section_id,
                     model.Sections.perch_mount.label("perch_mount_id"),
@@ -176,6 +176,7 @@ class OneSection(Resource):
                     model.Sections.note,
                     model.MountTypes.name.label("mount_type"),
                     model.Cameras.model_name.label("camera"),
+                    model.Members.first_name.label("operator"),
                 )
                 .join(
                     model.MountTypes,
@@ -192,7 +193,20 @@ class OneSection(Resource):
                     model.PerchMounts.perch_mount_id == model.Sections.perch_mount,
                     isouter=True,
                 )
+                .join(
+                    model.SectionOperators,
+                    model.SectionOperators.section == model.Sections.section_id,
+                    isouter=True,
+                )
+                .join(
+                    model.Members,
+                    model.Members.member_id == model.SectionOperators.operator,
+                    isouter=True,
+                )
                 .filter(model.Sections.section_id == section_id)
-                .one()
+                .all()
             )
-        return result._asdict()
+        result = results[0]._asdict()
+        result["operators"] = [r.operator for r in results]
+        result.pop("operator")
+        return result

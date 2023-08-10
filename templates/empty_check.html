@@ -8,7 +8,9 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <div>
             <h1 class="h1">空拍檢查</h1>
-            <h4 class="text-secondary">{{ perch_mount["perch_mount_name"] }}</h4>
+            <a href="{{ url_for('perch_mount', perch_mount_id=perch_mount['perch_mount_id'])}}" class="text-decoration-none">
+                <h4 class="text-secondary">{{ perch_mount["perch_mount_name"] }}</h4>
+            </a>
         </div>
     </div>
     {% if not media %}

@@ -2,15 +2,16 @@ import sys
 from os.path import dirname
 from flask_restful import Resource, reqparse
 from sqlalchemy.orm import Session
+from sqlalchemy import func, and_
 
 sys.path.append(dirname(dirname(dirname(__file__))))
-from src.resources.db_engine import engine
+from src.resources.db_engine import master_engine, slave_engine
 import src.model as model
 
 
 class AllMembers(Resource):
     def get(self):
-        with Session(engine) as session:
+        with Session(slave_engine) as session:
             results = (
                 session.query(
                     model.Members.member_id,
@@ -46,7 +47,7 @@ class Member(Resource):
 
     def post(self):
         arg = self.parser.parse_args()
-        with Session(engine) as session:
+        with Session(master_engine) as session:
             new_member = model.Members(
                 user_name=arg.user_name,
                 phone_number=arg.phone_number,
@@ -61,7 +62,7 @@ class Member(Resource):
 
     def patch(self, member_id: int):
         arg = self.parser.parse_args()
-        with Session(engine) as session:
+        with Session(master_engine) as session:
             session.query(model.Members).filter(
                 model.Members.member_id == member_id
             ).update(dict(arg))
@@ -69,7 +70,7 @@ class Member(Resource):
         return self._get_member_by_id(member_id)
 
     def _get_member_by_id(self, member_id):
-        with Session(engine) as session:
+        with Session(master_engine) as session:
             result = (
                 session.query(
                     model.Members.member_id,
@@ -90,3 +91,33 @@ class Member(Resource):
                 .one()
             )
         return result._asdict()
+
+
+class MemberContributions(Resource):
+    def get(self, member_id: int):
+        with Session(slave_engine) as session:
+            reviews = (
+                session.query(func.sum(model.Contributions.num_files).label("count"))
+                .filter(
+                    and_(
+                        model.Contributions.action == 1,
+                        model.Contributions.contributor == member_id,
+                    )
+                )
+                .one()
+            )
+            checks = (
+                session.query(func.sum(model.Contributions.num_files).label("count"))
+                .filter(
+                    and_(
+                        model.Contributions.action == 2,
+                        model.Contributions.contributor == member_id,
+                    )
+                )
+                .one()
+            )
+        result = {
+            "reviews": int(reviews.count) if reviews.count else None,
+            "checks": int(checks.count) if checks.count else None,
+        }
+        return result

@@ -4,7 +4,7 @@ from flask_restful import Resource, reqparse
 from sqlalchemy.orm import Session
 
 sys.path.append(dirname(dirname(dirname(__file__))))
-from src.resources.db_engine import engine
+from src.resources.db_engine import master_engine
 import src.model as model
 
 
@@ -21,6 +21,6 @@ class Contribution(Resource):
             num_files=arg.num_files,
             action=arg.action,
         )
-        with Session(engine) as session:
+        with Session(master_engine) as session:
             session.add(new_contibution)
             session.commit()

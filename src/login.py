@@ -30,6 +30,7 @@ def user_loader(user_name):
     user = User()
     user.id = user_name
     user.member_id = users[user_name]["member_id"]
+    user.first_name = users[user_name]["first_name"]
     user.admin = users[user_name]["is_admin"]
     user.super_admin = users[user_name]["is_super_admin"]
     return user

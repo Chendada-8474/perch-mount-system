@@ -74,7 +74,7 @@ function requeryTrandData(event) {
     request.send();
     request.onload = function () {
         var results = JSON.parse(request.responseText);
-        console.log(results)
+
         var detectedDateList = results.detected_seq.map(function (item) {
             return item[0];
         });

@@ -6,63 +6,66 @@
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h1">成員</h1>
-        <div>
-            <button id="addMrmber" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMemberModal">
-                新增成員
-                <i data-feather="user-plus" class="ms-1"></i>
-            </button>
+        <h1 class="h1">{{ member["last_name"] }} {{ member["first_name"] }} ( {{ member["user_name"] }} )</h1>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-2">
+            <p class="text-secondary">空拍檢查檔案數</p>
+            <h3>
+                {{ contributions["checks"] }}
+            </h3>
+        </div>
+        <div class="col-2">
+            <p class="text-secondary">物種檢視檔案數</p>
+            <h3>
+                {{ contributions["reviews"] }}
+            </h3>
         </div>
     </div>
 
-    <div>
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">帳號</th>
-                    <th scope="col">姓名</th>
-                    <th scope="col">職位</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for member in members %}
-                <tr>
-                    <th scope="row">{{ member["member_id"] }}</th>
-                    <td>
-                        {{ member["user_name"] }}
-                        {% if member["is_admin"] %}
-                        <i data-feather="star" class="text-secondary ms-3"></i>
+    <div class="shadow-sm bg-light p-3 rounded-2">
+        <h4 class="fw-bold text-secondary mb-3">認領棲架</h4>
+        {% if not perch_mounts %}
+        <div class="alert alert-light" role="alert">
+            目前沒有認領中的棲架。
+        </div>
+        {% endif %}
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            {% for perch_mount in perch_mounts %}
+            <div id="perch_mount_{{ perch_mount['perch_mount_id'] }}" class="col project_{{ perch_mount['project_id'] }} habitat_{{ perch_mount['habitat_id'] }} filt-target">
+                <div class="card shadow border-0">
+                    <div class="card-body">
+                        <a href="{{ url_for('perch_mount', perch_mount_id=perch_mount['perch_mount_id']) }}" class="text-decoration-none text-black fw-bolder">
+                            <h5 class="card-title">
+                                {{ perch_mount["perch_mount_id"] }}. {{ perch_mount["perch_mount_name"] }}
+                                {% if perch_mount["layer"] %}
+                                ( {{ perch_mount["layer"] }} )
+                                {% endif %}
+                            </h5>
+                        </a>
+                        {% if perch_mount["is_priority"] %}
+                        <span class="badge rounded-pill text-bg-danger">優先處裡</span>
                         {% endif %}
-                    </td>
-                    <td>{{ member["last_name"] }} {{ member["first_name"] }}</td>
-                    <td>{{ member["position"] }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-
-    <!-- Modal -->
-    <div class="modal fade" id="addMemberModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">新增成員</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">新增</button>
+                        {% if perch_mount["habitat_id"] == 1 %}
+                        <span class="badge rounded-pill text-bg-success">{{ perch_mount["habitat"] }}</span>
+                        {% elif perch_mount["habitat_id"] == 2 %}
+                        <span class="badge rounded-pill text-bg-primary">{{ perch_mount["habitat"] }}</span>
+                        {% else %}
+                        <span class="badge rounded-pill text-bg-dark">{{ perch_mount["habitat"] }}</span>
+                        {% endif %}
+                        <span class="badge rounded-pill text-bg-secondary">{{ perch_mount["project"] }}</span>
+                        {% if perch_mount["latest_note"] %}
+                        <span class="badge rounded-pill text-bg-light">{{ perch_mount["latest_note"] }}</span>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
     </div>
+
+
 </main>
-<script src="{{ url_for('static', filename='js/components/loading.js')}}"></script>
-<script src="{{ url_for('static', filename='js/components/empty_medium.js')}}"></script>
+<script src="{{ url_for('static', filename='js/api/post_member.js')}}"></script>
 {% endblock %}
