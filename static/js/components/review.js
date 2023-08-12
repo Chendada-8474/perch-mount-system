@@ -121,8 +121,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         clearIndividuals() {
-            for (let individaul of Object.values(this.individuals)) {
-                individaul.element.remove();
+            var individualIds = []
+            for (var individaulId of Object.keys(this.individuals)) {
+                individualIds.push(individaulId);
+            }
+            for (let individaulId of individualIds) {
+                this.deleteIndividual(individaulId);
             }
         }
 
