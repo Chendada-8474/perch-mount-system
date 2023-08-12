@@ -75,6 +75,7 @@
                     {% endfor %}
                 </div>
 
+
                 {% for medium in media %}
                 {% if loop.index == 1 or medium["medium_datetime"].split(" ")[0] != media[loop.index - 2]["medium_datetime"].split(" ")[0]
                 %}
