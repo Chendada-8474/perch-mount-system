@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         clearIndividuals() {
-            for (let individaul of this.individuals) {
+            for (let individaul of Object.values(this.individuals)) {
                 individaul.element.remove();
             }
         }
@@ -738,7 +738,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         #listenDeleteIndividualButton() {
-            this.deleteIndividualButton("click", (event) => {
+            this.deleteIndividualButton.addEventListener("click", (event) => {
                 for (let medium of media.childrenObjects) {
                     if (medium.selectedInput.checked) {
                         medium.clearIndividuals();
