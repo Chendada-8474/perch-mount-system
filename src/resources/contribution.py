@@ -13,6 +13,7 @@ class Contribution(Resource):
     parser.add_argument("contributor", type=int)
     parser.add_argument("num_files", type=int)
     parser.add_argument("action", type=int)
+    parser.add_argument("time", type=str)
 
     def post(self):
         arg = self.parser.parse_args()
@@ -20,6 +21,7 @@ class Contribution(Resource):
             contributor=arg.contributor,
             num_files=arg.num_files,
             action=arg.action,
+            time=arg.time,
         )
         with Session(master_engine) as session:
             session.add(new_contibution)

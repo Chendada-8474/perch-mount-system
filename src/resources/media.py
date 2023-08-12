@@ -809,3 +809,43 @@ class ReviewMonthPerchMount(Resource):
             media_results[-1]["individuals"].append(individual)
 
         return media_results
+
+
+class ScheduleDetectMedia(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument("media", action="append")
+
+    def post(self):
+        arg = self.parser.parse_args()
+
+        media = []
+        individuals = []
+
+        for medium in arg.media:
+            m = ast.literal_eval(medium)
+            new_medium = model.DetectedMedia(
+                detected_medium_id=m["medium_id"],
+                section=m["section"],
+                medium_datetime=m["medium_datetime"],
+                path=m["path"],
+            )
+            media.append(new_medium)
+
+            for individual in m["individuals"]:
+                new_individual = model.DetectedIndividuals(
+                    medium=m["medium_id"],
+                    taxon_order_by_ai=individual["taxon_order_by_ai"],
+                    xmin=individual["xmin"],
+                    xmax=individual["xmax"],
+                    ymin=individual["ymin"],
+                    ymax=individual["ymax"],
+                )
+                individuals.append(new_individual)
+
+        with Session(master_engine) as session:
+            session.add_all(media)
+            session.commit()
+
+        with Session(master_engine) as session:
+            session.add_all(individuals)
+            session.commit()

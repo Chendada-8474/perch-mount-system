@@ -24,17 +24,41 @@
         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-media" type="button" role="tab" aria-controls="pills-media" aria-selected="true">
-                    已辨識資料 ({{ media|length }})
+                    已辨識資料 (
+                    {% if media|length > 999999 %}
+                    {{ "%.1f M"|format(media|length / 1000000) }}
+                    {% elif media|length > 999 %}
+                    {{ "%.1f k"|format(media|length / 1000) }}
+                    {% else %}
+                    {{media|length}}
+                    {% endif %}
+                    )
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-detected" type="button" role="tab" aria-controls="pills-detected" aria-selected="false">
-                    待物種檢視 ({{ detected_media|length }})
+                    待物種檢視 (
+                    {% if detected_media|length > 999999 %}
+                    {{ "%.1f M"|format(detected_media|length / 1000000) }}
+                    {% elif detected_media|length > 999 %}
+                    {{ "%.1f k"|format(detected_media|length / 1000) }}
+                    {% else %}
+                    {{detected_media|length}}
+                    {% endif %}
+                    )
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-empty" type="button" role="tab" aria-controls="pills-empty" aria-selected="false">
-                    待空拍檢查 ({{ empty_media|length }})
+                    待空拍檢查 (
+                    {% if empty_media|length > 999999 %}
+                    {{ "%.1f M"|format(empty_media|length / 1000000) }}
+                    {% elif empty_media|length > 999 %}
+                    {{ "%.1f k"|format(empty_media|length / 1000) }}
+                    {% else %}
+                    {{empty_media|length}}
+                    {% endif %}
+                    )
                 </button>
             </li>
         </ul>
@@ -45,7 +69,7 @@
                     {% for medium in media %}
                     {% if medium["medium_datetime"].split(" ")[0] != media[loop.index - 2]["medium_datetime"].split(" ")[0] %}
                     <a class="text-decoration-none" href="#day_{{ medium['medium_datetime'].split(' ')[0] }}">
-                        <button type="button" class="btn btn-outline-success rounded-pill me-2" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">{{ medium["medium_datetime"].split(" ")[0] }}</button>
+                        <button type="button" class="btn btn-outline-success rounded-pill mb-2 me-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">{{ medium["medium_datetime"].split(" ")[0] }}</button>
                     </a>
                     {% endif %}
                     {% endfor %}
@@ -84,8 +108,16 @@
                                 </th>
                                 <td>{{ medium["medium_id"] }}</td>
                                 <td>{{ medium["medium_datetime"] }}</td>
-                                <td>{{ medium["reviewer"] }}</td>
-                                <td>{{ medium["empty_checker"] }}</td>
+                                <td>
+                                    {% if medium["reviewer"] %}
+                                    {{ medium["reviewer"] }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if medium["empty_checker"] %}
+                                    {{ medium["empty_checker"] }}
+                                    {% endif %}
+                                </td>
                                 <td>
                                     {% if medium["featured_behavior"] %}
                                     {{ medium["featured_behavior"] }}

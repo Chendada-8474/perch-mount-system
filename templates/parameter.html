@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<link href="{{ url_for('static', filename='css/empty_check.css')}}" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/a11y-dark.min.css">
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h1">上傳參數產生器</h1>
+    </div>
+
+
+    <div class="shadow-sm bg-light p-3 rounded-2">
+        <div class="row">
+            <div class="col-5">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="form-floating mb-3">
+                            {{ parameter_form.perch_mount_id(class="form-control parameter", placeholder="", list="perch_mount_list") }}
+                            {{ parameter_form.perch_mount_id.label }}
+                            <datalist id="perch_mount_list">
+                                {% for perch_mount in perch_mounts %}
+                                <option value="{{ perch_mount['perch_mount_id'] }}">{{ perch_mount['project'] }}_{{ perch_mount['perch_mount_name'] }}</option>
+                                {% endfor %}
+                            </datalist>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-floating mb-3">
+                            {{ parameter_form.project(class="form-control parameter", placeholder="", disabled=True) }}
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-floating mb-3">
+                            {{ parameter_form.perch_mount_name(class="form-control parameter", placeholder="", disabled=True) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-floating mb-3">
+                            {{ parameter_form.check_date(class="form-control parameter") }}
+                            {{ parameter_form.check_date.label }}
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-floating mb-3">
+                            {{ parameter_form.camera(class="form-control parameter", placeholder="") }}
+                            {{ parameter_form.camera.label }}
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-floating mb-3">
+                            {{ parameter_form.mount_type(class="form-control parameter") }}
+                            {{ parameter_form.mount_type.label }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-floating mb-3">
+                            {{ parameter_form.note(class="form-control parameter", rows=2, placeholder="") }}
+                            {{ parameter_form.note.label(class="form-label") }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col mb-3">
+                        {{ parameter_form.valid(class="btn-check parameter") }}
+                        {{ parameter_form.valid.label(class="btn btn-outline-success") }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-5">
+                        <div class="form-floating mb-3">
+                            {{ parameter_form.start_time(class="form-control parameter") }}
+                            {{ parameter_form.start_time.label }}
+                        </div>
+                    </div>
+                    <div class="col-7">
+                        <p class="text-secondary fw-light">若不需要校正開始時間，請不要填寫這個欄位。</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                {{ parameter_form.operators(class="form-select parameter h-75") }}
+                {{ parameter_form.operators.label(class="text-secondary mt-1") }}
+            </div>
+            <div class="col-5">
+                <div class="row">
+                    <div class="col">
+
+                        <pre class="shadow rounded"><code id="parameterYAML" class="language-yaml" style="font-size: 1rem;"></code></pre>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        {{ parameter_form.submit(class="btn btn-primary") }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/yaml.min.js" integrity="sha512-uzLMr+y2UfIJhZodXJJXGUgSWhOTdT1FABVEECjTZ8rPNQ5mT8AJUldpJVPnxUYjT052sB8ddJwiB56MtAQA3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>hljs.highlightAll();</script>
+<script src="{{ url_for('static', filename='js/components/parameter.js')}}"></script>
+{% endblock %}

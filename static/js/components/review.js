@@ -120,6 +120,12 @@ document.addEventListener("DOMContentLoaded", () => {
             delete this.individuals[individualId];
         }
 
+        clearIndividuals() {
+            for (let individaul of this.individuals) {
+                individaul.element.remove();
+            }
+        }
+
         createIndividual(individualId, xmin, xmax, ymin, ymax) {
             let individualElement = this.#individualTemplate(individualId, xmin, xmax, ymin, ymax);
             this.modalIndividualTbody.appendChild(individualElement);
@@ -692,9 +698,11 @@ document.addEventListener("DOMContentLoaded", () => {
         constructor() {
             this.speciesName = document.getElementById("edit-species");
             this.confirmButton = document.getElementById("confirm-edit");
+            this.deleteIndividualButton = document.getElementById("delete-individuals");
             this.#listenConfirm();
             this.#listenSpeciesInput();
             this.#listenStartButton();
+            this.#listenDeleteIndividualButton();
         }
 
 
@@ -727,6 +735,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
         #listenSpeciesInput() {
             this.speciesName.addEventListener("input", searchSpecies);
+        }
+
+        #listenDeleteIndividualButton() {
+            this.deleteIndividualButton("click", (event) => {
+                for (let medium of media.childrenObjects) {
+                    if (medium.selectedInput.checked) {
+                        medium.clearIndividuals();
+                    }
+                }
+            })
         }
 
         #listenStartButton() {

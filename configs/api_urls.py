@@ -36,6 +36,8 @@ REVIEW_MONTH_PERCH_MOUNT_ = "/api/review/perch_mount/<int:perch_mount_id>/year_m
 EMPTY_CHECK_SECTION = "/api/empty_check/section/<int:section_id>/limit/<int:limit>"
 REVIEW_SECTION = "/api/review/section/<int:section_id>/limit/<int:limit>"
 
+SCHEDULE_DETECT_MEDIA = "/api/schedule_detect"
+
 IDENTIFY_PREY_SECTION = "/api/identify_prey/section/<int:section_id>"
 
 MEDIUM = "/api/medium/<string:medium_id>"

@@ -13,13 +13,49 @@
         <div class="col-2">
             <p class="text-secondary">空拍檢查檔案數</p>
             <h3>
+                {% if contributions["checks"] and contributions["checks"] > 999 %}
+                <div>
+                    {% if contributions["checks"] > 999999 %}
+                    {{ "%.1f M"|format(contributions["checks"] / 1000000) }}
+                    {% else %}
+                    {{ "%.1f k"|format(contributions["checks"] / 1000) }}
+                    {% endif %}
+                </div>
+                {% else %}
                 {{ contributions["checks"] }}
+                {% endif %}
             </h3>
         </div>
         <div class="col-2">
             <p class="text-secondary">物種檢視檔案數</p>
             <h3>
+                {% if contributions["reviews"] and contributions["reviews"] > 999 %}
+                <div>
+                    {% if contributions["reviews"] > 999999 %}
+                    {{ "%.1f M"|format(contributions["reviews"] / 1000000) }}
+                    {% else %}
+                    {{ "%.1f k"|format(contributions["reviews"] / 1000) }}
+                    {% endif %}
+                </div>
+                {% else %}
                 {{ contributions["reviews"] }}
+                {% endif %}
+            </h3>
+        </div>
+        <div class="col-2">
+            <p class="text-secondary">回收棲架數</p>
+            <h3>
+                {% if contributions["operations"] and contributions["operations"] > 999 %}
+                <div>
+                    {% if contributions["operations"] > 999999 %}
+                    {{ "%.1f M"|format(contributions["operations"] / 1000000) }}
+                    {% else %}
+                    {{ "%.1f k"|format(contributions["operations"] / 1000) }}
+                    {% endif %}
+                </div>
+                {% else %}
+                {{ contributions["operations"] }}
+                {% endif %}
             </h3>
         </div>
     </div>

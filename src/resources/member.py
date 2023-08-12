@@ -100,7 +100,7 @@ class MemberContributions(Resource):
                 session.query(func.sum(model.Contributions.num_files).label("count"))
                 .filter(
                     and_(
-                        model.Contributions.action == 1,
+                        model.Contributions.action == 2,
                         model.Contributions.contributor == member_id,
                     )
                 )
@@ -110,14 +110,20 @@ class MemberContributions(Resource):
                 session.query(func.sum(model.Contributions.num_files).label("count"))
                 .filter(
                     and_(
-                        model.Contributions.action == 2,
+                        model.Contributions.action == 1,
                         model.Contributions.contributor == member_id,
                     )
                 )
                 .one()
             )
+            operations = (
+                session.query(func.count(model.SectionOperators.section).label("count"))
+                .filter(model.SectionOperators.operator == member_id)
+                .one()
+            )
         result = {
             "reviews": int(reviews.count) if reviews.count else None,
             "checks": int(checks.count) if checks.count else None,
+            "operations": int(operations.count) if operations.count else None,
         }
         return result

@@ -100,18 +100,29 @@
                         <span class="badge rounded-pill text-bg-light me-1">by {{ medium["featured_by"] }}</span>
                         {% endif %}
                     </div>
-                    <p>{{ medium["title"] }}</p>
+                    <p>
+                        {% if medium["title"] %}
+                        {{ medium["title"] }}
+                        {% endif %}
+                    </p>
                 </div>
                 {% endfor %}
             </div>
         </div>
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
-                {% for p in range(num_page) %}
+                <li class="page-item"><a class="page-link {% if page == 0 %}disabled{% endif %}" href="{{ url_for('featured', page=[0, page - 1] | max, perch_mount_name=perch_mount_name, behavior_id=behavior_id, chinese_common_name=chinese_common_name) }}">Previous</a></li>
+                {% if page > 6 %}
+                <li><a class="page-link disabled" href="">......</a></li>
+                {% endif %}
+                {% for p in range(first_page, end_page) %}
                 <li class="page-item {% if p == page %}disabled{% endif %}">
                     <a class="page-link" href="{{ url_for('featured', page=p, perch_mount_name=perch_mount_name, behavior_id=behavior_id, chinese_common_name=chinese_common_name) }}">{{ p + 1 }}</a>
                 </li>
                 {% endfor %}
+                {% if num_page - 6 >= page %} <li><a class="page-link disabled" href="">......</a></li>
+                {% endif %}
+                <li class="page-item"><a class="page-link {% if page == num_page - 1 %}disabled{% endif %}" href="{{ url_for('featured', page=[num_page - 1, page + 1] | min, perch_mount_name=perch_mount_name, behavior_id=behavior_id, chinese_common_name=chinese_common_name) }}">Next</a></li>
             </ul>
         </nav>
     </div>

@@ -39,10 +39,11 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "key"
 
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://%s:%s@%s:3306/%s" % (
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://%s:%s@%s:%s/%s" % (
     configs.mysql.master_user,
     configs.mysql.master_passward,
     configs.mysql.master_ip,
+    configs.mysql.master_port,
     configs.mysql.database,
 )
 
@@ -323,6 +324,10 @@ def featured(
     media["media"] = file.add_all_file_name(media["media"])
     media["media"] = file.add_all_is_image(media["media"])
 
+    num_page = (media["count"] - 1) // config.NUM_MEDIA_IN_PAGE + 1
+    first_page = max(page - 6, 0)
+    end_page = min(page + 6, num_page)
+
     return render_template(
         "featured.html",
         behaviors=behaviors_,
@@ -330,7 +335,9 @@ def featured(
         species=species_,
         media=media["media"],
         page=page,
-        num_page=(media["count"] - 1) // config.NUM_MEDIA_IN_PAGE + 1,
+        first_page=first_page,
+        end_page=end_page,
+        num_page=num_page,
         perch_mount_name=perch_mount_name,
         behavior_id=behavior_id,
         chinese_common_name=chinese_common_name,
@@ -345,6 +352,24 @@ def pending():
         "pending.html",
         pending_perch_mounts=pending_perch_mounts,
         projects=projects,
+    )
+
+
+@app.route("/parameter")
+def parameter_maker():
+    perch_mounts_ = req.get("/api/perch_mounts")
+    mount_types_ = req.get("/api/mount_types")
+    cameras_ = req.get("/api/cameras")
+    members_ = req.get("/api/members")
+
+    parameter_form = form.Parameter()
+    parameter_form.init_choice(mount_types_, cameras_, members_)
+
+    return render_template(
+        "parameter.html",
+        mount_types=mount_types_,
+        parameter_form=parameter_form,
+        perch_mounts=perch_mounts_,
     )
 
 
@@ -530,6 +555,8 @@ api.add_resource(res_contribution.Contribution, api_urls.CONTRIBUTION)
 
 api.add_resource(res_prey.Prey, api_urls.PREY)
 api.add_resource(res_featured.FeaturedMedia, api_urls.FEATURED_MEDIA)
+
+api.add_resource(res_media.ScheduleDetectMedia, api_urls.SCHEDULE_DETECT_MEDIA)
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", debug=True)

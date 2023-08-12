@@ -1,8 +1,9 @@
 import sys
+import ast
 from os.path import dirname
 from flask_restful import Resource, reqparse
 from sqlalchemy.orm import Session
-from sqlalchemy import func, and_
+from sqlalchemy import func, and_, desc
 
 sys.path.append(dirname(dirname(dirname(__file__))))
 from src.resources.db_engine import slave_engine, master_engine
@@ -10,6 +11,9 @@ import src.model as model
 
 
 class SectionsOfPerchMount(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument("sections", action="append")
+
     def get(self, perch_mount_id: int):
         with Session(slave_engine) as session:
             detected_count = (
@@ -106,7 +110,7 @@ class SectionsOfPerchMount(Resource):
                         isouter=True,
                     )
                 )
-                .order_by(model.Sections.section_id)
+                .order_by(desc(model.Sections.check_date))
                 .filter(model.Sections.perch_mount == perch_mount_id)
                 .all()
             )
@@ -135,8 +139,50 @@ class SectionsOfPerchMount(Resource):
 
         return new_results
 
+    def post(self, perch_mount_id: int):
+        arg = self.parser.parse_args()
+
+        new_sections = []
+        section_operators = []
+        for section in arg.sections:
+            s = ast.literal_eval(section)
+            new_sections.append(
+                model.Sections(
+                    perch_mount=perch_mount_id,
+                    camera=s["camera"],
+                    mount_type=s["mount_type"],
+                    start_time=s["start_time"],
+                    end_time=s["end_time"],
+                    check_date=s["check_date"],
+                    valid=s["valid"],
+                    note=s["note"],
+                )
+            )
+
+            section_operators.append(
+                [
+                    model.SectionOperators(section=None, operator=o)
+                    for o in s["operators"]
+                ]
+            )
+        with Session(master_engine) as session:
+            session.add_all(new_sections)
+            session.commit()
+
+            new_section_operators = []
+            for i, section in enumerate(new_sections):
+                for operator in section_operators[i]:
+                    operator.section = section.section_id
+                    new_section_operators.append(operator)
+
+            session.add_all(new_section_operators)
+            session.commit()
+
 
 class OperatorsOfSection(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument("operators", action="append")
+
     def get(self, section_id: int):
         with Session(slave_engine) as session:
             results = (
@@ -154,10 +200,26 @@ class OperatorsOfSection(Resource):
             )
         return [result._asdict() for result in results]
 
+    def post(self, section_id: int):
+        arg = self.parser.parse_args()
+
+        new_operators = []
+        for operator in map(int, arg.operators):
+            new_operators.append(
+                model.SectionOperators(
+                    section=section_id,
+                    operator=operator,
+                )
+            )
+
+        with Session(master_engine) as session:
+            session.add_all(new_operators)
+            session.commit()
+
 
 class OneSection(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument("perch_mount", type=int, nullable=False)
+    parser.add_argument("perch_mount", type=int)
     parser.add_argument("mount_type", type=int)
     parser.add_argument("camera", type=int)
     parser.add_argument("start_time", type=str)
@@ -240,3 +302,6 @@ class OneSection(Resource):
                 model.PerchMounts.perch_mount_id == arg.perch_mount
             ).update({"latest_note": arg.note})
             session.commit()
+            new_section_id = new_section.section_id
+
+        return {"section_id": new_section_id}
