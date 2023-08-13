@@ -5,14 +5,14 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func, select
 
 sys.path.append(dirname(dirname(dirname(__file__))))
-from src.resources.db_engine import master_engine
+from src.resources.db_engine import master_engine, slave_engine
 import src.model as model
 
 
 class IndividualsOfMedium(Resource):
     def get(self, medium_id: int):
         species_human = select(model.Species)
-        with Session(master_engine) as session:
+        with Session(slave_engine) as session:
             results = (
                 session.query(
                     model.Individuals.individual_id,

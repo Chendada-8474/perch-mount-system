@@ -70,7 +70,7 @@ class Member(Resource):
         return self._get_member_by_id(member_id)
 
     def _get_member_by_id(self, member_id):
-        with Session(master_engine) as session:
+        with Session(slave_engine) as session:
             result = (
                 session.query(
                     model.Members.member_id,

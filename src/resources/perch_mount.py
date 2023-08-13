@@ -109,7 +109,7 @@ class PerchMount(Resource):
         return arg
 
     def _get_perch_mount(self, perch_mount_id: int) -> dict:
-        with Session(master_engine) as session:
+        with Session(slave_engine) as session:
             result = (
                 session.query(
                     model.PerchMounts.perch_mount_id,
@@ -169,7 +169,7 @@ class PerchMountClaimBy(Resource):
 
 class PendingPerchMounts(Resource):
     def get(self):
-        with Session(master_engine) as session:
+        with Session(slave_engine) as session:
             empty_count = (
                 session.query(
                     func.count(model.EmptyMedia.empty_medium_id).label("count"),
@@ -316,7 +316,7 @@ class PerchMountMediaCount(Resource):
 
 class PerchMountMonthPendingEmptyCount(Resource):
     def get(self, perch_mount_id):
-        with Session(master_engine) as session:
+        with Session(slave_engine) as session:
             results = (
                 session.query(
                     func.count(model.EmptyMedia.empty_medium_id).label("count"),
@@ -347,7 +347,7 @@ class PerchMountMonthPendingEmptyCount(Resource):
 
 class PerchMountMonthPendingDetectedCount(Resource):
     def get(self, perch_mount_id):
-        with Session(master_engine) as session:
+        with Session(slave_engine) as session:
             results = (
                 session.query(
                     func.count(model.DetectedMedia.detected_medium_id).label("count"),
