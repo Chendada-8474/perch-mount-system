@@ -1,7 +1,6 @@
 var updateSpeciesButtons = document.getElementsByClassName("update-species");
 var updateTagButtons = document.getElementsByClassName("update-tag");
 var updatePreyButtons = document.getElementsByClassName("update-prey");
-var host = "http://127.0.0.1:5000"
 
 for (var speciesButton of updateSpeciesButtons) {
     speciesButton.addEventListener("click", (event) => {
@@ -42,7 +41,7 @@ function update(individualId) {
 
     if (species) {
 
-        fetch("http://127.0.0.1:5000/api/taxon_orders", {
+        fetch("/api/taxon_orders", {
             method: "POST",
             body: JSON.stringify({
                 "chinese_common_names": [species],
@@ -75,7 +74,7 @@ function postIndividual(data, individualId) {
     if (!ans) { return; }
     var api_url = `/api/individual/${individualId}`
 
-    fetch(host + api_url, {
+    fetch(api_url, {
         method: "PATCH",
         body: JSON.stringify(data),
         headers: new Headers({

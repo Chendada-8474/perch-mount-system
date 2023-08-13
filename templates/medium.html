@@ -5,7 +5,8 @@
 <link href="{{ url_for('static', filename='css/full_screen.css')}}" rel="stylesheet">
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h1">
             {% if medium["file_name"] %}
             {{ medium["file_name"] }}
@@ -14,23 +15,27 @@
             {% endif %}
             {% if current_user.is_admin() %}
             <div class="btn-group ms-3" role="group">
-                <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle border-0" data-bs-toggle="dropdown" aria-expanded="false">
+                <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle border-0"
+                    data-bs-toggle="dropdown" aria-expanded="false">
                     <i data-feather="edit-2"></i>
                 </button>
                 <ul class="dropdown-menu">
                     <li class="mb-1">
-                        <button id="updateProject" class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#eventModal">
+                        <button id="updateProject" class="dropdown-item" type="button" data-bs-toggle="modal"
+                            data-bs-target="#eventModal">
                             <i data-feather="alert-circle" class="me-2"></i>變更事件
                         </button>
                     </li>
                     <li class="mb-1">
-                        <button id="updateHabitat" class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#featuredModal">
+                        <button id="updateHabitat" class="dropdown-item" type="button" data-bs-toggle="modal"
+                            data-bs-target="#featuredModal">
                             <i data-feather="heart" class="me-2"></i>加入精選
                         </button>
                     </li>
 
                     <li class="mb-1">
-                        <button class="dropdown-item download-medium{% if not medium['path'] %} disabled{% endif %}" type="button" value="{{ medium['medium_id'] }}">
+                        <button class="dropdown-item download-medium{% if not medium['path'] %} disabled{% endif %}"
+                            type="button" value="{{ medium['medium_id'] }}">
                             <i data-feather="download" class="me-2"></i>下載
                         </button>
                     </li>
@@ -48,7 +53,8 @@
                     </a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="{{ url_for('section', perch_mount_id=perch_mount['perch_mount_id'], section_id=section['section_id']) }}">
+                    <a
+                        href="{{ url_for('section', perch_mount_id=perch_mount['perch_mount_id'], section_id=section['section_id']) }}">
                         {{ section["check_date"] }}
                     </a>
                 </li>
@@ -74,7 +80,8 @@
                 <ol class="list-group">
                     <li class="list-group-item">
                         回收日期：
-                        <a href="{{ url_for('section', perch_mount_id=perch_mount['perch_mount_id'], section_id=section['section_id']) }}">
+                        <a
+                            href="{{ url_for('section', perch_mount_id=perch_mount['perch_mount_id'], section_id=section['section_id']) }}">
                             {{ section['check_date'] }}
                         </a>
                     </li>
@@ -140,9 +147,11 @@
                 {% if medium['path'] %}
                 <div>
                     {% if medium["is_image"] %}
-                    <img src="{{ url_for('send_media', path=medium['path']) }}" class="img-fluid rounded full-screen" alt="...">
+                    <img src="{{ url_for('send_media', path=medium['epath']) }}" class="img-fluid rounded full-screen"
+                        alt="...">
                     {% else %}
-                    <video src="{{ url_for('send_media', path=medium['path']) }}" class="img-fluid rounded" controls></video>
+                    <video src="{{ url_for('send_media', path=medium['epath']) }}" class="img-fluid rounded"
+                        controls></video>
                     {% endif %}
                 </div>
                 {% else %}
@@ -203,27 +212,33 @@
                                 <div class="d-flex">
                                     {% if current_user.is_admin() %}
 
-                                    <button class="dropdown-item text-danger delete-individual" type="button" value="{{ individual['individual_id'] }}">
+                                    <button class="dropdown-item text-danger delete-individual" type="button"
+                                        value="{{ individual['individual_id'] }}">
                                         <i data-feather="trash-2"></i>
                                     </button>
 
                                     <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle border-0" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button type="button"
+                                            class="btn btn-outline-secondary btn-sm dropdown-toggle border-0"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
                                             <i data-feather="edit-2"></i>
                                         </button>
                                         <ul class="dropdown-menu">
                                             <li class="mb-1">
-                                                <button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#speciesModal{{ individual['individual_id'] }}">
+                                                <button class="dropdown-item" type="button" data-bs-toggle="modal"
+                                                    data-bs-target="#speciesModal{{ individual['individual_id'] }}">
                                                     變更物種
                                                 </button>
                                             </li>
                                             <li class="mb-1">
-                                                <button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#tagModal{{ individual['individual_id'] }}">
+                                                <button class="dropdown-item" type="button" data-bs-toggle="modal"
+                                                    data-bs-target="#tagModal{{ individual['individual_id'] }}">
                                                     編輯標記
                                                 </button>
                                             </li>
                                             <li class="mb-1">
-                                                <button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#preyModal{{ individual['individual_id'] }}">
+                                                <button class="dropdown-item" type="button" data-bs-toggle="modal"
+                                                    data-bs-target="#preyModal{{ individual['individual_id'] }}">
                                                     編輯獵物
                                                 </button>
                                             </li>
@@ -237,86 +252,111 @@
 
 
                         <!-- Species Modal -->
-                        <div class="modal fade" id="speciesModal{{ individual['individual_id'] }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="speciesModal{{ individual['individual_id'] }}" tabindex="-1"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-sm">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h1 class="modal-title fs-5" id="exampleModalLabel">變更物種</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="species{{ individual['individual_id'] }}" placeholder="" value="{% if individual['species'] %}{{ individual['species'] }}{% endif %}">
+                                            <input type="text" class="form-control"
+                                                id="species{{ individual['individual_id'] }}" placeholder=""
+                                                value="{% if individual['species'] %}{{ individual['species'] }}{% endif %}">
                                             <label for="species{{ individual['individual_id'] }}">物種</label>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary update-species" value="{{ individual['individual_id'] }}">Save changes</button>
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary update-species"
+                                            value="{{ individual['individual_id'] }}">Save changes</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Tag Modal -->
-                        <div class="modal fade" id="tagModal{{ individual['individual_id'] }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="tagModal{{ individual['individual_id'] }}" tabindex="-1"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-sm">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h1 class="modal-title fs-5" id="exampleModalLabel">編輯標記</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
                                         <div class="form-check mb-3">
                                             {% if individual["tagged"] %}
-                                            <input class="form-check-input" type="checkbox" value="" id="tagged{{ individual['individual_id'] }}" checked>
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="tagged{{ individual['individual_id'] }}" checked>
                                             {% else %}
-                                            <input class="form-check-input" type="checkbox" value="" id="tagged{{ individual['individual_id'] }}">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="tagged{{ individual['individual_id'] }}">
                                             {% endif %}
-                                            <label class="form-check-label" for="tagged{{ individual['individual_id'] }}">
+                                            <label class="form-check-label"
+                                                for="tagged{{ individual['individual_id'] }}">
                                                 是否有標記
                                             </label>
                                         </div>
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="ring_number{{ individual['individual_id'] }}" value="{% if individual['ring_number'] %}{{ individual['ring_number'] }}{% endif %}" placeholder="">
+                                            <input type="text" class="form-control"
+                                                id="ring_number{{ individual['individual_id'] }}"
+                                                value="{% if individual['ring_number'] %}{{ individual['ring_number'] }}{% endif %}"
+                                                placeholder="">
                                             <label for="ring_number{{ individual['individual_id'] }}">環號</label>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary update-tag" value="{{ individual['individual_id'] }}">Save changes</button>
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary update-tag"
+                                            value="{{ individual['individual_id'] }}">Save changes</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Prey Modal -->
-                        <div class="modal fade" id="preyModal{{ individual['individual_id'] }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="preyModal{{ individual['individual_id'] }}" tabindex="-1"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-sm">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h1 class="modal-title fs-5" id="exampleModalLabel">編輯獵物</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
                                         <div class="form-check mb-3">
                                             {% if individual["prey"] %}
-                                            <input class="form-check-input" type="checkbox" value="" id="prey{{ individual['individual_id'] }}" checked>
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="prey{{ individual['individual_id'] }}" checked>
                                             {% else %}
-                                            <input class="form-check-input" type="checkbox" value="" id="prey{{ individual['individual_id'] }}">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                id="prey{{ individual['individual_id'] }}">
                                             {% endif %}
                                             <label class="form-check-label" for="prey{{ individual['individual_id'] }}">
                                                 是否有獵物
                                             </label>
                                         </div>
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="prey_name{{ individual['individual_id'] }}" value="{% if individual['prey_name'] %}{{ individual['prey_name'] }}{% endif %}" placeholder="">
+                                            <input type="text" class="form-control"
+                                                id="prey_name{{ individual['individual_id'] }}"
+                                                value="{% if individual['prey_name'] %}{{ individual['prey_name'] }}{% endif %}"
+                                                placeholder="">
                                             <label for="prey_name{{ individual['individual_id'] }}">獵物</label>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary update-prey" value="{{ individual['individual_id'] }}">Save changes</button>
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary update-prey"
+                                            value="{{ individual['individual_id'] }}">Save changes</button>
                                     </div>
                                 </div>
                             </div>
@@ -326,17 +366,20 @@
                 </table>
 
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#newIndividualModal">
+                <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal"
+                    data-bs-target="#newIndividualModal">
                     新增個體
                 </button>
 
                 <!-- New Individual Modal -->
-                <div class="modal fade" id="newIndividualModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="newIndividualModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
                     <div class="modal-dialog modal-sm">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h1 class="modal-title fs-5" id="exampleModalLabel">新增個體</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <div class="form-floating mb-3">
@@ -382,7 +425,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id="updateEvent" type="button" class="btn btn-primary" value="{{ medium['medium_id'] }}">Save changes</button>
+                    <button id="updateEvent" type="button" class="btn btn-primary"
+                        value="{{ medium['medium_id'] }}">Save changes</button>
                 </div>
             </div>
         </div>
@@ -398,7 +442,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="featured_title" placeholder="" value="{% if medium['featured_title'] %}{{ medium['featured_title'] }}{% endif %}">
+                        <input type="text" class="form-control" id="featured_title" placeholder=""
+                            value="{% if medium['featured_title'] %}{{ medium['featured_title'] }}{% endif %}">
                         <label for="floatingInput">精選標題</label>
                     </div>
                     <div class="form-floating">
@@ -406,7 +451,8 @@
                             <option value="" selected>--</option>
                             {% for behavior in behaviors %}
                             {% if behavior['chinese_name'] == medium["featured_behavior"] %}
-                            <option value="{{ behavior['behavior_id'] }}" selected>{{ behavior['chinese_name'] }}</option>
+                            <option value="{{ behavior['behavior_id'] }}" selected>{{ behavior['chinese_name'] }}
+                            </option>
                             {% else %}
                             <option value="{{ behavior['behavior_id'] }}">{{ behavior['chinese_name'] }}</option>
                             {% endif %}
@@ -417,7 +463,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id="updateFeatured" type="button" class="btn btn-primary" value="{{ medium['medium_id'] }}">Save changes</button>
+                    <button id="updateFeatured" type="button" class="btn btn-primary"
+                        value="{{ medium['medium_id'] }}">Save changes</button>
                 </div>
             </div>
         </div>

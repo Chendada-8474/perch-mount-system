@@ -1,4 +1,5 @@
 import os
+import urllib.parse
 from PIL import Image
 from io import BytesIO
 from src.model import db, migrate
@@ -55,6 +56,8 @@ migrate.init_app(app, db)
 login_manager.init_app(app)
 cache = Cache(app)
 
+encryptor = file.Encryptor()
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -106,6 +109,7 @@ def index():
 
 
 @app.route("/perch_mount/<int:perch_mount_id>")
+@login_required
 def perch_mount(perch_mount_id: int):
     perch_mount_ = req.get(f"/api/perch_mount/{perch_mount_id}")
 
@@ -149,6 +153,7 @@ def perch_mount(perch_mount_id: int):
 
 
 @app.route("/perch_mount/<int:perch_mount_id>/section/<int:section_id>")
+@login_required
 def section(perch_mount_id: int, section_id: int):
     perch_mount_ = req.get(f"/api/perch_mount/{perch_mount_id}")
     section_ = req.get(f"api/section/{section_id}")
@@ -173,6 +178,7 @@ def section(perch_mount_id: int, section_id: int):
 @app.route(
     "/perch_mount/<int:perch_mount_id>/section/<int:section_id>/medium/<string:medium_id>"
 )
+@login_required
 def medium_page(perch_mount_id: int, section_id: int, medium_id: str):
     perch_mount_ = req.get(f"/api/perch_mount/{perch_mount_id}")
     section_ = req.get(f"api/section/{section_id}")
@@ -183,6 +189,7 @@ def medium_page(perch_mount_id: int, section_id: int, medium_id: str):
 
     medium = file.add_is_image(medium)
     medium = file.add_file_name(medium)
+    medium["epath"] = encryptor.encrypt(medium["path"])
 
     return render_template(
         "medium.html",
@@ -196,12 +203,17 @@ def medium_page(perch_mount_id: int, section_id: int, medium_id: str):
 
 
 @app.route("/empty_check/perch_mount/<int:perch_mount_id>")
+@login_required
 def empty_check_perch_mount(perch_mount_id: int):
     perch_mount_ = req.get(f"/api/perch_mount/{perch_mount_id}")
     media = req.get(
         f"/api/empty_check/perch_mount/{perch_mount_id}/limit/{config.EMPTY_CHECK_LIMIT}"
     )
     media = file.add_all_is_image(media)
+
+    for medium in media:
+        medium["epath"] = encryptor.encrypt(medium["path"])
+
     return render_template(
         "empty_check.html",
         media=media,
@@ -210,12 +222,17 @@ def empty_check_perch_mount(perch_mount_id: int):
 
 
 @app.route("/empty_check/perch_mount/<int:perch_mount_id>/section/<int:section_id>")
+@login_required
 def empty_check_section(perch_mount_id: int, section_id: int):
     perch_mount_ = req.get(f"/api/perch_mount/{perch_mount_id}")
     media = req.get(
         f"/api/empty_check/section/{section_id}/limit/{config.EMPTY_CHECK_LIMIT}"
     )
     media = file.add_all_is_image(media)
+
+    for medium in media:
+        medium["epath"] = encryptor.encrypt(medium["path"])
+
     return render_template(
         "empty_check.html",
         media=media,
@@ -224,6 +241,7 @@ def empty_check_section(perch_mount_id: int, section_id: int):
 
 
 @app.route("/review/perch_mount/<int:perch_mount_id>/section/<int:section_id>")
+@login_required
 def review_section(perch_mount_id: int, section_id: int):
     perch_mount_ = req.get(f"/api/perch_mount/{perch_mount_id}")
     behaviors = req.get("/api/behaviors")
@@ -231,6 +249,10 @@ def review_section(perch_mount_id: int, section_id: int):
     media = req.get(f"/api/review/section/{section_id}/limit/{config.REVIEW_LIMIT}")
     media = file.add_all_is_image(media)
     media = file.add_all_file_name(media)
+
+    for medium in media:
+        medium["epath"] = encryptor.encrypt(medium["path"])
+
     return render_template(
         "review.html",
         behaviors=behaviors,
@@ -241,6 +263,7 @@ def review_section(perch_mount_id: int, section_id: int):
 
 
 @app.route("/review/perch_mount/<int:perch_mount_id>")
+@login_required
 def review_perch_mount(perch_mount_id: int):
     perch_mount_ = req.get(f"/api/perch_mount/{perch_mount_id}")
     behaviors = req.get("/api/behaviors")
@@ -250,6 +273,10 @@ def review_perch_mount(perch_mount_id: int):
     )
     media = file.add_all_is_image(media)
     media = file.add_all_file_name(media)
+
+    for medium in media:
+        medium["epath"] = encryptor.encrypt(medium["path"])
+
     return render_template(
         "review.html",
         behaviors=behaviors,
@@ -260,6 +287,7 @@ def review_perch_mount(perch_mount_id: int):
 
 
 @app.route("/review/perch_mount/<int:perch_mount_id>/year_month/<string:year_month>")
+@login_required
 def review_month_perch_mount(perch_mount_id: int, year_month: str):
     perch_mount_ = req.get(f"/api/perch_mount/{perch_mount_id}")
     behaviors = req.get("/api/behaviors")
@@ -269,6 +297,10 @@ def review_month_perch_mount(perch_mount_id: int, year_month: str):
     )
     media = file.add_all_is_image(media)
     media = file.add_all_file_name(media)
+
+    for medium in media:
+        medium["epath"] = encryptor.encrypt(medium["path"])
+
     return render_template(
         "review.html",
         behaviors=behaviors,
@@ -281,12 +313,17 @@ def review_month_perch_mount(perch_mount_id: int, year_month: str):
 @app.route(
     "/empty_check/perch_mount/<int:perch_mount_id>/year_month/<string:year_month>"
 )
+@login_required
 def empty_check_month_perch_mount(perch_mount_id: int, year_month: str):
     perch_mount_ = req.get(f"/api/perch_mount/{perch_mount_id}")
     media = req.get(
         f"/api/empty_check/perch_mount/{perch_mount_id}/year_month/{year_month}/limit/{config.REVIEW_LIMIT}"
     )
     media = file.add_all_is_image(media)
+
+    for medium in media:
+        medium["epath"] = encryptor.encrypt(medium["path"])
+
     return render_template(
         "empty_check.html",
         media=media,
@@ -297,17 +334,23 @@ def empty_check_month_perch_mount(perch_mount_id: int, year_month: str):
 @app.route(
     "/identify_prey/perch_mount/<int:perch_mount_id>/section/section/<int:section_id>"
 )
+@login_required
 def identify_prey(perch_mount_id: int, section_id: int):
     perch_mount_ = req.get(f"api/perch_mount/{perch_mount_id}")
     media = req.get(f"/api/identify_prey/section/{section_id}")
     media = file.add_all_is_image(media)
     media = file.add_all_file_name(media)
+
+    for medium in media:
+        medium["epath"] = encryptor.encrypt(medium["path"])
+
     return render_template("identify_prey.html", media=media, perch_mount=perch_mount_)
 
 
 @app.route(
     "/featured/page/<int:page>/perch_mount/<string:perch_mount_name>/behavior/<int:behavior_id>/species/<string:chinese_common_name>"
 )
+@login_required
 def featured(
     page: int,
     perch_mount_name: str,
@@ -323,6 +366,9 @@ def featured(
 
     media["media"] = file.add_all_file_name(media["media"])
     media["media"] = file.add_all_is_image(media["media"])
+
+    for medium in media["media"]:
+        medium["epath"] = encryptor.encrypt(medium["path"])
 
     num_page = (media["count"] - 1) // config.NUM_MEDIA_IN_PAGE + 1
     first_page = max(page - 6, 0)
@@ -345,17 +391,21 @@ def featured(
 
 
 @app.route("/pending")
+@login_required
 def pending():
     pending_perch_mounts = req.get("/api/pending_perch_mounts")
     projects = req.get("/api/projects")
+    ai_tasks = os.listdir("D:/perch-mount-system/detected-tasks")
     return render_template(
         "pending.html",
         pending_perch_mounts=pending_perch_mounts,
         projects=projects,
+        ai_tasks=ai_tasks,
     )
 
 
 @app.route("/parameter")
+@login_required
 def parameter_maker():
     perch_mounts_ = req.get("/api/perch_mounts")
     mount_types_ = req.get("/api/mount_types")
@@ -374,6 +424,7 @@ def parameter_maker():
 
 
 @app.route("/members")
+@login_required
 def members():
     members_ = req.get("/api/members")
     positions = req.get("/api/positions")
@@ -390,6 +441,7 @@ def members():
 
 
 @app.route("/member/<int:member_id>")
+@login_required
 def member_page(member_id: int):
     member = req.get(f"/api/member/{member_id}")
     contributions = req.get(f"/api/member/{member_id}/contributions")
@@ -403,6 +455,7 @@ def member_page(member_id: int):
 
 
 @app.route("/behaviors")
+@login_required
 def behaviors():
     behaviors_ = req.get("/api/behaviors")
     behavior_form = form.NewBehavior()
@@ -415,6 +468,7 @@ def behaviors():
 
 
 @app.route("/cameras")
+@login_required
 def cameras():
     cameras_ = req.get("/api/cameras")
     camera_form = form.NewCamera()
@@ -427,6 +481,7 @@ def cameras():
 
 
 @app.route("/events")
+@login_required
 def events():
     events_ = req.get("/api/events")
     event_form = form.NewEvent()
@@ -440,6 +495,7 @@ def events():
 
 @app.route("/species")
 @cache.cached(timeout=3600)
+@login_required
 def species_page():
     species = req.get("/api/species")
 
@@ -448,6 +504,7 @@ def species_page():
 
 @app.route("/uploads/<path:path>")
 def send_media(path):
+    path = encryptor.decrypt(path)
     _, extension = os.path.splitext(path)
     if extension.lower()[1:] in config.IMAGE_EXTENSIONS:
         image_io = BytesIO()

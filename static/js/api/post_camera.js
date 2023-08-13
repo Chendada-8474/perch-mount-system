@@ -1,10 +1,9 @@
 var newMemberButton = document.getElementById("submit");
-var host = "http://127.0.0.1:5000"
 
 newMemberButton.addEventListener("click", (event) => {
     var model_name = document.getElementById("model_name").value;
 
-    fetch(host + "/api/camera", {
+    fetch("/api/camera", {
         method: "POST",
         body: JSON.stringify({
             "model_name": model_name,

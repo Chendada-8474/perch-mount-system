@@ -7,21 +7,25 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <div>
             <h1 class="mb-2">檢視物種</h1>
             <h4>
-                <a href="{{ url_for('perch_mount', perch_mount_id=perch_mount['perch_mount_id'])}}" class="text-decoration-none">
+                <a href="{{ url_for('perch_mount', perch_mount_id=perch_mount['perch_mount_id'])}}"
+                    class="text-decoration-none">
                     {{ perch_mount["perch_mount_name"] }}
                 </a>
             </h4>
         </div>
         <div>
-            <button class="btn btn-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+            <button class="btn btn-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
+                aria-controls="offcanvasExample">
                 <i data-feather="settings"></i>
             </button>
 
-            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample"
+                aria-labelledby="offcanvasExampleLabel">
                 <div class="offcanvas-header">
                     <h5 class="offcanvas-title" id="offcanvasExampleLabel">偏好設定</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -37,7 +41,9 @@
         </div>
 
         <!-- Edit selected media infomation trigger -->
-        <button id="start_edit" class="btn btn-primary m-3 position-fixed bottom-0 end-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="z-index: 999;">變更選取項目</button>
+        <button id="start_edit" class="btn btn-primary m-3 position-fixed bottom-0 end-0" type="button"
+            data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
+            style="z-index: 999;">變更選取項目</button>
 
         <!-- editable attribute -->
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
@@ -64,7 +70,7 @@
                         <select id="edit-event" class="form-select form-select-sm mb-2">
                             <option value="">--</option>
                             {% for event in events %}
-                            <option value="{{ event['event_id'] }}">{{ event[chinese_name] }}</option>
+                            <option value="{{ event['event_id'] }}">{{ event["chinese_name"] }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -111,10 +117,12 @@
                                 <div id="horizontal" class="position-absolute border-bottom border-light"></div>
                                 <div id="vertical" class="position-absolute border-end border-light"></div>
                                 <div id="bounding-box-painter" class="position-absolute" style="z-index: 9999;"></div>
-                                <img id="edit_modal_image" class="rounded" src="" alt="" style="width: 800px; height:600px;">
+                                <img id="edit_modal_image" class="rounded" src="" alt=""
+                                    style="width: 800px; height:600px;">
                             </div>
 
-                            <video aria-colcount="rounded" src="" class="rounded card-img-top" style="width:50rem;" controls></video>
+                            <video aria-colcount="rounded" src="" class="rounded card-img-top" style="width:50rem;"
+                                controls></video>
                         </div>
                         <div class="col">
                             <table class="table">
@@ -209,7 +217,8 @@
             {% for medium in media %}
 
             <!-- a medium -->
-            <div id="{{ medium['detected_medium_id'] }}" class="card shadow border-0 border border-primary m-3 d-flex p-3 pm-media" style="width: 20rem;">
+            <div id="{{ medium['detected_medium_id'] }}"
+                class="card shadow border-0 border border-primary m-3 d-flex p-3 pm-media" style="width: 20rem;">
                 <input type="datetime" value="{{ medium['medium_datetime'] }}" name="medium_datetime" hidden>
                 <input type="text" value="{{ medium['path'] }}" name="path" hidden>
                 <input type="text" value="{{ medium['file_name'] }}" name="file_name" hidden>
@@ -228,14 +237,17 @@
 
                     <div class="d-flex flex-wrap">
                         <!-- featrue modal trigger modal -->
-                        <button type="button" class="btn btn-white btn-sm" data-bs-toggle="modal" data-bs-target="#featureModal" name="feature_open" value="{{ medium['detected_medium_id'] }}">
+                        <button type="button" class="btn btn-white btn-sm" data-bs-toggle="modal"
+                            data-bs-target="#featureModal" name="feature_open"
+                            value="{{ medium['detected_medium_id'] }}">
                             <span class="text-secondary pm-heart hover-pointer" data-feather="heart"></span>
                         </button>
                         <input type="text" name="feature_title" hidden>
                         <input type="number" name="feature_behavior" hidden>
 
                         <!-- editer modal trigger modal -->
-                        <button type="button" class="btn btn-white btn-sm" data-bs-toggle="modal" data-bs-target="#editModal" name="edit_modal_trigger">
+                        <button type="button" class="btn btn-white btn-sm" data-bs-toggle="modal"
+                            data-bs-target="#editModal" name="edit_modal_trigger">
                             <span class="text-secondary hover-pointer" data-feather="edit"></span>
                         </button>
 
@@ -247,9 +259,11 @@
                 <!-- medium part -->
                 <div id="medium_picture_template">
                     {% if medium.is_image %}
-                    <img src="{{ url_for('send_media', path=medium['path']) }}" class="rounded pm-image card-img-top full-screen" alt="" loading="lazy">
+                    <img src="{{ url_for('send_media', path=medium['epath']) }}"
+                        class="rounded pm-image card-img-top full-screen" alt="" loading="lazy">
                     {% else %}
-                    <video src="{{ url_for('send_media', path=medium['path']) }}" class="rounded card-img-top" controls></video>
+                    <video src="{{ url_for('send_media', path=medium['epath']) }}" class="rounded card-img-top"
+                        controls></video>
                     {% endif %}
                 </div>
 
@@ -270,31 +284,40 @@
                         <tr id="{{ medium['detected_medium_id'] }}_indi_{{ loop.index }}" class="rounded individual">
                             <td class="ai-species align-middle fw-bold fs-6">
                                 {{ individual["common_name_by_ai"] }}
-                                <input type="text" name="ai_species" value="{{ individual['common_name_by_ai'] }}" hidden>
-                                <input type="number" name="taxon_order_by_ai" value="{{ individual['taxon_order_by_ai'] }}" hidden>
+                                <input type="text" name="ai_species" value="{{ individual['common_name_by_ai'] }}"
+                                    hidden>
+                                <input type="number" name="taxon_order_by_ai"
+                                    value="{{ individual['taxon_order_by_ai'] }}" hidden>
                             </td>
                             <td class="align-middle">
-                                <input list="species_list" type="text" name="common_ch_name" class="form-control form-control-sm pm-review-species" size="10">
+                                <input list="species_list" type="text" name="common_ch_name"
+                                    class="form-control form-control-sm pm-review-species" size="10">
                                 <input type="number" name="taxon_order_by_human" hidden>
                             </td>
                             <td>
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" name="prey">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
+                                    name="prey">
                             </td>
                             <td>
-                                <button type="button" class="btn btn-white btn-sm" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button type="button" class="btn btn-white btn-sm" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
                                     <span class="text-secondary hover-pointer" data-feather="more-vertical"></span>
                                 </button>
                                 <ul class="dropdown-menu p-2">
                                     <li>
-                                        <input class="form-check-input" type="checkbox" id="flexCheckDefault" name="tagged">
+                                        <input class="form-check-input" type="checkbox" id="flexCheckDefault"
+                                            name="tagged">
                                         <label class="form-check-label" for="flexCheckDefault">標記</label>
                                     </li>
                                     <li>
                                         <label for="ring_number_input">環號</label>
-                                        <input id="ring_number_input" class="form-control form-control-sm" type="text" value="" name="ring_number">
+                                        <input id="ring_number_input" class="form-control form-control-sm" type="text"
+                                            value="" name="ring_number">
                                     </li>
                                 </ul>
-                                <button type="button" class="btn btn-outline-danger btn-sm border-0" value="{{ medium['detected_medium_id'] }}_indi_{{ loop.index }}" name="main_medium_indivudal_id">
+                                <button type="button" class="btn btn-outline-danger btn-sm border-0"
+                                    value="{{ medium['detected_medium_id'] }}_indi_{{ loop.index }}"
+                                    name="main_medium_indivudal_id">
                                     <i data-feather="trash-2"></i>
                                 </button>
                             </td>
@@ -328,7 +351,8 @@
         </div>
 
         <!-- Button trigger modal -->
-        <button id="open-confirm-modal" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal">
+        <button id="open-confirm-modal" type="button" class="btn btn-success" data-bs-toggle="modal"
+            data-bs-target="#confirmModal">
             <span data-feather="send" class="align-text-bottom"></span>
             確認變更
         </button>
@@ -355,7 +379,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button name="review_data" id="confirm-send-button" type="click" class="btn btn-primary" value="">送出</button>
+                        <button name="review_data" id="confirm-send-button" type="click" class="btn btn-primary"
+                            value="">送出</button>
                     </div>
                 </div>
             </div>

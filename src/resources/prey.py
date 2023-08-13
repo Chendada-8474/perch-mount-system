@@ -76,6 +76,7 @@ class IdentifySectionPreys(Resource):
             results = (
                 session.query(
                     model.Media.medium_id,
+                    model.Media.section,
                     model.Media.path,
                     model.Individuals.individual_id,
                     model.Individuals.prey_name,
@@ -107,6 +108,7 @@ class IdentifySectionPreys(Resource):
                         {
                             "medium_id": result.medium_id,
                             "path": result.path,
+                            "section": result.section,
                             "individuals": [],
                         }
                     )

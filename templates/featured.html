@@ -6,7 +6,8 @@
 <link href="{{ url_for('static', filename='css/full_screen.css')}}" rel="stylesheet">
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 
         <h1 class="h1">精選</h1>
 
@@ -62,28 +63,34 @@
             <div id="empty_check_media" class="d-flex flex-wrap">
 
                 {% for medium in media %}
-                <div id="{{ medium['medium_id'] }}" class="card shadow border-0 border border-primary m-3 d-flex p-3" style="width: 20rem;">
+                <div id="{{ medium['medium_id'] }}" class="card shadow border-0 border border-primary m-3 d-flex p-3"
+                    style="width: 20rem;">
                     <div class="d-flex justify-content-between">
                         <p>
-                            <a href="{{ url_for('medium_page', perch_mount_id=medium['perch_mount_id'], section_id=medium['section_id'], medium_id=medium['medium_id']) }}" class="text-decoration-none">
+                            <a href="{{ url_for('medium_page', perch_mount_id=medium['perch_mount_id'], section_id=medium['section_id'], medium_id=medium['medium_id']) }}"
+                                class="text-decoration-none">
                                 {{ medium['file_name'] }}
                             </a>
                         </p>
                         <div>
-                            <button class="dropdown-item download-medium" type="button" value="{{ medium['medium_id'] }}">
+                            <button class="dropdown-item download-medium" type="button"
+                                value="{{ medium['medium_id'] }}">
                                 <i data-feather="download"></i>
                             </button>
                         </div>
                     </div>
                     <div class="mb-2">
                         {% if not medium['path'] %}
-                        <img src="{{ url_for('static', filename='img/not_found.png') }}" class="card-img-top full-screen" alt="{{ medium['path']}} " loading="lazy">
+                        <img src="{{ url_for('static', filename='img/not_found.png') }}"
+                            class="card-img-top full-screen" alt="{{ medium['path']}} " loading="lazy">
                         {% else %}
                         <div>
                             {% if medium["is_image"] %}
-                            <img src="{{ url_for('send_media', path=medium['path']) }}" class="card-img-top full-screen" alt="{{ medium['path']}} " loading="lazy">
+                            <img src="{{ url_for('send_media', path=medium['epath']) }}"
+                                class="card-img-top full-screen" alt="{{ medium['path']}} " loading="lazy">
                             {% else %}
-                            <video src="{{ url_for('send_media', path=medium['path']) }}" class="card-img-top" controls></video>
+                            <video src="{{ url_for('send_media', path=medium['epath']) }}" class="card-img-top"
+                                controls></video>
                             {% endif %}
                         </div>
                         {% endif %}
@@ -111,18 +118,24 @@
         </div>
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
-                <li class="page-item"><a class="page-link {% if page == 0 %}disabled{% endif %}" href="{{ url_for('featured', page=[0, page - 1] | max, perch_mount_name=perch_mount_name, behavior_id=behavior_id, chinese_common_name=chinese_common_name) }}">Previous</a></li>
+                <li class="page-item"><a class="page-link {% if page == 0 %}disabled{% endif %}"
+                        href="{{ url_for('featured', page=[0, page - 1] | max, perch_mount_name=perch_mount_name, behavior_id=behavior_id, chinese_common_name=chinese_common_name) }}">Previous</a>
+                </li>
                 {% if page > 6 %}
                 <li><a class="page-link disabled" href="">......</a></li>
                 {% endif %}
                 {% for p in range(first_page, end_page) %}
                 <li class="page-item {% if p == page %}disabled{% endif %}">
-                    <a class="page-link" href="{{ url_for('featured', page=p, perch_mount_name=perch_mount_name, behavior_id=behavior_id, chinese_common_name=chinese_common_name) }}">{{ p + 1 }}</a>
+                    <a class="page-link"
+                        href="{{ url_for('featured', page=p, perch_mount_name=perch_mount_name, behavior_id=behavior_id, chinese_common_name=chinese_common_name) }}">{{
+                        p + 1 }}</a>
                 </li>
                 {% endfor %}
                 {% if num_page - 6 >= page %} <li><a class="page-link disabled" href="">......</a></li>
                 {% endif %}
-                <li class="page-item"><a class="page-link {% if page == num_page - 1 %}disabled{% endif %}" href="{{ url_for('featured', page=[num_page - 1, page + 1] | min, perch_mount_name=perch_mount_name, behavior_id=behavior_id, chinese_common_name=chinese_common_name) }}">Next</a></li>
+                <li class="page-item"><a class="page-link {% if page == num_page - 1 %}disabled{% endif %}"
+                        href="{{ url_for('featured', page=[num_page - 1, page + 1] | min, perch_mount_name=perch_mount_name, behavior_id=behavior_id, chinese_common_name=chinese_common_name) }}">Next</a>
+                </li>
             </ul>
         </nav>
     </div>

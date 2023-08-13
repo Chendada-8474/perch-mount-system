@@ -914,7 +914,7 @@ document.addEventListener("DOMContentLoaded", () => {
         var IdNamePair = datadispatcher.getIdNamePair();
 
 
-        fetch("http://127.0.0.1:5000/api/taxon_orders", {
+        fetch("/api/taxon_orders", {
             method: "POST",
             body: JSON.stringify({ "chinese_common_names": IdNamePair.commonName }),
             headers: new Headers({

@@ -1,8 +1,6 @@
 var button = document.getElementById("submitClaimBy");
 var claimPerchMountButtons = document.getElementsByClassName("claim-perch-mount");
 var unclaimPerchMountButtons = document.getElementsByClassName("unclaim-perch-mount");
-var host = "http://127.0.0.1:5000"
-
 
 if (button) {
     button.addEventListener("click", (event) => {
@@ -12,7 +10,7 @@ if (button) {
         if (!ans) { return; }
 
         if (memberId) {
-            fetch(host + `/api/claim_perch_mount/${event.target.value}/claim_by/${memberId}`, {
+            fetch(`/api/claim_perch_mount/${event.target.value}/claim_by/${memberId}`, {
                 method: "PUT",
             })
                 .then(response => response)
@@ -22,7 +20,7 @@ if (button) {
                 .catch(err => alert(err));
             return;
         }
-        fetch(host + `/api/claim_perch_mount/${event.target.value}`, {
+        fetch(`/api/claim_perch_mount/${event.target.value}`, {
             method: "DELETE",
         })
             .then(response => response)
@@ -41,7 +39,7 @@ if (claimPerchMountButtons) {
             var ans = confirm("確定要認領嗎？");
             if (!ans) { return; }
 
-            fetch(host + `/api/claim_perch_mount/${event.target.value}/claim_by/${memberId}`, {
+            fetch(`/api/claim_perch_mount/${event.target.value}/claim_by/${memberId}`, {
                 method: "PUT",
             })
                 .then(response => response)
@@ -62,7 +60,7 @@ if (unclaimPerchMountButtons) {
             var ans = confirm("確定要取消認領嗎？");
             if (!ans) { return; }
 
-            fetch(host + `/api/claim_perch_mount/${event.target.value}`, {
+            fetch(`/api/claim_perch_mount/${event.target.value}`, {
                 method: "DELETE",
             })
                 .then(response => response)

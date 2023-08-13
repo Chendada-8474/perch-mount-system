@@ -1,4 +1,4 @@
-MEDIA_ROOT = "D:/coding/demo_nas"
+MEDIA_ROOT = "Z:/棲架資料庫"
 HOST = "http://127.0.0.1:5000"
 EMPTY_CHECK_LIMIT = 250
 REVIEW_LIMIT = 100

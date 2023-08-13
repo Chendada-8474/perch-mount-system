@@ -1,5 +1,4 @@
 var newMemberButton = document.getElementById("submit");
-var host = "http://127.0.0.1:5000"
 
 newMemberButton.addEventListener("click", (event) => {
     var user_name = document.getElementById("user_name").value;
@@ -8,7 +7,7 @@ newMemberButton.addEventListener("click", (event) => {
     var last_name = document.getElementById("last_name").value;
     var position = document.getElementById("position").value;
 
-    fetch(host + "/api/member", {
+    fetch("/api/member", {
         method: "POST",
         body: JSON.stringify({
             "user_name": user_name,

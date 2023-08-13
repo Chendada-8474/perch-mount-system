@@ -1,6 +1,6 @@
 var preyInputs = document.getElementsByClassName("prey");
 var indentifer = document.getElementById("identiferId").value;
-var host = "http://127.0.0.1:5000"
+
 
 if (preyInputs) {
     for (var preyInput of preyInputs) {
@@ -9,7 +9,7 @@ if (preyInputs) {
             var individualId = event.target.parentNode.querySelector("input[name='individual_id']").value;
             var preyName = (event.target.value) ? event.target.value : null;
 
-            fetch(host + `/api/prey/${individualId}`, {
+            fetch(`/api/prey/${individualId}`, {
                 method: "PUT",
                 body: JSON.stringify({
                     "prey_name": preyName,

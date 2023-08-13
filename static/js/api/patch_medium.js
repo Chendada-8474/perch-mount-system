@@ -4,7 +4,6 @@ var behavior = document.getElementById("featured_behavior");
 var title = document.getElementById("featured_title");
 var eventSelect = document.getElementById("event");
 var currentUser = document.getElementById("current_user").value;
-var host = "http://127.0.0.1:5000"
 
 updateFeaturedButton.addEventListener("click", (event) => {
 
@@ -12,7 +11,7 @@ updateFeaturedButton.addEventListener("click", (event) => {
     if (!ans) { return; }
     var api_url = `/api/medium/${event.target.value}`
 
-    fetch(host + api_url, {
+    fetch(api_url, {
         method: "PATCH",
         body: JSON.stringify(
             {
@@ -37,7 +36,7 @@ updateEventButton.addEventListener("click", (event) => {
     if (!ans) { return; }
     var api_url = `/api/medium/${event.target.value}`
 
-    fetch(host + api_url, {
+    fetch(api_url, {
         method: "PATCH",
         body: JSON.stringify(
             {

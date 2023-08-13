@@ -1,10 +1,9 @@
 var newMemberButton = document.getElementById("submit");
-var host = "http://127.0.0.1:5000"
 
 newMemberButton.addEventListener("click", (event) => {
     var chinese_name = document.getElementById("chinese_name").value;
 
-    fetch(host + "/api/behavior", {
+    fetch("/api/behavior", {
         method: "POST",
         body: JSON.stringify({
             "chinese_name": chinese_name,

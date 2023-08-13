@@ -1,4 +1,4 @@
-var host = "http://127.0.0.1:5000"
+
 
 
 window.addEventListener('load', function () {
@@ -7,7 +7,7 @@ window.addEventListener('load', function () {
     postPerchMountForm.addEventListener("submit", (event) => {
         var api_url = "/api/perch_mount"
         data = formToJson(postPerchMountForm);
-        fetch(host + api_url, {
+        fetch(api_url, {
             method: "POST",
             body: JSON.stringify(data),
             headers: new Headers({

@@ -2,7 +2,6 @@ var emptyMedia = document.getElementsByClassName("empty-medium");
 var sendButton = document.getElementById("sendButton");
 var checkerId = document.getElementById("checkerId").value;
 var perchMountId = document.getElementById("perchMountId").value;
-var host = "http://127.0.0.1:5000"
 
 for (let medium of emptyMedia) {
     medium.classList.add("border");
@@ -56,7 +55,7 @@ sendButton.addEventListener("click", (event) => {
     var ans = confirm(`確定要送出資料嗎？\n你選擇了：\n${mediaWithAnimal.length} 個有動物的檔案，\n${trueEmptyMedia.length} 個空拍檔案。`);
     var api_url = "/api/empty_check"
     if (ans) {
-        fetch(host + api_url, {
+        fetch(api_url, {
             method: "DELETE",
             body: JSON.stringify({ "media": trueEmptyMedia }),
             headers: new Headers({
@@ -76,7 +75,7 @@ sendButton.addEventListener("click", (event) => {
                 window.location.replace(host + `/perch_mount/${perchMountId}`);
             });
 
-        fetch(host + api_url, {
+        fetch(api_url, {
             method: "PUT",
             body: JSON.stringify({ "media": mediaWithAnimal }),
             headers: new Headers({
@@ -96,7 +95,7 @@ sendButton.addEventListener("click", (event) => {
                 window.location.replace(host + `/perch_mount/${perchMountId}`);
             });
 
-        fetch(host + "/api/contribution", {
+        fetch("/api/contribution", {
             method: "POST",
             body: JSON.stringify({
                 "contributor": checkerId,

@@ -13,19 +13,18 @@ var reviewerSpan = document.getElementById("reviewerInfo");
 var emptyCheckerSpan = document.getElementById("emptyCheckerInfo");
 var featuredBySpan = document.getElementById("featuredByInfo");
 
-var host = "http://127.0.0.1:5000"
 
 for (var openButton of openEditorButtons) {
     openButton.addEventListener("click", (event) => {
 
-        fetch(host + `/api/medium/${event.currentTarget.value}`, { method: "GET" })
+        fetch(`/api/medium/${event.currentTarget.value}`, { method: "GET" })
             .then(response => response.json())
             .then(response => {
                 initMedium(response);
             })
             .catch(err => alert(err));
 
-        fetch(host + `/api/medium/${event.currentTarget.value}/individuals`, { method: "GET" })
+        fetch(`/api/medium/${event.currentTarget.value}/individuals`, { method: "GET" })
             .then(response => response.json())
             .then(response => {
                 initIndividuals(response);

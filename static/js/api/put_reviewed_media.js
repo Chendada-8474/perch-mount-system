@@ -2,7 +2,6 @@ var sendButton = document.getElementById("confirm-send-button")
 var media = document.getElementById("contents").children
 var perchMountId = document.getElementById("perchMountId").value;
 var reviewerId = document.getElementById("current_user").value;
-var host = "http://127.0.0.1:5000"
 
 sendButton.addEventListener("click", (event) => {
     var reviewedMedia = [];
@@ -69,7 +68,7 @@ sendButton.addEventListener("click", (event) => {
 
 
     var api_url = "/api/review"
-    fetch(host + api_url, {
+    fetch(api_url, {
         method: "DELETE",
         body: JSON.stringify({ "media": emptyMedia }),
         headers: new Headers({
@@ -81,16 +80,16 @@ sendButton.addEventListener("click", (event) => {
 
             if (response.message) {
                 alert("你重複檢視了一樣的資料，網頁將把你導回首頁。")
-                window.location.replace(host + `/perch_mount/${perchMountId}`);
+                window.location.replace(`/perch_mount/${perchMountId}`);
             }
         })
         .catch(err => {
             alert(err);
-            window.location.replace(host + `/perch_mount/${perchMountId}`);
+            window.location.replace(`/perch_mount/${perchMountId}`);
         });
 
 
-    fetch(host + api_url, {
+    fetch(api_url, {
         method: "PUT",
         body: JSON.stringify({ "media": reviewedMedia }),
         headers: new Headers({
@@ -102,15 +101,15 @@ sendButton.addEventListener("click", (event) => {
 
             if (response.message) {
                 alert("你重複檢視了一樣的資料，網頁將把你導回棲架頁面。")
-                window.location.replace(host + `/perch_mount/${perchMountId}`);
+                window.location.replace(`/perch_mount/${perchMountId}`);
             }
         })
         .catch(err => {
             alert(err)
-            window.location.replace(host + `/perch_mount/${perchMountId}`);
+            window.location.replace(`/perch_mount/${perchMountId}`);
         });
 
-    fetch(host + "/api/contribution", {
+    fetch("/api/contribution", {
         method: "POST",
         body: JSON.stringify({
             "contributor": reviewerId,
@@ -125,8 +124,8 @@ sendButton.addEventListener("click", (event) => {
         .then(response => { })
         .catch(err => {
             alert(err);
-            window.location.replace(host + `/perch_mount/${perchMountId}`);
+            window.location.replace(`/perch_mount/${perchMountId}`);
         });
     alert("資料已成功送出！");
-    window.location.replace(host + `/perch_mount/${perchMountId}`);
+    window.location.replace(`/perch_mount/${perchMountId}`);
 })
