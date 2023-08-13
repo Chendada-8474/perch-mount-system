@@ -81,7 +81,7 @@ sendButton.addEventListener("click", (event) => {
 
             if (response.message) {
                 alert("你重複檢視了一樣的資料，網頁將把你導回首頁。")
-                window.location.replace(host);
+                window.location.replace(host + `/perch_mount/${perchMountId}`);
             }
         })
         .catch(err => {

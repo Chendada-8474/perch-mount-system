@@ -56,7 +56,10 @@ class PerchMountSectionPreyCount(Resource):
                 .filter(model.Sections.perch_mount == perch_mount_id)
                 .filter(or_(model.Individuals.prey, model.Individuals.prey_name))
                 .group_by(model.Media.section)
-                .order_by(desc(model.Sections.check_date))
+                .order_by(
+                    desc(model.Sections.check_date),
+                    func.date_format(model.Sections.check_date, "%Y-%m-%d"),
+                )
                 .join(
                     indentidied,
                     indentidied.c.section == model.Media.section,
