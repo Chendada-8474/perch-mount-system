@@ -348,7 +348,22 @@ class PerchMountMonthPendingEmptyCount(Resource):
 class PerchMountMonthPendingDetectedCount(Resource):
     def get(self, perch_mount_id):
         with Session(slave_engine) as session:
-            results = (
+            reviewed = (
+                session.query(
+                    func.count(model.Media.medium_id).label("count"),
+                    func.date_format(model.Media.medium_datetime, "%Y-%m").label(
+                        "year_month"
+                    ),
+                )
+                .join(
+                    model.Sections,
+                    model.Sections.section_id == model.Media.section,
+                )
+                .group_by(func.date_format(model.Media.medium_datetime, "%Y-%m"))
+                .filter(model.Sections.perch_mount == perch_mount_id)
+                .subquery()
+            )
+            detected = (
                 session.query(
                     func.count(model.DetectedMedia.detected_medium_id).label("count"),
                     func.date_format(
@@ -360,17 +375,31 @@ class PerchMountMonthPendingDetectedCount(Resource):
                     model.Sections.section_id == model.DetectedMedia.section,
                 )
                 .group_by(
-                    func.date_format(model.DetectedMedia.medium_datetime, "%Y-%m"),
-                    model.Sections.perch_mount,
+                    func.date_format(model.DetectedMedia.medium_datetime, "%Y-%m")
                 )
                 .filter(
-                    model.DetectedMedia.reviewed == 0,
-                    model.Sections.perch_mount == perch_mount_id,
+                    and_(
+                        model.DetectedMedia.reviewed == 0,
+                        model.Sections.perch_mount == perch_mount_id,
+                    )
                 )
                 .order_by(
                     desc(func.date_format(model.DetectedMedia.medium_datetime, "%Y-%m"))
                 )
-                .all()
+                .subquery()
             )
 
+            results = (
+                session.query(
+                    detected.c.year_month,
+                    detected.c.count,
+                    reviewed.c.count.label("reviewed_count"),
+                )
+                .join(
+                    reviewed,
+                    reviewed.c.year_month == detected.c.year_month,
+                    isouter=True,
+                )
+                .all()
+            )
         return [result._asdict() for result in results]

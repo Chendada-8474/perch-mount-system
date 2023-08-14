@@ -290,6 +290,7 @@
                             <tr>
                                 <th scope="col">Year Month</th>
                                 <th scope="col">待物種檢視</th>
+                                <th scope="col">已完成</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -306,6 +307,13 @@
                                             review <span class="badge text-bg-secondary ms-1">{{ count["count"] }}</span>
                                         </button>
                                     </a>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if count["reviewed_count"] %}
+                                    {{ count["reviewed_count"] }}
+                                    {% else %}
+                                    0
                                     {% endif %}
                                 </td>
                             </tr>

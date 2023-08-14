@@ -539,11 +539,11 @@ api.add_resource(
 )
 api.add_resource(
     res_perch_mount.PerchMountMonthPendingEmptyCount,
-    api_urls.PERCH_MOUNT_MOUNT_PENDING_EMPTY_COUNT,
+    api_urls.PERCH_MOUNT_MONTH_PENDING_EMPTY_COUNT,
 )
 api.add_resource(
     res_perch_mount.PerchMountMonthPendingDetectedCount,
-    api_urls.PERCH_MOUNT_MOUNT_PENDING_DETECTED_COUNT,
+    api_urls.PERCH_MOUNT_MONTH_PENDING_DETECTED_COUNT,
 )
 api.add_resource(res_prey.PerchMountSectionPreyCount, api_urls.PERCH_MOUNT_PREY_COUNT)
 

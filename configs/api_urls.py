@@ -4,10 +4,10 @@ PERCH_MOUNT1 = "/api/perch_mount/<int:perch_mount_id>"
 PERCH_MOUNT2 = "/api/perch_mount"
 PERCH_MOUNT_MEDIA_COUNT = "/api/perch_mount/<int:perch_mount_id>/media_count"
 PENDING_PERCH_MOUNTS = "/api/pending_perch_mounts"
-PERCH_MOUNT_MOUNT_PENDING_EMPTY_COUNT = (
+PERCH_MOUNT_MONTH_PENDING_EMPTY_COUNT = (
     "/api/perch_mount/<int:perch_mount_id>/month_pending_empty_count"
 )
-PERCH_MOUNT_MOUNT_PENDING_DETECTED_COUNT = (
+PERCH_MOUNT_MONTH_PENDING_DETECTED_COUNT = (
     "/api/perch_mount/<int:perch_mount_id>/month_pending_detected_count"
 )
 PERCH_MOUNT_CLAIM_BY1 = (
