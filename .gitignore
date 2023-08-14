@@ -137,4 +137,4 @@ mysql.py
 demo_media
 mod_wsgi-4.9.2-cp39-cp39-win_amd64.whl
 app.wsgi
-configs
+configs/
