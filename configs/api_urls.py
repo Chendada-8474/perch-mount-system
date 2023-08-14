@@ -38,7 +38,7 @@ REVIEW_SECTION = "/api/review/section/<int:section_id>/limit/<int:limit>"
 
 SCHEDULE_DETECT_MEDIA = "/api/schedule_detect"
 
-IDENTIFY_PREY_SECTION = "/api/identify_prey/section/<int:section_id>"
+IDENTIFY_PREY_SECTION = "/api/identify_prey/<string:predator>/section/<int:section_id>"
 
 MEDIUM = "/api/medium/<string:medium_id>"
 SECTION_MEDIA = "/api/section/<int:section_id>/media"

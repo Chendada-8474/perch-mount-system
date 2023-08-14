@@ -332,12 +332,13 @@ def empty_check_month_perch_mount(perch_mount_id: int, year_month: str):
 
 
 @app.route(
-    "/identify_prey/perch_mount/<int:perch_mount_id>/section/section/<int:section_id>"
+    "/identify_prey/<string:predator>/perch_mount/<int:perch_mount_id>/section/section/<int:section_id>"
 )
 @login_required
-def identify_prey(perch_mount_id: int, section_id: int):
+def identify_prey(perch_mount_id: int, section_id: int, predator: str):
     perch_mount_ = req.get(f"api/perch_mount/{perch_mount_id}")
-    media = req.get(f"/api/identify_prey/section/{section_id}")
+
+    media = req.get(f"/api/identify_prey/{predator}/section/{section_id}")
     media = file.add_all_is_image(media)
     media = file.add_all_file_name(media)
 

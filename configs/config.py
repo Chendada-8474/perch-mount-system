@@ -7,6 +7,8 @@ VIDEO_EXTENSIONS = {"mov", "avi", "mp4", "mpg", "mpeg", "m4v", "wmv", "mkv"}
 NUM_MEDIA_IN_PAGE = 50
 TASKS_DIR_PATH = "D:/perch-mount-system/tasks"
 
+RAPTOR_ORDERS = {"Strigiformes", "Accipitriformes"}
+
 cache = {
     "DEBUG": True,  # some Flask specific configs
     "CACHE_TYPE": "SimpleCache",  # Flask-Caching related configs

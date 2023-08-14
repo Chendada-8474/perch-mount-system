@@ -369,7 +369,9 @@
                     <tr>
                         <th scope="col">Section ID</th>
                         <th scope="col">回收日期</th>
-                        <th scope="col">獵物數量</th>
+                        <th scope="col">尚未辨認猛禽</th>
+                        <th scope="col">尚未辨認其他鳥</th>
+                        <th scope="col">已辨認 / 總獵物</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -379,18 +381,44 @@
                         <td>{{ count["check_date"] }}</td>
                         <td>
                             {% if count["prey_count"] %}
-                            <a href="{{ url_for('identify_prey', perch_mount_id=perch_mount['perch_mount_id'], section_id=count['section']) }}">
+                            <a href="{{ url_for('identify_prey', perch_mount_id=perch_mount['perch_mount_id'], section_id=count['section'], predator='raptor') }}">
                                 <button type="button" class="btn btn-outline-secondary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
-                                    去辨認獵物 <span class="badge text-bg-secondary ms-1">
-                                        {% if count["identified_count"] %}
-                                        {{ count["identified_count"] }}
+                                    去認猛禽的獵物 <span class="badge text-bg-secondary ms-1">
+                                        {% if count["raptor_count"] %}
+                                        {{ count["raptor_count"] }}
                                         {% else %}
                                         0
                                         {% endif %}
-                                        /
-                                        {{ count["prey_count"] }}</span>
+                                    </span>
                                 </button>
                             </a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if count["prey_count"] %}
+                            <a href="{{ url_for('identify_prey', perch_mount_id=perch_mount['perch_mount_id'], section_id=count['section'], predator='other') }}">
+                                <button type="button" class="btn btn-outline-secondary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                                    去認其他鳥的獵物 <span class="badge text-bg-secondary ms-1">
+                                        {% if count["other_count"] %}
+                                        {{ count["other_count"] }}
+                                        {% else %}
+                                        0
+                                        {% endif %}
+                                    </span>
+                                </button>
+                            </a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if count["prey_count"] %}
+                            {% if count["identified_count"] %}
+                            {{ count["identified_count"] }}
+                            {% else %}
+                            0
+                            {% endif %}
+                            /
+                            {{ count["prey_count"] }}
+
                             {% endif %}
                         </td>
                     </tr>

@@ -2,16 +2,81 @@ import sys
 from os.path import dirname
 from flask_restful import Resource, reqparse
 from sqlalchemy.orm import Session
-from sqlalchemy import func, or_, desc
+from sqlalchemy import func, or_, desc, and_
 
 sys.path.append(dirname(dirname(dirname(__file__))))
 from src.resources.db_engine import master_engine, slave_engine
 import src.model as model
+import configs.config as config
 
 
 class PerchMountSectionPreyCount(Resource):
     def get(self, perch_mount_id: int):
         with Session(slave_engine) as session:
+            raptor = (
+                session.query(
+                    func.count(model.Individuals.individual_id).label("count"),
+                    model.Media.section,
+                )
+                .join(
+                    model.Media,
+                    model.Media.medium_id == model.Individuals.medium,
+                    isouter=True,
+                )
+                .join(
+                    model.Species,
+                    model.Species.taxon_order == model.Individuals.taxon_order_by_human,
+                    isouter=True,
+                )
+                .join(
+                    model.Sections,
+                    model.Sections.section_id == model.Media.section,
+                    isouter=True,
+                )
+                .filter(
+                    and_(
+                        model.Individuals.prey,
+                        model.Individuals.prey_name == None,
+                        model.Species.order.in_(config.RAPTOR_ORDERS),
+                        model.Sections.perch_mount == perch_mount_id,
+                    )
+                )
+                .group_by(model.Media.section)
+                .subquery()
+            )
+
+            other = (
+                session.query(
+                    func.count(model.Individuals.individual_id).label("count"),
+                    model.Media.section,
+                )
+                .join(
+                    model.Media,
+                    model.Media.medium_id == model.Individuals.medium,
+                    isouter=True,
+                )
+                .join(
+                    model.Species,
+                    model.Species.taxon_order == model.Individuals.taxon_order_by_human,
+                    isouter=True,
+                )
+                .join(
+                    model.Sections,
+                    model.Sections.section_id == model.Media.section,
+                    isouter=True,
+                )
+                .filter(
+                    and_(
+                        model.Individuals.prey,
+                        model.Individuals.prey_name == None,
+                        ~model.Species.order.in_(config.RAPTOR_ORDERS),
+                        model.Sections.perch_mount == perch_mount_id,
+                    )
+                )
+                .group_by(model.Media.section)
+                .subquery()
+            )
+
             indentidied = (
                 session.query(
                     func.count(model.Individuals.individual_id).label("count"),
@@ -38,6 +103,8 @@ class PerchMountSectionPreyCount(Resource):
                 session.query(
                     func.count(model.Individuals.individual_id).label("prey_count"),
                     indentidied.c.count.label("identified_count"),
+                    raptor.c.count.label("raptor_count"),
+                    other.c.count.label("other_count"),
                     model.Media.section,
                     func.date_format(model.Sections.check_date, "%Y-%m-%d").label(
                         "check_date"
@@ -65,13 +132,22 @@ class PerchMountSectionPreyCount(Resource):
                     indentidied.c.section == model.Media.section,
                     isouter=True,
                 )
+                .join(raptor, raptor.c.section == model.Media.section, isouter=True)
+                .join(other, other.c.section == model.Media.section, isouter=True)
                 .all()
             )
+
         return [result._asdict() for result in results]
 
 
 class IdentifySectionPreys(Resource):
-    def get(self, section_id: int):
+    def get(self, section_id: int, predator: str):
+        condition = (
+            model.Species.order.in_(config.RAPTOR_ORDERS)
+            if predator == "raptor"
+            else ~model.Species.order.in_(config.RAPTOR_ORDERS)
+        )
+
         with Session(slave_engine) as session:
             results = (
                 session.query(
@@ -81,6 +157,7 @@ class IdentifySectionPreys(Resource):
                     model.Individuals.individual_id,
                     model.Individuals.prey_name,
                     model.Species.chinese_common_name,
+                    model.Species.order,
                 )
                 .join(
                     model.Individuals,
@@ -93,6 +170,7 @@ class IdentifySectionPreys(Resource):
                     isouter=True,
                 )
                 .filter(model.Media.section == section_id)
+                .filter(condition)
                 .filter(or_(model.Individuals.prey, model.Individuals.prey_name))
                 .order_by(model.Media.medium_datetime)
                 .all()
