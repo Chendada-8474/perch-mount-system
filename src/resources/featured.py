@@ -18,6 +18,7 @@ class FeaturedMedia(Resource):
         perch_mount_name: int,
         behavior_id: int,
         chinese_common_name: str,
+        member_id: int,
     ):
         conditions = [model.Media.featured_behavior.is_not(None)]
 
@@ -29,6 +30,9 @@ class FeaturedMedia(Resource):
 
         if behavior_id:
             conditions.append(model.Media.featured_behavior == behavior_id)
+
+        if member_id:
+            conditions.append(model.Media.featured_by == member_id)
 
         columns = [
             model.Media.medium_id,

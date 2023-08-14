@@ -75,4 +75,4 @@ PERCH_MOUNTS_CLAIM_BY = "/api/member/<int:member_id>/perch_mounts"
 MEMBER_CONTRIBUTIONS = "/api/member/<int:member_id>/contributions"
 
 CONTRIBUTION = "/api/contribution"
-FEATURED_MEDIA = "/api/featured/page/<int:page>/perch_mount/<string:perch_mount_name>/behavior/<int:behavior_id>/species/<string:chinese_common_name>"
+FEATURED_MEDIA = "/api/featured/page/<int:page>/perch_mount/<string:perch_mount_name>/behavior/<int:behavior_id>/species/<string:chinese_common_name>/member/<int:member_id>"

@@ -348,7 +348,7 @@ def identify_prey(perch_mount_id: int, section_id: int):
 
 
 @app.route(
-    "/featured/page/<int:page>/perch_mount/<string:perch_mount_name>/behavior/<int:behavior_id>/species/<string:chinese_common_name>"
+    "/featured/page/<int:page>/perch_mount/<string:perch_mount_name>/behavior/<int:behavior_id>/species/<string:chinese_common_name>/member/<int:member_id>"
 )
 @login_required
 def featured(
@@ -356,13 +356,15 @@ def featured(
     perch_mount_name: str,
     behavior_id: int,
     chinese_common_name: str,
+    member_id: int,
 ):
     media = req.get(
-        f"/api/featured/page/{page}/perch_mount/{perch_mount_name}/behavior/{behavior_id}/species/{chinese_common_name}"
+        f"/api/featured/page/{page}/perch_mount/{perch_mount_name}/behavior/{behavior_id}/species/{chinese_common_name}/member/{member_id}"
     )
     behaviors_ = req.get("/api/behaviors")
     perch_mounts_ = req.get("/api/perch_mounts")
     species_ = req.get("/api/species")
+    members_ = req.get("/api/members")
 
     media["media"] = file.add_all_file_name(media["media"])
     media["media"] = file.add_all_is_image(media["media"])
@@ -379,6 +381,7 @@ def featured(
         behaviors=behaviors_,
         perch_mounts=perch_mounts_,
         species=species_,
+        members=members_,
         media=media["media"],
         page=page,
         first_page=first_page,
@@ -386,6 +389,7 @@ def featured(
         num_page=num_page,
         perch_mount_name=perch_mount_name,
         behavior_id=behavior_id,
+        member_id=member_id,
         chinese_common_name=chinese_common_name,
     )
 
