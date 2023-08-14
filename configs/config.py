@@ -5,7 +5,7 @@ REVIEW_LIMIT = 100
 IMAGE_EXTENSIONS = {"bmp", "jpg", "jpeg", "png", "tif", "tiff", "dng"}
 VIDEO_EXTENSIONS = {"mov", "avi", "mp4", "mpg", "mpeg", "m4v", "wmv", "mkv"}
 NUM_MEDIA_IN_PAGE = 50
-
+TASKS_DIR_PATH = "D:/perch-mount-system/tasks"
 
 cache = {
     "DEBUG": True,  # some Flask specific configs

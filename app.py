@@ -395,7 +395,7 @@ def featured(
 def pending():
     pending_perch_mounts = req.get("/api/pending_perch_mounts")
     projects = req.get("/api/projects")
-    ai_tasks = os.listdir("D:/perch-mount-system/detected-tasks")
+    ai_tasks = os.listdir(config.TASKS_DIR_PATH)
     return render_template(
         "pending.html",
         pending_perch_mounts=pending_perch_mounts,
