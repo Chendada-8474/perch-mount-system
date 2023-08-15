@@ -220,3 +220,12 @@ class Actions(db.Model):
     __tablename__ = "actions"
     action_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(15))
+
+
+class UpdateInfo(db.Model):
+    __tablename__ = "update_info"
+    update_info_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    message_file_name = db.Column(db.String(30))
+    detail_file_name = db.Column(db.String(30))
+    create_date = db.Column(db.Date, default=datetime.today)
+    checked = db.Column(db.Boolean, default=False)

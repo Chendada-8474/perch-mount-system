@@ -16,7 +16,7 @@ window.addEventListener('load', function () {
         })
             .then(response => response.json())
             .then(json => {
-                window.location.replace(host + `/perch_mount/${json.perch_mount_id}`);
+                window.location.replace(`/perch_mount/${json.perch_mount_id}`);
             })
             .catch(err => alert(err));
     });

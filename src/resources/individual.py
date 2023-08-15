@@ -51,12 +51,20 @@ class Individual(Resource):
     parser.add_argument("prey_name", type=str)
     parser.add_argument("tagged", type=bool)
     parser.add_argument("ring_number", type=str)
+    parser.add_argument("xmin", type=float)
+    parser.add_argument("xmax", type=float)
+    parser.add_argument("ymin", type=float)
+    parser.add_argument("ymax", type=float)
 
     def post(self, medium_id: str):
         arg = self.parser.parse_args()
         new_individual = model.Individuals(
             medium=medium_id,
             taxon_order_by_human=arg.taxon_order_by_human,
+            xmin=arg.xmin,
+            xmax=arg.xmax,
+            ymin=arg.ymin,
+            ymax=arg.ymax,
         )
 
         with Session(master_engine) as session:
@@ -65,7 +73,11 @@ class Individual(Resource):
 
     def patch(self, individual_id: int):
         arg = self.parser.parse_args()
-        print(dict(arg))
+
+        arg.pop("xmin")
+        arg.pop("xmax")
+        arg.pop("ymin")
+        arg.pop("ymax")
 
         with Session(master_engine) as session:
             session.query(model.Individuals).filter(

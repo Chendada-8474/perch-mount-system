@@ -14,6 +14,7 @@ import src.data_request as req
 
 from flask_caching import Cache
 from flask_restful import Api
+from flaskext.markdown import Markdown
 from flask_login import login_required, login_user, logout_user
 from flask import (
     Flask,
@@ -33,6 +34,7 @@ import src.resources.individual as res_individual
 import src.resources.perch_mount as res_perch_mount
 import src.resources.contribution as res_contribution
 import src.resources.featured as res_featured
+import src.resources.update_info as res_update
 
 HOST = "http://127.0.0.1:5000"
 
@@ -54,6 +56,7 @@ api = Api(app)
 db.init_app(app)
 migrate.init_app(app, db)
 login_manager.init_app(app)
+Markdown(app)
 cache = Cache(app)
 
 encryptor = file.Encryptor()
@@ -90,6 +93,10 @@ def index():
     projects = req.get("/api/projects")
     habitats = req.get("/api/habitats")
     layers = req.get("/api/layers")
+    updates = req.get("/api/all_update_info")
+
+    for update in updates:
+        update["message"] = file.read_md(update["message_file_name"])
 
     perch_mount_form = form.NewPerchMount()
     perch_mount_form.init_choices(
@@ -105,6 +112,7 @@ def index():
         habitats=habitats,
         layers=layers,
         perch_mount_form=perch_mount_form,
+        updates=updates,
     )
 
 
@@ -507,6 +515,14 @@ def species_page():
     return render_template("species.html", species=species)
 
 
+@app.route("/update_info/<int:update_info_id>")
+@login_required
+def update_info(update_info_id: int):
+    update = req.get("/api/update_info/%s" % update_info_id)
+    update["detail"] = file.read_md(update["detail_file_name"])
+    return render_template("update_info.html", update=update)
+
+
 @app.route("/uploads/<path:path>")
 def send_media(path):
     path = encryptor.decrypt(path)
@@ -606,7 +622,7 @@ api.add_resource(res_options.SpeciesTrie, api_urls.SPECIES_SEARCH)
 api.add_resource(res_options.SpeciesTaxonOrders, api_urls.SPECIES_TAXON_ORDERS)
 
 api.add_resource(res_section.OneSection, api_urls.SECTION1, api_urls.SECTION2)
-api.add_resource(res_section.SectionsOfPerchMount, api_urls.SECTIONS_OF_PERCH_MOUNT)
+api.add_resource(res_section.SectionsOfPerchMount, api_urls.PERCH_MOUNT_SECTIONS)
 api.add_resource(res_section.OperatorsOfSection, api_urls.SECTION_OPERATORS)
 
 api.add_resource(res_member.AllMembers, api_urls.MEMBERS)
@@ -619,6 +635,9 @@ api.add_resource(res_prey.Prey, api_urls.PREY)
 api.add_resource(res_featured.FeaturedMedia, api_urls.FEATURED_MEDIA)
 
 api.add_resource(res_media.ScheduleDetectMedia, api_urls.SCHEDULE_DETECT_MEDIA)
+
+api.add_resource(res_update.UpdateInfo, api_urls.UPDATE_INFO1, api_urls.UPDATE_INFO2)
+api.add_resource(res_update.UpdateInfos, api_urls.ALL_UPDATE_INFO)
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", debug=True)

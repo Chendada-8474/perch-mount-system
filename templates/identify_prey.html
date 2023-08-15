@@ -5,19 +5,17 @@
 <link href="{{ url_for('static', filename='css/empty_check.css')}}" rel="stylesheet">
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-    <div
-        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <div>
             <h1 class="h1">辨識物種</h1>
-            <a href="{{ url_for('perch_mount', perch_mount_id=perch_mount['perch_mount_id'])}}"
-                class="text-decoration-none">
+            <a href="{{ url_for('perch_mount', perch_mount_id=perch_mount['perch_mount_id'])}}" class="text-decoration-none">
                 <h4>{{ perch_mount["perch_mount_name"] }}</h4>
             </a>
         </div>
     </div>
     {% if not media %}
     <div class="alert alert-success" role="alert">
-        你選擇的檔案已經都檢查完空拍了。
+        沒有選擇到需要辨識獵物的資料。
     </div>
     {% else %}
     <div class="shadow-sm bg-light p-3 rounded-2">
@@ -32,32 +30,26 @@
             <div id="empty_check_media" class="d-flex flex-wrap">
 
                 {% for medium in media %}
-                <div id="{{ medium['medium_id'] }}" class="card shadow border-0 border border-primary m-3 d-flex p-3"
-                    style="width: 20rem;">
+                <div id="{{ medium['medium_id'] }}" class="card shadow border-0 border border-primary m-3 d-flex p-3" style="width: 20rem;">
                     <div class="d-flex justify-content-between">
-                        <p><a class="text-decoration-none"
-                                href="{{ url_for('medium_page', perch_mount_id=perch_mount['perch_mount_id'], section_id=medium['section'], medium_id=medium['medium_id']) }}">
+                        <p><a class="text-decoration-none" href="{{ url_for('medium_page', perch_mount_id=perch_mount['perch_mount_id'], section_id=medium['section'], medium_id=medium['medium_id']) }}">
                                 {{ medium['file_name'] }}
                             </a>
                         </p>
                         <div>
-                            <button class="dropdown-item download-medium" type="button"
-                                value="{{ medium['medium_id'] }}">
+                            <button class="dropdown-item download-medium" type="button" value="{{ medium['medium_id'] }}">
                                 <i data-feather="download"></i>
                             </button>
                         </div>
                     </div>
                     {% if not medium['path'] %}
-                    <img src="{{ url_for('static', filename='img/not_found.png') }}" class="card-img-top full-screen"
-                        alt="{{ medium['path']}} " loading="lazy">
+                    <img src="{{ url_for('static', filename='img/not_found.png') }}" class="card-img-top full-screen" alt="{{ medium['path']}} " loading="lazy">
                     {% else %}
                     <div>
                         {% if medium["is_image"] %}
-                        <img src="{{ url_for('send_media', path=medium['epath']) }}" class="card-img-top full-screen"
-                            alt="{{ medium['path']}} " loading="lazy">
+                        <img src="{{ url_for('send_media', path=medium['epath']) }}" class="card-img-top full-screen" alt="{{ medium['path']}} " loading="lazy">
                         {% else %}
-                        <video src="{{ url_for('send_media', path=medium['epath']) }}" class="card-img-top"
-                            controls></video>
+                        <video src="{{ url_for('send_media', path=medium['epath']) }}" class="card-img-top" controls></video>
                         {% endif %}
                     </div>
                     {% endif %}
@@ -75,10 +67,8 @@
                             <tr>
                                 <td>{{ individual["predator"] }}</td>
                                 <td>
-                                    <input class="form-control form-control-sm prey" type="text"
-                                        value="{% if individual['prey_name'] %}{{ individual['prey_name'] }}{% endif %}">
-                                    <input type="number" value="{{ individual['individual_id'] }}" name="individual_id"
-                                        hidden>
+                                    <input class="form-control form-control-sm prey" type="text" value="{% if individual['prey_name'] %}{{ individual['prey_name'] }}{% endif %}">
+                                    <input type="number" value="{{ individual['individual_id'] }}" name="individual_id" hidden>
                                 </td>
                             </tr>
                             {% endfor %}

@@ -4,6 +4,7 @@
 {% block content %}
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h1">
             棲架資料庫管理系統
@@ -16,6 +17,7 @@
             </ul>
             {% endif %}
         </h1>
+
         <div class="d-flex">
             <select id="project_filter" class="form-select" aria-label="Default select example">
                 <option value="" selected>-- 篩選計畫 --</option>
@@ -25,6 +27,18 @@
             </select>
         </div>
     </div>
+    {% if current_user.is_admin() %}
+    {% for update in updates %}
+    {% if not update["checked"] %}
+    <div class="alert alert-warning alert-dismissible fade show my-1" role="alert">
+        <button type="button" class="btn btn-outline-danger btn-sm update me-3" value="{{ update['update_info_id'] }}">不再顯示</button>
+        <a href="{{ url_for('update_info', update_info_id=update['update_info_id']) }}">{{ update["create_date"] }}</a> 有新的系統更新。
+        額外更新訊息：{{ update["message"] }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
     <div class="shadow-sm bg-light p-3 rounded-2">
         <h4 class="text-secondary mb-3">運作中棲架</h4>
         <div class="row row-cols-1 row-cols-md-4 g-4">
@@ -173,4 +187,5 @@
 <script src="{{ url_for('static', filename='js/components/filter.js')}}"></script>
 <script src="{{ url_for('static', filename='js/api/patch_perch_mount.js')}}"></script>
 <script src="{{ url_for('static', filename='js/api/post_perch_mount.js')}}"></script>
+<script src="{{ url_for('static', filename='js/api/patch_update.js')}}"></script>
 {% endblock %}

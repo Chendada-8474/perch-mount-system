@@ -210,7 +210,6 @@ class Prey(Resource):
     def put(self, individual_id: int):
         arg = self.parser.parse_args()
         update = {
-            "prey": arg.prey_name != None,
             "prey_name": arg.prey_name,
             "prey_identify_by": arg.prey_identify_by if arg.prey_name else None,
         }

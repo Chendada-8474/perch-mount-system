@@ -2,6 +2,7 @@ import os
 import sys
 from datetime import datetime
 from cryptography.fernet import Fernet
+from flask import url_for
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 import configs.config as config
@@ -65,6 +66,10 @@ def add_file_name(medium: dict):
     return medium
 
 
-if __name__ == "__main__":
-    e = Encryptor()
-    path = "s測試"
+def read_md(file_name: str):
+    path = url_for("static", filename="document/update-info/%s" % file_name)
+    with open(
+        "./static/document/update-info/%s" % file_name, "r", encoding="UTF-8"
+    ) as md:
+        content = md.read()
+    return content
