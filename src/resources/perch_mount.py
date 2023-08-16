@@ -153,7 +153,7 @@ class PerchMount(Resource):
 
 class PerchMountClaimBy(Resource):
     def put(self, perch_mount_id: int, member_id: int):
-        with Session(slave_engine) as session:
+        with Session(master_engine) as session:
             session.query(model.PerchMounts).filter(
                 model.PerchMounts.perch_mount_id == perch_mount_id
             ).update({"claim_by": member_id})
