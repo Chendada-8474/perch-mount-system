@@ -131,11 +131,11 @@ dmypy.json
 #vscode
 .vscode/
 
-python-venv
-script.py
+config.py
 mysql.py
+script.py
+python-venv
 demo_media
 mod_wsgi-4.9.2-cp39-cp39-win_amd64.whl
 app.wsgi
-config.py
 new_update.py
