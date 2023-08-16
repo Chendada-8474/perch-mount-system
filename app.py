@@ -406,14 +406,18 @@ def featured(
 @app.route("/pending")
 @login_required
 def pending():
-    pending_perch_mounts = req.get("/api/pending_perch_mounts")
+    pendings = req.get("/api/pending_perch_mounts")
     projects = req.get("/api/projects")
+    total_empty = sum(p["empty_count"] for p in pendings if p["empty_count"])
+    total_detected = sum(p["detected_count"] for p in pendings if p["detected_count"])
     ai_tasks = os.listdir(config.TASKS_DIR_PATH)
     return render_template(
         "pending.html",
-        pending_perch_mounts=pending_perch_mounts,
+        pendings=pendings,
         projects=projects,
         ai_tasks=ai_tasks,
+        total_empt=total_empty,
+        total_detected=total_detected,
     )
 
 
@@ -633,6 +637,7 @@ api.add_resource(res_contribution.Contribution, api_urls.CONTRIBUTION)
 
 api.add_resource(res_prey.Prey, api_urls.PREY)
 api.add_resource(res_featured.FeaturedMedia, api_urls.FEATURED_MEDIA)
+api.add_resource(res_featured.FeaturedMedium, api_urls.FEATURD_MEDIUM)
 
 api.add_resource(res_media.ScheduleDetectMedia, api_urls.SCHEDULE_DETECT_MEDIA)
 

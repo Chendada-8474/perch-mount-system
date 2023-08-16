@@ -79,8 +79,11 @@
                                 {{ medium['file_name'] }}
                             </a>
                         </p>
-                        <div>
-                            <button class="dropdown-item download-medium" type="button" value="{{ medium['medium_id'] }}">
+                        <div class="d-flex">
+                            <button class="btn btn-outline-danger border-0 btn-sm m-1 defeature" type="button" value="{{ medium['medium_id'] }}">
+                                <i data-feather="trash-2"></i>
+                            </button>
+                            <button class="dropdown-item download-medium m-1" type="button" value="{{ medium['medium_id'] }}">
                                 <i data-feather="download"></i>
                             </button>
                         </div>
@@ -145,5 +148,6 @@
 <script src="{{ url_for('static', filename='js/components/full_screen_image.js')}}"></script>
 <script src="{{ url_for('static', filename='js/components/download_medium.js')}}"></script>
 <script src="{{ url_for('static', filename='js/components/redirect_featured.js')}}"></script>
+<script src="{{ url_for('static', filename='js/api/unfeature.js')}}"></script>
 
 {% endblock %}

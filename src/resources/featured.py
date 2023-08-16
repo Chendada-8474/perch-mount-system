@@ -6,7 +6,7 @@ from sqlalchemy import and_, func
 
 
 sys.path.append(dirname(dirname(dirname(__file__))))
-from src.resources.db_engine import slave_engine
+from src.resources.db_engine import slave_engine, master_engine
 import src.model as model
 import configs.config as config
 
@@ -116,3 +116,18 @@ class FeaturedMedia(Resource):
             .all()
         )
         return query
+
+
+class FeaturedMedium(Resource):
+    def delete(self, medium_id: str):
+        with Session(master_engine) as session:
+            session.query(model.Media).filter(
+                model.Media.medium_id == medium_id
+            ).update(
+                {
+                    "featured_behavior": None,
+                    "featured_by": None,
+                    "featured_title": None,
+                }
+            )
+            session.commit()

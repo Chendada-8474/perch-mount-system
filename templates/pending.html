@@ -50,14 +50,28 @@
                         <th scope="col">認領</th>
                         <th scope="col">棲架名稱</th>
                         <th scope="col">計畫</th>
-                        <th scope="col">待空拍檢查</th>
-                        <th scope="col">待物種辨識</th>
+                        <th scope="col">
+                            待空拍檢查
+                            {% if total_empty %}
+                            ({{ total_empty }})
+                            {% else %}
+                            (0)
+                            {% endif %}
+                        </th>
+                        <th scope="col">
+                            待物種辨識
+                            {% if total_detected %}
+                            ({{ total_detected }})
+                            {% else %}
+                            (0)
+                            {% endif %}
+                        </th>
                         <th scope="col">最後備註</th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for perch_mount in pending_perch_mounts %}
+                    {% for perch_mount in pendings %}
                     <tr id="perch_mount_{{ perch_mount['perch_mount_id'] }}" class="project_{{ perch_mount['project_id'] }}">
                         <th>
 

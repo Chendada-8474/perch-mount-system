@@ -54,6 +54,7 @@ PREY = "/api/prey/<int:individual_id>"
 # medium information
 MEDIUM = "/api/medium/<string:medium_id>"
 MEDIUM_INDIVIDUALS = "/api/medium/<string:medium_id>/individuals"
+FEATURD_MEDIUM = "/api/medium/<string:medium_id>/feature"
 
 # individual
 INDIVIDUAL1 = "/api/individual/<int:individual_id>"
