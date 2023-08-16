@@ -18,7 +18,7 @@ class UpdateInfo(Resource):
         with Session(slave_engine) as session:
             result = (
                 session.query(
-                    model.UpdateInfo.detail_file_name,
+                    model.UpdateInfo.detail,
                     func.date_format(model.UpdateInfo.create_date, "%Y-%m-%d").label(
                         "create_date"
                     ),
@@ -53,8 +53,8 @@ class UpdateInfos(Resource):
             results = (
                 session.query(
                     model.UpdateInfo.update_info_id,
-                    model.UpdateInfo.message_file_name,
-                    model.UpdateInfo.detail_file_name,
+                    model.UpdateInfo.message,
+                    model.UpdateInfo.detail,
                     model.UpdateInfo.checked,
                     func.date_format(model.UpdateInfo.create_date, "%Y-%m-%d").label(
                         "create_date"
