@@ -99,12 +99,10 @@ class PerchMountSectionPreyCount(Resource):
                 .group_by(model.Media.section)
                 .subquery()
             )
-            results = (
+
+            prey = (
                 session.query(
-                    func.count(model.Individuals.individual_id).label("prey_count"),
-                    indentidied.c.count.label("identified_count"),
-                    raptor.c.count.label("raptor_count"),
-                    other.c.count.label("other_count"),
+                    func.count(model.Individuals.individual_id).label("count"),
                     model.Media.section,
                     func.date_format(model.Sections.check_date, "%Y-%m-%d").label(
                         "check_date"
@@ -127,13 +125,25 @@ class PerchMountSectionPreyCount(Resource):
                     desc(model.Sections.check_date),
                     func.date_format(model.Sections.check_date, "%Y-%m-%d"),
                 )
+                .subquery()
+            )
+
+            results = (
+                session.query(
+                    prey.c.count.label("prey_count"),
+                    prey.c.section,
+                    prey.c.check_date,
+                    indentidied.c.count.label("identified_count"),
+                    raptor.c.count.label("raptor_count"),
+                    other.c.count.label("other_count"),
+                )
                 .join(
                     indentidied,
-                    indentidied.c.section == model.Media.section,
+                    indentidied.c.section == prey.c.section,
                     isouter=True,
                 )
-                .join(raptor, raptor.c.section == model.Media.section, isouter=True)
-                .join(other, other.c.section == model.Media.section, isouter=True)
+                .join(raptor, raptor.c.section == prey.c.section, isouter=True)
+                .join(other, other.c.section == prey.c.section, isouter=True)
                 .all()
             )
 
