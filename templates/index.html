@@ -2,7 +2,7 @@
 
 
 {% block content %}
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/a11y-dark.min.css">
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -27,18 +27,56 @@
             </select>
         </div>
     </div>
+
     {% if current_user.is_admin() %}
     {% for update in updates %}
     {% if not update["checked"] %}
-    <div class="alert alert-warning alert-dismissible fade show my-1" role="alert">
-        <button type="button" class="btn btn-outline-danger btn-sm update me-3" value="{{ update['update_info_id'] }}">不再顯示</button>
-        <a href="{{ url_for('update_info', update_info_id=update['update_info_id']) }}">{{ update["create_date"] }}</a> 有新的系統更新。
+    <div class="alert bg-warning alert-dismissible fade show my-1" style="--bs-bg-opacity: .25;" role="alert">
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-warning btn-sm me-3" data-bs-toggle="modal" data-bs-target="#update{{ update['update_info_id'] }}">
+            更新內容
+        </button>
+        {{ update["create_date"] }} 有新的系統更新。
         額外更新訊息：{{ update["message"] }}
+
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="update{{ update['update_info_id'] }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">{{ update["create_date"] }} 更新內容</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body markdown">
+                        {% filter markdown %}
+                        {{ update["detail"] }}
+                        {% endfilter %}
+                        <div class="shadow-sm bg-light p-3 rounded-2">
+                            <h5 class="fw-bold">更新指南</h5>
+                            <p>打開終端機<br>進入專案資料夾</p>
+                            <pre class="shadow rounded"><code class="language-dos" style="font-size: 1rem;">cd /d d:perch-mount-system/perch-mount-system</code></pre>
+                            <p>從 GitHub 拉取更新</p>
+                            <pre class="shadow rounded"><code class="language-dos" style="font-size: 1rem;">git pull</code></pre>
+                            <p>關閉 Apache Server</p>
+                            <p>再重新打開桌面的 Apache Server 就更新完成了！</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger update me-3" value="{{ update['update_info_id'] }}">
+                            不再顯示
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     {% endif %}
     {% endfor %}
     {% endif %}
+
     <div class="shadow-sm bg-light p-3 rounded-2">
         <h4 class="text-secondary mb-3">運作中棲架</h4>
         <div class="row row-cols-1 row-cols-md-4 g-4">
@@ -188,4 +226,8 @@
 <script src="{{ url_for('static', filename='js/api/patch_perch_mount.js')}}"></script>
 <script src="{{ url_for('static', filename='js/api/post_perch_mount.js')}}"></script>
 <script src="{{ url_for('static', filename='js/api/patch_update.js')}}"></script>
+<script src="{{ url_for('static', filename='js/components/markdown.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/dos.min.js"></script>
+<script>hljs.highlightAll();</script>
 {% endblock %}

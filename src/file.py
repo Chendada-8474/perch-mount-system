@@ -64,12 +64,3 @@ def add_all_file_name(media: list[dict]):
 def add_file_name(medium: dict):
     medium["file_name"] = os.path.basename(medium["path"]) if medium["path"] else None
     return medium
-
-
-def read_md(file_name: str):
-    path = url_for("static", filename="document/update-info/%s" % file_name)
-    with open(
-        "./static/document/update-info/%s" % file_name, "r", encoding="UTF-8"
-    ) as md:
-        content = md.read()
-    return content

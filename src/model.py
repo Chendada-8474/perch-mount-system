@@ -225,7 +225,7 @@ class Actions(db.Model):
 class UpdateInfo(db.Model):
     __tablename__ = "update_info"
     update_info_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    message = db.Column(db.String(30))
+    message = db.Column(db.Text)
     detail = db.Column(db.Text)
     create_date = db.Column(db.Date, default=datetime.today)
     checked = db.Column(db.Boolean, default=False)

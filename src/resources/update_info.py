@@ -12,13 +12,15 @@ import src.model as model
 
 class UpdateInfo(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument("checked", type=bool)
+    parser.add_argument("message", type=str)
+    parser.add_argument("detail", type=str)
 
     def get(self, update_info_id: int):
         with Session(slave_engine) as session:
             result = (
                 session.query(
                     model.UpdateInfo.detail,
+                    model.UpdateInfo.message,
                     func.date_format(model.UpdateInfo.create_date, "%Y-%m-%d").label(
                         "create_date"
                     ),
@@ -29,21 +31,20 @@ class UpdateInfo(Resource):
         return result._asdict()
 
     def post(self):
+        arg = self.parser.parse_args()
         new_update_info = model.UpdateInfo(
-            message_file_name=datetime.today().strftime("%Y%m%d_mes.md"),
-            detail_file_name=datetime.today().strftime("%Y%m%d_detail.md"),
+            message_file_name=arg.message,
+            detail_file_name=arg.detail,
         )
         with Session(master_engine) as session:
             session.add(new_update_info)
             session.commit()
 
-    def patch(self, update_info_id: int):
-        arg = self.parser.parse_args()
-
+    def delete(self, update_info_id: int):
         with Session(master_engine) as session:
             session.query(model.UpdateInfo).filter(
                 model.UpdateInfo.update_info_id == update_info_id
-            ).update(dict(arg))
+            ).update({"checked": True})
             session.commit()
 
 

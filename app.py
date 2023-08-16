@@ -95,9 +95,6 @@ def index():
     layers = req.get("/api/layers")
     updates = req.get("/api/all_update_info")
 
-    for update in updates:
-        update["message"] = file.read_md(update["message_file_name"])
-
     perch_mount_form = form.NewPerchMount()
     perch_mount_form.init_choices(
         habitats=[(h["habitat_id"], h["chinese_name"]) for h in habitats],
@@ -519,12 +516,12 @@ def species_page():
     return render_template("species.html", species=species)
 
 
-@app.route("/update_info/<int:update_info_id>")
+@app.route("/update_info/")
 @login_required
-def update_info(update_info_id: int):
-    update = req.get("/api/update_info/%s" % update_info_id)
-    update["detail"] = file.read_md(update["detail_file_name"])
-    return render_template("update_info.html", update=update)
+def update_info():
+    updates = req.get("/api/update_infos")
+
+    return render_template("update_info.html", updates=updates)
 
 
 @app.route("/uploads/<path:path>")
