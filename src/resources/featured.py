@@ -51,6 +51,10 @@ class FeaturedMedia(Resource):
 
         media = []
         medium_id = ""
+
+        start = page * config.NUM_MEDIA_IN_PAGE
+        end = start + config.NUM_MEDIA_IN_PAGE
+
         for result in results:
             if result.medium_id != medium_id:
                 media.append(
@@ -70,8 +74,6 @@ class FeaturedMedia(Resource):
             media[-1]["species"].append(result.species)
 
         count = len(media)
-        start = page * config.NUM_MEDIA_IN_PAGE
-        end = start + config.NUM_MEDIA_IN_PAGE
 
         return {
             "count": count,

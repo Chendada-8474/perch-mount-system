@@ -397,6 +397,7 @@ def featured(
         behavior_id=behavior_id,
         member_id=member_id,
         chinese_common_name=chinese_common_name,
+        total=media["count"],
     )
 
 
