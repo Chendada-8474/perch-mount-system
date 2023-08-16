@@ -150,15 +150,21 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a target="_blank" class="nav-link {% if request.path == '/species' %} active {% endif %}" href="https://github.com/Chendada-8474/perch-mount-system">
+                            <a target="_blank" class="nav-link" href="https://github.com/Chendada-8474/perch-mount-system">
                                 <span data-feather="github" class="align-text-bottom"></span>
                                 GitHub
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a target="_blank" class="nav-link {% if request.path == '/species' %} active {% endif %}" href="https://perchmount.docs.apiary.io/">
+                            <a target="_blank" class="nav-link" href="https://perchmount.docs.apiary.io/">
                                 <span data-feather="book" class="align-text-bottom"></span>
                                 開發者 api 文件
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == '/update_info' %} active {% endif %}" href="{{ url_for('update_info') }}">
+                                <span data-feather="git-merge" class="align-text-bottom"></span>
+                                近期更新資訊
                             </a>
                         </li>
                     </ul>
@@ -180,13 +186,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% if request.path == '/camera' %} active {% endif %}" href="{{ url_for('cameras') }}">
+                            <a class="nav-link {% if request.path == '/cameras' %} active {% endif %}" href="{{ url_for('cameras') }}">
                                 <span data-feather="camera" class="align-text-bottom"></span>
                                 相機
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% if request.path == '/event' %} active {% endif %}" href="{{ url_for('events') }}">
+                            <a class="nav-link {% if request.path == '/events' %} active {% endif %}" href="{{ url_for('events') }}">
                                 <span data-feather="alert-triangle" class="align-text-bottom"></span>
                                 意外事件
                             </a>

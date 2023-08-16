@@ -93,7 +93,7 @@ def index():
     projects = req.get("/api/projects")
     habitats = req.get("/api/habitats")
     layers = req.get("/api/layers")
-    updates = req.get("/api/all_update_info")
+    updates = req.get("/api/updates")
 
     perch_mount_form = form.NewPerchMount()
     perch_mount_form.init_choices(
@@ -516,10 +516,10 @@ def species_page():
     return render_template("species.html", species=species)
 
 
-@app.route("/update_info/")
+@app.route("/update_info")
 @login_required
 def update_info():
-    updates = req.get("/api/update_infos")
+    updates = req.get("/api/updates")
 
     return render_template("update_info.html", updates=updates)
 
