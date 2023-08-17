@@ -133,6 +133,9 @@ class SectionMedia(Resource):
 
 
 class SectionEmptyMedia(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument("media", action="append")
+
     def get(self, section_id: int):
         with Session(slave_engine) as session:
             results = (
@@ -154,6 +157,25 @@ class SectionEmptyMedia(Resource):
                 .all()
             )
         return [result._asdict() for result in results]
+
+    def post(self, section_id: int):
+        arg = self.parser.parse_args()
+
+        media = []
+        for medium in arg.media:
+            m = ast.literal_eval(medium)
+            media.append(
+                model.EmptyMedia(
+                    section=section_id,
+                    empty_medium_id=m["medium_id"],
+                    medium_datetime=m["medium_datetime"],
+                    path=m["path"],
+                )
+            )
+
+        with Session(master_engine) as session:
+            session.add_all(media)
+            session.commit()
 
 
 class SectionDetectedMedia(Resource):
@@ -251,9 +273,6 @@ class DetectedDayCountOfPerchMount(Resource):
 
 
 class EmptyMedia(Resource):
-    parser = reqparse.RequestParser()
-    parser.add_argument("media", action="append")
-
     def get(self, section_id: int):
         with Session(master_engine) as session:
             results = (
@@ -273,24 +292,6 @@ class EmptyMedia(Resource):
                 .all()
             )
         return [result._asdict() for result in results]
-
-    def post(self, section_id: int):
-        arg = self.parser.parse_args()
-
-        media = []
-        for medium in arg.media:
-            m = ast.literal_eval(medium)
-            media.append(
-                model.EmptyMedia(
-                    section=section_id,
-                    medium_datetime=m["medium_datetime"],
-                    path=m["path"],
-                )
-            )
-
-        with Session(master_engine) as session:
-            session.add_all(media)
-            session.commit()
 
 
 class EmptyCheckPerchMount(Resource):
