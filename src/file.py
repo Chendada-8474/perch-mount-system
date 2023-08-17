@@ -6,6 +6,7 @@ from flask import url_for
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 import configs.config as config
+import configs.path
 
 
 class Encryptor:
@@ -26,7 +27,7 @@ class Encryptor:
 def move_to_empty(path: str):
     file_name = os.path.basename(path)
     date_str = datetime.now().strftime("%Y-%m-%d")
-    dir_path = os.path.join(config.MEDIA_ROOT, "空拍", date_str)
+    dir_path = os.path.join(configs.path.MEDIA_ROOT, "空拍", date_str)
     if not os.path.exists(dir_path):
         os.mkdir(dir_path)
     os.rename(path, os.path.join(dir_path, file_name))

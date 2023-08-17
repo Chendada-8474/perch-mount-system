@@ -94,7 +94,7 @@ FEATURED_MEDIA = "/api/featured/page/<int:page>/perch_mount/<string:perch_mount_
 
 
 # api for schedule dectection
-SCHEDULE_DETECT_MEDIA = "/api/schedule_detect"
+SCHEDULE_DETECT_MEDIA = "/api/section/<int:section_id>/schedule_detect"
 
 
 ALL_UPDATE_INFO = "/api/updates"

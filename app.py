@@ -1,10 +1,10 @@
 import os
-import urllib.parse
 from PIL import Image
 from io import BytesIO
 from src.model import db, migrate
 from src.login import login_manager
 import configs.mysql
+import configs.path
 import configs.config as config
 import configs.api_urls as api_urls
 import src.login
@@ -408,7 +408,7 @@ def pending():
     projects = req.get("/api/projects")
     total_empty = sum(p["empty_count"] for p in pendings if p["empty_count"])
     total_detected = sum(p["detected_count"] for p in pendings if p["detected_count"])
-    ai_tasks = os.listdir(config.TASKS_DIR_PATH)
+    ai_tasks = os.listdir(configs.path.TASKS_DIR_PATH)
     return render_template(
         "pending.html",
         pendings=pendings,

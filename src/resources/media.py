@@ -815,7 +815,7 @@ class ScheduleDetectMedia(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument("media", action="append")
 
-    def post(self):
+    def post(self, section_id: int):
         arg = self.parser.parse_args()
 
         media = []
@@ -825,7 +825,7 @@ class ScheduleDetectMedia(Resource):
             m = ast.literal_eval(medium)
             new_medium = model.DetectedMedia(
                 detected_medium_id=m["medium_id"],
-                section=m["section"],
+                section=section_id,
                 medium_datetime=m["medium_datetime"],
                 path=m["path"],
             )
