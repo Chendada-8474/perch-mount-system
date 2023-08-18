@@ -80,3 +80,22 @@ class Parameter(FlaskForm):
         self.mount_type.choices = [(m["mount_type_id"], m["name"]) for m in mount_types]
         self.camera.choices = [(c["camera_id"], c["model_name"]) for c in cameras]
         self.operators.choices = [(m["member_id"], m["first_name"]) for m in members]
+
+
+class RowData(FlaskForm):
+    project = SelectMultipleField("計畫")
+    perch_mount = SelectMultipleField("棲架")
+    species = SelectMultipleField("物種")
+    raptor = SelectField("猛禽", choices=[("", "--"), (1, "猛禽"), (2, "其他")])
+    start_time = DateTimeLocalField("開始時間")
+    end_time = DateTimeLocalField("結束時間")
+    prey = BooleanField("獵物")
+    identified_prey = BooleanField("已辨識獵物")
+    tagged = BooleanField("標記")
+    submit = SubmitField("搜尋")
+
+    def init_choice(self, projects, species):
+        self.project.choices = [(m["project_id"], m["name"]) for m in projects]
+        self.species.choices = [
+            (m["taxon_order_by_human"], m["chinese_common_name"]) for m in species
+        ]

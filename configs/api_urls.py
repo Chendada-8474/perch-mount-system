@@ -100,3 +100,8 @@ SCHEDULE_DETECT_MEDIA = "/api/section/<int:section_id>/schedule_detect"
 ALL_UPDATE_INFO = "/api/updates"
 UPDATE_INFO1 = "/api/update_info"
 UPDATE_INFO2 = "/api/update_info/<int:update_info_id>"
+
+
+# row data download
+QUERY_DATA = "/api/query_data"
+RECORD_SPECIES = "/api/record_species"

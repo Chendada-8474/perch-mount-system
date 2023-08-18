@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<link href="{{ url_for('static', filename='css/empty_check.css')}}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/full_screen.css')}}" rel="stylesheet">
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+
+        <h1 class="h1">資料下載</h1>
+
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-2">
+            {{ data_form.project.label(class="text-secondary") }}
+            {{ data_form.project(class="form-select parameter", size=10) }}
+        </div>
+        <div class="col-2">
+            {{ data_form.perch_mount.label(class="text-secondary") }}
+            {{ data_form.perch_mount(class="form-select parameter", size=10) }}
+        </div>
+        <div class="col-2">
+            {{ data_form.species.label(class="text-secondary") }}
+            {{ data_form.species(class="form-select parameter", size=10) }}
+        </div>
+
+        <div class="col-4">
+            <div class="row mb-3">
+                <div class="col-6">
+                    {{ data_form.start_time.label }}
+                    {{ data_form.start_time(class="form-control parameter") }}
+                </div>
+                <div class="col-6">
+                    {{ data_form.end_time.label }}
+                    {{ data_form.end_time(class="form-control parameter") }}
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    {{ data_form.raptor.label(class="text-secondary") }}
+                    {{ data_form.raptor(class="form-select parameter") }}
+                </div>
+            </div>
+            <div class="row mb-5">
+                <div class="d-flex flex-wrap">
+
+
+                    {{ data_form.prey(class="btn-check") }}
+                    {{ data_form.prey.label(class="btn btn-outline-secondary me-4") }}
+                    {{ data_form.identified_prey(class="btn-check") }}
+                    {{ data_form.identified_prey.label(class="btn btn-outline-secondary me-4") }}
+                    {{ data_form.tagged(class="btn-check") }}
+                    {{ data_form.tagged.label(class="btn btn-outline-secondary me-4") }}
+                    {{ data_form.submit(class="btn btn-primary") }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    <button class="btn btn-primary" id="downloadRowData">
+                        下載資料
+                    </button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-primary" id="downloadSpeciesList">
+                        下載名錄
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <p class="mb-3 text-secondary">
+        前 50 筆資料預覽，總共搜尋到<span class="fw-bold" id="numData"></span>筆資料。
+    </p>
+
+    <div class="shadow-sm bg-light p-3 rounded-2 mb-3">
+        <table id="rowDataTable" class="table table-striped">
+            <thead>
+                <tr>
+
+                    <th scope="col">taxon_order</th>
+                    <th scope="col">物種</th>
+                    <th scope="col">計畫</th>
+                    <th scope="col">棲架</th>
+                    <th scope="col">拍攝時間</th>
+                    <th scope="col">獵物</th>
+                    <th scope="col">獵物名稱</th>
+                    <th scope="col">標記</th>
+                    <th scope="col">環號</th>
+                </tr>
+            </thead>
+            <tbody id="rowDataTbody">
+
+            </tbody>
+        </table>
+        <div id="loading" class="d-flex align-items-center d-none">
+            <strong role="status">查詢資料中...</strong>
+            <div class="spinner-border ms-auto text-primary" aria-hidden="true"></div>
+        </div>
+    </div>
+
+    <div class="shadow-sm bg-light p-3 rounded-2 mb-3">
+        <table id="speciesListTable" class="table table-striped">
+            <thead>
+                <tr>
+
+                    <th scope="col">中文俗名</th>
+                    <th scope="col">學名</th>
+                    <th scope="col">英文俗名</th>
+                    <th scope="col">科</th>
+                    <th scope="col">留棲狀態</th>
+                    <th scope="col">特有性</th>
+                    <th scope="col">保育等級</th>
+                </tr>
+            </thead>
+            <tbody id="speciesListTbody">
+
+            </tbody>
+        </table>
+    </div>
+
+</main>
+
+<script src="{{ url_for('static', filename='js/api/unfeature.js')}}"></script>
+<script src="{{ url_for('static', filename='js/components/perch_mount_options.js')}}"></script>
+<script src="{{ url_for('static', filename='js/api/query_download.js')}}"></script>
+
+{% endblock %}

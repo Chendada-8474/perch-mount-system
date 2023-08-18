@@ -35,6 +35,7 @@ import src.resources.perch_mount as res_perch_mount
 import src.resources.contribution as res_contribution
 import src.resources.featured as res_featured
 import src.resources.update_info as res_update
+import src.resources.row_data as res_row
 
 HOST = "http://127.0.0.1:5000"
 
@@ -526,6 +527,18 @@ def update_info():
     return render_template("update_info.html", updates=updates)
 
 
+@app.route("/download")
+@login_required
+def download():
+    data_form = form.RowData()
+
+    projects = req.get("/api/projects")
+    record_species = req.get("/api/record_species")
+    data_form.init_choice(projects, record_species)
+
+    return render_template("download.html", data_form=data_form)
+
+
 @app.route("/uploads/<path:path>")
 def send_media(path):
     path = encryptor.decrypt(path)
@@ -642,6 +655,9 @@ api.add_resource(res_media.ScheduleDetectMedia, api_urls.SCHEDULE_DETECT_MEDIA)
 
 api.add_resource(res_update.UpdateInfo, api_urls.UPDATE_INFO1, api_urls.UPDATE_INFO2)
 api.add_resource(res_update.UpdateInfos, api_urls.ALL_UPDATE_INFO)
+
+api.add_resource(res_row.RowData, api_urls.QUERY_DATA)
+api.add_resource(res_options.RecordSpecies, api_urls.RECORD_SPECIES)
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", debug=True)

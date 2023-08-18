@@ -164,3 +164,21 @@ class SpeciesTaxonOrders(Resource):
         if not arg.chinese_common_names:
             return []
         return self.species_names.get_taxon_orders(arg.chinese_common_names)
+
+
+class RecordSpecies(Resource):
+    def get(self):
+        with Session(slave_engine) as session:
+            results = (
+                session.query(
+                    model.Individuals.taxon_order_by_human,
+                    model.Species.chinese_common_name,
+                )
+                .group_by(model.Individuals.taxon_order_by_human)
+                .join(
+                    model.Species,
+                    model.Species.taxon_order == model.Individuals.taxon_order_by_human,
+                )
+                .all()
+            )
+        return [result._asdict() for result in results]

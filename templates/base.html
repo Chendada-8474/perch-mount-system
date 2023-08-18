@@ -107,7 +107,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" target="_blank" href="https://lookerstudio.google.com/s/k-HbfXeKhiU">
+                            <a class="nav-link" target="_blank" href="https://lookerstudio.google.com/reporting/b4670409-a2c4-4762-80eb-4bf34119795f">
                                 <span data-feather="activity" class="align-text-bottom"></span>
                                 Google Looker Studio
                             </a>
@@ -129,6 +129,12 @@
                             <a class="nav-link {% if request.path == '/parameter' %} active {% endif %}" href="{{ url_for('parameter_maker') }}">
                                 <span data-feather="clipboard" class="align-text-bottom"></span>
                                 上傳參數產生器
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == '/download' %} active {% endif %}" href="{{ url_for('download') }}">
+                                <span data-feather="download-cloud" class="align-text-bottom"></span>
+                                資料下載
                             </a>
                         </li>
                     </ul>
