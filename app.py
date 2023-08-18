@@ -406,6 +406,7 @@ def featured(
 def pending():
     pendings = req.get("/api/pending_perch_mounts")
     projects = req.get("/api/projects")
+
     total_empty = sum(p["empty_count"] for p in pendings if p["empty_count"])
     total_detected = sum(p["detected_count"] for p in pendings if p["detected_count"])
     ai_tasks = os.listdir(configs.path.TASKS_DIR_PATH)
@@ -414,7 +415,7 @@ def pending():
         pendings=pendings,
         projects=projects,
         ai_tasks=ai_tasks,
-        total_empt=total_empty,
+        total_empty=total_empty,
         total_detected=total_detected,
     )
 
