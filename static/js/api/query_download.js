@@ -1,4 +1,4 @@
-project = document.getElementById("project");
+var project = document.getElementById("project");
 var perchMount = document.getElementById("perch_mount");
 var species = document.getElementById("species");
 var startTime = document.getElementById("start_time");
@@ -43,16 +43,17 @@ submit.addEventListener("click", (event) => {
     var AllSpecies = getMultipleValues(species)
 
     var data = {
-        "project": projects,
-        "perch_mount": perchMounts,
-        "species": AllSpecies,
-        "start_time": startTime.value,
-        "end_time": endTime.value,
-        "raptor": raptor.value,
+        "project": (projects) ? project : null,
+        "perch_mount": (perchMounts) ? perchMounts : null,
+        "species": (AllSpecies) ? AllSpecies : null,
+        "start_time": (startTime.value) ? startTime.value : null,
+        "end_time": (endTime.value) ? endTime.value : null,
+        "raptor": (raptor.value) ? raptor.value : null,
         "prey": prey.checked,
         "identified_prey": identifiedPrey.checked,
         "tagged": tagged.checked,
     }
+
     rowDataTbody.innerHTML = "";
     speciesListTbody.innerHTML = "";
 

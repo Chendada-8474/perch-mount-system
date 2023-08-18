@@ -16,7 +16,7 @@ class RowData(Resource):
     parser.add_argument("project", action="append")
     parser.add_argument("perch_mount", action="append")
     parser.add_argument("species", action="append")
-    parser.add_argument("raptor", type=bool)
+    parser.add_argument("raptor", type=int)
     parser.add_argument("start_time", type=str)
     parser.add_argument("end_time", type=str)
     parser.add_argument("prey", type=bool)
@@ -25,7 +25,7 @@ class RowData(Resource):
 
     def post(self):
         arg = self.parser.parse_args()
-        print(type(arg.species))
+
         conditions = self._prase_conditions(arg)
         return self._get_data(conditions)
 
@@ -43,7 +43,7 @@ class RowData(Resource):
         if arg.raptor:
             conditions.append(
                 model.Species.order.in_(config.RAPTOR_ORDERS)
-                if arg.raptor == 1
+                if int(arg.raptor) == 1
                 else ~model.Species.order.in_(config.RAPTOR_ORDERS)
             )
 
