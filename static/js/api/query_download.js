@@ -43,7 +43,7 @@ submit.addEventListener("click", (event) => {
     var AllSpecies = getMultipleValues(species)
 
     var data = {
-        "project": (projects) ? project : null,
+        "project": (projects) ? projects : null,
         "perch_mount": (perchMounts) ? perchMounts : null,
         "species": (AllSpecies) ? AllSpecies : null,
         "start_time": (startTime.value) ? startTime.value : null,
@@ -56,7 +56,7 @@ submit.addEventListener("click", (event) => {
 
     rowDataTbody.innerHTML = "";
     speciesListTbody.innerHTML = "";
-
+    console.log(data)
     loading.classList.remove("d-none");
 
     fetch("/api/query_data", {
@@ -99,7 +99,7 @@ function makeTable(data) {
         count -= 1;
     }
 
-
+    var count = 50;
     for (var species of data.species_list) {
 
         var tr = document.createElement("tr");
