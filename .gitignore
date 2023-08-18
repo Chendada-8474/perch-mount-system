@@ -132,7 +132,6 @@ dmypy.json
 .vscode/
 
 path.py
-config.py
 mysql.py
 script.py
 python-venv
