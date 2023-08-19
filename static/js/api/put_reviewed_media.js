@@ -3,6 +3,7 @@ var media = document.getElementById("contents").children
 var perchMountId = document.getElementById("perchMountId").value;
 var reviewerId = document.getElementById("current_user").value;
 
+
 sendButton.addEventListener("click", (event) => {
     var reviewedMedia = [];
     var emptyMedia = [];
@@ -126,6 +127,7 @@ sendButton.addEventListener("click", (event) => {
             alert(err);
             window.location.replace(`/perch_mount/${perchMountId}`);
         });
-    alert("資料已成功送出！");
-    window.location.replace(`/perch_mount/${perchMountId}`);
+    confirm("資料已成功送出！");
+
+    window.location = `/perch_mount/${perchMountId}`;
 })
