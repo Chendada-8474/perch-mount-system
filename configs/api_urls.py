@@ -105,3 +105,5 @@ UPDATE_INFO2 = "/api/update_info/<int:update_info_id>"
 # row data download
 QUERY_DATA = "/api/query_data"
 RECORD_SPECIES = "/api/record_species"
+
+PROCESSED_DATA = "/api/processed_data"

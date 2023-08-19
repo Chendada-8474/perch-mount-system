@@ -1,5 +1,6 @@
 import sys
 import ast
+from datetime import datetime, timedelta
 from os.path import dirname
 from flask_restful import Resource, reqparse
 from sqlalchemy.orm import Session, aliased
@@ -10,6 +11,7 @@ sys.path.append(dirname(dirname(dirname(__file__))))
 from src.resources.db_engine import master_engine, slave_engine
 import src.model as model
 import src.file as file
+import configs.config as config
 
 
 class Medium(Resource):
@@ -849,4 +851,46 @@ class ScheduleDetectMedia(Resource):
 
         with Session(master_engine) as session:
             session.add_all(individuals)
+            session.commit()
+
+
+class ProcessedMedia(Resource):
+    def get(self):
+        with Session(master_engine) as session:
+            results = (
+                session.query(
+                    func.date_format(
+                        model.DetectedMedia.medium_datetime, "%Y-%m-%d %H:%i:%S"
+                    ).label("medium_datetime"),
+                    model.DetectedMedia.reviewed,
+                )
+                .filter(
+                    model.DetectedMedia.reviewed == 1,
+                )
+                .all()
+            )
+
+        return [result._asdict() for result in results]
+
+    def delete(self):
+        with Session(master_engine) as session:
+            session.query(model.EmptyMedia).filter(
+                and_(model.EmptyMedia.checked == 1)
+            ).delete()
+            session.commit()
+
+            processed_ids = (
+                session.query(model.DetectedMedia.detected_medium_id)
+                .filter(model.DetectedMedia.reviewed == 1)
+                .all()
+            )
+
+            processed_ids = [medium_id[0] for medium_id in processed_ids]
+
+            session.query(model.DetectedIndividuals).filter(model.DetectedIndividuals.medium.in_(processed_ids)).delete()
+            session.commit()
+
+            session.query(model.DetectedMedia).filter(
+                model.DetectedMedia.reviewed == 1
+            ).delete()
             session.commit()
