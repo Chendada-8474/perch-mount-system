@@ -67,12 +67,12 @@ sendButton.addEventListener("click", (event) => {
 
                 if (response.message) {
                     alert("你重複檢視了一樣的資料，網頁將把你導回首頁。")
-                    window.location.replace(host);
+                    window.location = `/perch_mount/${perchMountId}`;
                 }
             })
             .catch(err => {
                 alert(err);
-                window.location.replace(host + `/perch_mount/${perchMountId}`);
+                window.location = `/perch_mount/${perchMountId}`;
             });
 
         fetch(api_url, {
@@ -87,12 +87,12 @@ sendButton.addEventListener("click", (event) => {
 
                 if (response.message) {
                     alert("你重複檢視了一樣的資料，網頁將把你導回棲架頁面。")
-                    window.location.replace(host + `/perch_mount/${perchMountId}`);
+                    window.location = `/perch_mount/${perchMountId}`;
                 }
             })
             .catch(err => {
                 alert(err)
-                window.location.replace(host + `/perch_mount/${perchMountId}`);
+                window.location = `/perch_mount/${perchMountId}`;
             });
 
         fetch("/api/contribution", {
@@ -110,9 +110,9 @@ sendButton.addEventListener("click", (event) => {
             .then(response => { })
             .catch(err => {
                 alert(err);
-                window.location.replace(host + `/perch_mount/${perchMountId}`);
+                window.location = `/perch_mount/${perchMountId}`;
             });
         alert("資料已成功送出！");
-        window.location.replace(host + `/perch_mount/${perchMountId}`);
+        window.location = `/perch_mount/${perchMountId}`;
     }
 })
