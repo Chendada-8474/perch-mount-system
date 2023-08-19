@@ -879,13 +879,19 @@ class ProcessedMedia(Resource):
             ).delete()
             session.commit()
 
-            processed_ids = session.query(model.)
+            processed_ids = (
+                session.query(model.DetectedMedia.detected_medium_id)
+                .filter(model.DetectedMedia.reviewed == 1)
+                .all()
+            )
+
+            processed_ids = [medium_id[0] for medium_id in processed_ids]
 
             session.query(model.DetectedIndividuals).join(
                 model.DetectedMedia,
                 model.DetectedMedia.detected_medium_id
                 == model.DetectedIndividuals.medium,
-            ).filter(and_(model.DetectedMedia.reviewed == 1)).delete()
+            ).filter(model.DetectedIndividuals.medium.in_(processed_ids)).delete()
             session.commit()
 
             session.query(model.DetectedMedia).filter(
