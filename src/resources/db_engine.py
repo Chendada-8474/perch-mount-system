@@ -18,6 +18,7 @@ master_engine = create_engine(
     pool_recycle=3600,
     pool_pre_ping=True,
     isolation_level="AUTOCOMMIT",
+    connect_args=configs.mysql.ssl_args,
 )
 
 slave_engine = create_engine(
@@ -32,4 +33,5 @@ slave_engine = create_engine(
     pool_recycle=3600,
     pool_pre_ping=True,
     isolation_level="AUTOCOMMIT",
+    connect_args=configs.mysql.ssl_args,
 )
