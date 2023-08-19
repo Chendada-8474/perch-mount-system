@@ -658,6 +658,7 @@ api.add_resource(res_update.UpdateInfos, api_urls.ALL_UPDATE_INFO)
 
 api.add_resource(res_row.RowData, api_urls.QUERY_DATA)
 api.add_resource(res_options.RecordSpecies, api_urls.RECORD_SPECIES)
+api.add_resource(res_media.ProcessedMedia, api_urls.PROCESSED_DATA)
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", debug=True)

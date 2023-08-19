@@ -12,3 +12,6 @@ cache = {
     "DEBUG": True,  # some Flask specific configs
     "CACHE_TYPE": "SimpleCache",  # Flask-Caching related configs
 }
+
+
+PROCESSED_DATA_REMAIN_DAYS = 7
