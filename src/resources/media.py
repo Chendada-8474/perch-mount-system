@@ -860,12 +860,12 @@ class ProcessedMedia(Resource):
             results = (
                 session.query(
                     func.date_format(
-                        model.EmptyMedia.medium_datetime, "%Y-%m-%d %H:%i:%S"
+                        model.DetectedMedia.medium_datetime, "%Y-%m-%d %H:%i:%S"
                     ).label("medium_datetime"),
-                    model.EmptyMedia.checked,
+                    model.DetectedMedia.reviewed,
                 )
                 .filter(
-                    model.EmptyMedia.checked == 1,
+                    model.DetectedMedia.reviewed == 1,
                 )
                 .all()
             )
@@ -887,11 +887,7 @@ class ProcessedMedia(Resource):
 
             processed_ids = [medium_id[0] for medium_id in processed_ids]
 
-            session.query(model.DetectedIndividuals).join(
-                model.DetectedMedia,
-                model.DetectedMedia.detected_medium_id
-                == model.DetectedIndividuals.medium,
-            ).filter(model.DetectedIndividuals.medium.in_(processed_ids)).delete()
+            session.query(model.DetectedIndividuals).filter(model.DetectedIndividuals.medium.in_(processed_ids)).delete()
             session.commit()
 
             session.query(model.DetectedMedia).filter(
