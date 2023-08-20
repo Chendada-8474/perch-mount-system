@@ -79,6 +79,7 @@ class RowData(Resource):
                     model.Individuals.tagged,
                     model.PerchMounts.perch_mount_name.label("perch_mount"),
                     model.Projects.name.label("project"),
+                    model.Media.medium_id,
                 )
                 .join(
                     model.Species,

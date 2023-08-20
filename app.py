@@ -520,6 +520,7 @@ def species_page():
 
 
 @app.route("/update_info")
+@cache.cached(timeout=3600)
 @login_required
 def update_info():
     updates = req.get("/api/updates")
@@ -528,6 +529,7 @@ def update_info():
 
 
 @app.route("/download")
+@cache.cached(timeout=3600)
 @login_required
 def download():
     data_form = form.RowData()

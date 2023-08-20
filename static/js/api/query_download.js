@@ -181,7 +181,7 @@ const buildData = data => {
         Array.prototype.forEach.call(data, d => {
             let items = [];
             Array.prototype.forEach.call(arrayTitle, title => {
-                let item = d[title] || '無';
+                let item = d[title] || '';
                 items.push(item);
             });
             arrayData.push(items)
