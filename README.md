@@ -52,4 +52,4 @@ TASKS_DIR_PATH = "your/shedule/detection/tasks/dir"
 
 ## API Documentation
 
-https://perchmount.docs.apiary.io/#reference/0/12
+https://perchmount.docs.apiary.io/
