@@ -29,16 +29,15 @@ create a .py file as `configs/mysql.py`
 master_passward = "<master user password>"
 master_user = "<master user name>"
 master_ip = "<master host>"
-master_port = <master post>
+master_port = "<master post>"
 
 slave_passward = "<slave user password>"
 slave_user = "<slave user name>"
 slave_ip = "<slave host>"
-slave_port = <slave post>
+slave_port = "<slave post>"
 
 database = "perch_mount"
 ```
-
 
 ### Config for Path
 
@@ -49,6 +48,30 @@ MEDIA_ROOT = "your/media/root/dir"
 TASKS_DIR_PATH = "your/shedule/detection/tasks/dir"
 ```
 
+
+## Initialize Database
+
+### Create Schema
+
+create perch_mount database
+
+```sql
+mysql> CREATE DATABASE perch_mount;
+```
+
+create user
+
+```sql
+mysql> CREATE USER '<your user name>'@'hostname' IDENTIFIED BY '<your password>';
+```
+
+authorize database
+```sql
+mysql> GRANT ALL PRIVILEGES ON perch_mount.* TO '<your user name>'@'hostname';
+```
+
+
+## Run Server
 
 ## API Documentation
 
