@@ -10,7 +10,7 @@ git clone repository
 git clone https://github.com/Chendada-8474/perch-mount-system.git
 ```
 
-install package
+install packages
 
 ```
 pip install -r requirements.txt
