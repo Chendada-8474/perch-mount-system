@@ -29,12 +29,12 @@ create a .py file as `configs/mysql.py`
 master_passward = "<master user password>"
 master_user = "<master user name>"
 master_ip = "<master host>"
-master_port = "<master post>"
+master_port = "<master port>"
 
 slave_passward = "<slave user password>"
 slave_user = "<slave user name>"
 slave_ip = "<slave host>"
-slave_port = "<slave post>"
+slave_port = "<slave port>"
 
 database = "perch_mount"
 ```
