@@ -29,7 +29,11 @@ class Contribution(Resource):
 
 
 class ScheduleDetectCount(Resource):
-    def post(self, num_files: int):
-        new_detection = model.ScheduleDetect(num_files=num_files)
+    def post(self, perch_mount_id: int, num_files: int):
+        new_detection = model.ScheduleDetect(
+            num_files=num_files,
+            perch_mount=perch_mount_id,
+        )
         with Session(master_engine) as session:
             session.add(new_detection)
+            session.commit()

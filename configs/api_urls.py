@@ -108,4 +108,6 @@ RECORD_SPECIES = "/api/record_species"
 
 PROCESSED_DATA = "/api/processed_data"
 
-SCHEDULE_DETECT_COUNT = "/api/schedule_detect_count"
+SCHEDULE_DETECT_COUNT = (
+    "/api/schedule_detect_count/perch_mount/<int:perch_mount_id>/<int:num_files>"
+)
