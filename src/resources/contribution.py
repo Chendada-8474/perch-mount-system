@@ -26,3 +26,10 @@ class Contribution(Resource):
         with Session(master_engine) as session:
             session.add(new_contibution)
             session.commit()
+
+
+class ScheduleDetectCount(Resource):
+    def post(self, num_files: int):
+        new_detection = model.ScheduleDetect(num_files=num_files)
+        with Session(master_engine) as session:
+            session.add(new_detection)

@@ -229,3 +229,10 @@ class UpdateInfo(db.Model):
     detail = db.Column(db.Text)
     create_date = db.Column(db.Date, default=datetime.today)
     checked = db.Column(db.Boolean, default=False)
+
+
+class ScheduleDetect(db.Model):
+    __tablename__ = "schedule_detect"
+    schedule_detect_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    num_files = db.Column(db.Integer)
+    detect_datetime = db.Column(db.Date, default=datetime.now)

@@ -107,3 +107,5 @@ QUERY_DATA = "/api/query_data"
 RECORD_SPECIES = "/api/record_species"
 
 PROCESSED_DATA = "/api/processed_data"
+
+SCHEDULE_DETECT_COUNT = "/api/schedule_detect_count"
