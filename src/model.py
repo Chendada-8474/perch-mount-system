@@ -236,4 +236,4 @@ class ScheduleDetect(db.Model):
     schedule_detect_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     num_files = db.Column(db.Integer)
     detect_datetime = db.Column(db.DateTime, default=datetime.now)
-    perch_mount = db.Column(db.Integer, db.ForeignKey("perch_mounts.perch_mount_id"))
+    section = db.Column(db.Integer, db.ForeignKey("sections.section_id"))
