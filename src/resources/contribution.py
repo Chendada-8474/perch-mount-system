@@ -29,10 +29,11 @@ class Contribution(Resource):
 
 
 class ScheduleDetectCount(Resource):
-    def post(self, section_id: int, num_files: int):
+    def post(self, section_id: int, num_files: int, is_image: int):
         new_detection = model.ScheduleDetect(
             num_files=num_files,
             section=section_id,
+            is_image=is_image != 0,
         )
         with Session(master_engine) as session:
             session.add(new_detection)

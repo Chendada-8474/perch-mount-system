@@ -237,3 +237,4 @@ class ScheduleDetect(db.Model):
     num_files = db.Column(db.Integer)
     detect_datetime = db.Column(db.DateTime, default=datetime.now)
     section = db.Column(db.Integer, db.ForeignKey("sections.section_id"))
+    is_image = db.Column(db.Boolean, default=True)

@@ -108,6 +108,4 @@ RECORD_SPECIES = "/api/record_species"
 
 PROCESSED_DATA = "/api/processed_data"
 
-SCHEDULE_DETECT_COUNT = (
-    "/api/schedule_detect_count/section/<int:section_id>/num_files/<int:num_files>"
-)
+SCHEDULE_DETECT_COUNT = "/api/schedule_detect_count/section/<int:section_id>/num_files/<int:num_files>/is_image/<int:is_image>"
