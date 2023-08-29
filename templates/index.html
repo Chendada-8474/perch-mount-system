@@ -88,17 +88,17 @@
     {% endfor %}
     {% endif %}
 
-    <div class="shadow-sm p-3 rounded-2">
+    <div class="shadow-sm p-3 rounded-2 bg-light-subtle">
         <h4 class="text-secondary mb-3">運作中棲架</h4>
         <div class="row row-cols-1 row-cols-md-4 g-4">
             {% for perch_mount in perch_mounts %}
             {% if not perch_mount["terminated"] %}
             <div id="perch_mount_{{ perch_mount['perch_mount_id'] }}"
                 class="col project_{{ perch_mount['project_id'] }} habitat_{{ perch_mount['habitat_id'] }} filt-target">
-                <div class="card shadow border-0 bg-light-subtle">
+                <div class="card shadow border-0">
                     <div class="card-body">
                         <a href="{{ url_for('perch_mount', perch_mount_id=perch_mount['perch_mount_id']) }}"
-                            class="text-decoration-none text-light fw-bolder">
+                            class="text-decoration-none text-light-emphasis fw-bolder">
                             <h5 class="card-title">
                                 {{ perch_mount["perch_mount_id"] }}. {{ perch_mount["perch_mount_name"] }}
                                 {% if perch_mount["layer"] %}
@@ -131,17 +131,17 @@
         </div>
     </div>
 
-    <div class="shadow-sm p-3 rounded-2 mt-5">
+    <div class="shadow-sm p-3 rounded-2 mt-5 bg-light-subtle">
         <h4 class="text-secondary mb-3">已撤收棲架</h4>
         <div class="row row-cols-1 row-cols-md-4 g-4">
             {% for perch_mount in perch_mounts %}
             {% if perch_mount["terminated"] %}
             <div id="perch_mount_{{ perch_mount['perch_mount_id'] }}"
                 class="col project_{{ perch_mount['project_id'] }} habitat_{{ perch_mount['habitat_id'] }} filt-target">
-                <div class="card shadow border-0 bg-light-subtle">
+                <div class="card shadow border-0">
                     <div class="card-body">
                         <a href="{{ url_for('perch_mount', perch_mount_id=perch_mount['perch_mount_id']) }}"
-                            class="text-decoration-none text-light fw-bolder">
+                            class="text-decoration-none text-light-emphasis fw-bolder">
                             <h5 class="card-title">
                                 {{ perch_mount["perch_mount_id"] }}. {{ perch_mount["perch_mount_name"] }}
                                 {% if perch_mount["layer"] %}

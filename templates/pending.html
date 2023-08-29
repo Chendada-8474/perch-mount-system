@@ -110,7 +110,7 @@
                             <a class="text-decoration-none" href="{{ url_for('perch_mount', perch_mount_id=perch_mount['perch_mount_id']) }}">{{ perch_mount["perch_mount_name"] }}</a>
                         </td>
                         <td>
-                            <span class="text-light">
+                            <span class="text-light-emphasis">
                                 {{ perch_mount["project"] }}
                             </span>
                             <input type="number" value="{{ perch_mount['project_id'] }}" name="project_id" hidden>
@@ -128,7 +128,7 @@
                             0
                             {% endif %}</td>
                         <td>
-                            <span class="text-light">
+                            <span class="text-light-emphasis">
                                 {{ perch_mount["latest_note"] }}
                             </span>
                         </td>
