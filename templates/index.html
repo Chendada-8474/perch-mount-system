@@ -5,15 +5,22 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/a11y-dark.min.css">
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h1">
             棲架資料庫管理系統
             {% if current_user.is_admin() %}
-            <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle border-0" data-bs-toggle="dropdown" aria-expanded="false">
+            <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle border-0"
+                data-bs-toggle="dropdown" aria-expanded="false">
                 <i data-feather="edit-2"></i>
             </button>
             <ul class="dropdown-menu">
-                <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#newPerchMountModal">新增棲架</button></li>
+                <li>
+                    <button class="dropdown-item"       data-bs-toggle="modal" data-bs-target="#newPerchMountModal">新增棲架</button>
+                </li>
+                <li>
+                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#newProjectModel">新增計畫</button>
+                </li>
             </ul>
             {% endif %}
         </h1>
@@ -33,7 +40,8 @@
     {% if not update["checked"] %}
     <div class="alert bg-warning alert-dismissible fade show my-1" style="--bs-bg-opacity: .25;" role="alert">
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-warning btn-sm me-3" data-bs-toggle="modal" data-bs-target="#update{{ update['update_info_id'] }}">
+        <button type="button" class="btn btn-warning btn-sm me-3" data-bs-toggle="modal"
+            data-bs-target="#update{{ update['update_info_id'] }}">
             更新內容
         </button>
         {{ update["create_date"] }} 有新的系統更新。
@@ -42,7 +50,8 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 
         <!-- Modal -->
-        <div class="modal fade" id="update{{ update['update_info_id'] }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="update{{ update['update_info_id'] }}" tabindex="-1"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -53,12 +62,14 @@
                         {% filter markdown %}
                         {{ update["detail"] }}
                         {% endfilter %}
-                        <div class="shadow-sm bg-light p-3 rounded-2">
+                        <div class="shadow-sm p-3 rounded-2">
                             <h5 class="fw-bold">更新指南</h5>
                             <p>打開終端機<br>進入專案資料夾</p>
-                            <pre class="shadow rounded"><code class="language-dos" style="font-size: 1rem;">cd /d d:perch-mount-system/perch-mount-system</code></pre>
+                            <pre
+                                class="shadow rounded"><code class="language-dos" style="font-size: 1rem;">cd /d d:perch-mount-system/perch-mount-system</code></pre>
                             <p>從 GitHub 拉取更新</p>
-                            <pre class="shadow rounded"><code class="language-dos" style="font-size: 1rem;">git pull</code></pre>
+                            <pre
+                                class="shadow rounded"><code class="language-dos" style="font-size: 1rem;">git pull</code></pre>
                             <p>關閉 Apache Server</p>
                             <p>再重新打開桌面的 Apache Server 就更新完成了！</p>
                         </div>
@@ -77,15 +88,17 @@
     {% endfor %}
     {% endif %}
 
-    <div class="shadow-sm bg-light p-3 rounded-2">
+    <div class="shadow-sm p-3 rounded-2">
         <h4 class="text-secondary mb-3">運作中棲架</h4>
         <div class="row row-cols-1 row-cols-md-4 g-4">
             {% for perch_mount in perch_mounts %}
             {% if not perch_mount["terminated"] %}
-            <div id="perch_mount_{{ perch_mount['perch_mount_id'] }}" class="col project_{{ perch_mount['project_id'] }} habitat_{{ perch_mount['habitat_id'] }} filt-target">
-                <div class="card shadow border-0">
+            <div id="perch_mount_{{ perch_mount['perch_mount_id'] }}"
+                class="col project_{{ perch_mount['project_id'] }} habitat_{{ perch_mount['habitat_id'] }} filt-target">
+                <div class="card shadow border-0 bg-light-subtle">
                     <div class="card-body">
-                        <a href="{{ url_for('perch_mount', perch_mount_id=perch_mount['perch_mount_id']) }}" class="text-decoration-none text-black fw-bolder">
+                        <a href="{{ url_for('perch_mount', perch_mount_id=perch_mount['perch_mount_id']) }}"
+                            class="text-decoration-none text-light fw-bolder">
                             <h5 class="card-title">
                                 {{ perch_mount["perch_mount_id"] }}. {{ perch_mount["perch_mount_name"] }}
                                 {% if perch_mount["layer"] %}
@@ -118,15 +131,17 @@
         </div>
     </div>
 
-    <div class="shadow-sm bg-light p-3 rounded-2 mt-5">
+    <div class="shadow-sm p-3 rounded-2 mt-5">
         <h4 class="text-secondary mb-3">已撤收棲架</h4>
         <div class="row row-cols-1 row-cols-md-4 g-4">
             {% for perch_mount in perch_mounts %}
             {% if perch_mount["terminated"] %}
-            <div id="perch_mount_{{ perch_mount['perch_mount_id'] }}" class="col project_{{ perch_mount['project_id'] }} habitat_{{ perch_mount['habitat_id'] }} filt-target">
-                <div class="card shadow border-0">
+            <div id="perch_mount_{{ perch_mount['perch_mount_id'] }}"
+                class="col project_{{ perch_mount['project_id'] }} habitat_{{ perch_mount['habitat_id'] }} filt-target">
+                <div class="card shadow border-0 bg-light-subtle">
                     <div class="card-body">
-                        <a href="{{ url_for('perch_mount', perch_mount_id=perch_mount['perch_mount_id']) }}" class="text-decoration-none text-black fw-bolder">
+                        <a href="{{ url_for('perch_mount', perch_mount_id=perch_mount['perch_mount_id']) }}"
+                            class="text-decoration-none text-light fw-bolder">
                             <h5 class="card-title">
                                 {{ perch_mount["perch_mount_id"] }}. {{ perch_mount["perch_mount_name"] }}
                                 {% if perch_mount["layer"] %}
@@ -137,13 +152,14 @@
                         {% if perch_mount["is_priority"] %}
                         <span class="badge rounded-pill text-bg-danger">優先處裡</span>
                         {% endif %}
-                        <span class="badge rounded-pill text-bg-light">{{ perch_mount["habitat"] }}</span>
-                        <span class="badge rounded-pill text-bg-light">{{ perch_mount["project"] }}</span>
+                        <span class="badge rounded-pill text-bg-secondary">{{ perch_mount["habitat"] }}</span>
+                        <span class="badge rounded-pill text-bg-secondary">{{ perch_mount["project"] }}</span>
                         {% if perch_mount["latest_note"] %}
-                        <span class="badge rounded-pill text-bg-light text-light">{{ perch_mount["latest_note"] }}</span>
+                        <span class="badge rounded-pill text-bg-secondary">{{ perch_mount["latest_note"]
+                            }}</span>
                         {% endif %}
                         {% if perch_mount["claim_by"] %}
-                        <span class="badge rounded-pill text-bg-light">{{ perch_mount["claim_by"] }} 認領</span>
+                        <span class="badge rounded-pill text-bg-secondary">{{ perch_mount["claim_by"] }} 認領</span>
                         {% endif %}
                     </div>
                 </div>
@@ -154,7 +170,8 @@
     </div>
 
     <!-- New Perch Mount Modal -->
-    <div class="modal fade" id="newPerchMountModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="newPerchMountModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -215,6 +232,35 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
                         {{ perch_mount_form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Project Modal -->
+    <div class="modal fade" id="newProjectModel" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">新增計畫</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form action="" method="post" id="newPerchMount">
+
+                    <div class="modal-body">
+                        <div class="row mb-3">
+                            <div class="col">
+                                <div class="form-floating">
+
+                                </div>
+                            </div>
+                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+
                     </div>
                 </form>
             </div>

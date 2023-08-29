@@ -97,7 +97,9 @@
                                 {% if perch_mount["claim_by"] == current_user.first_name %}
                                 <button type="button" class="btn btn-sm btn-outline-primary unclaim-perch-mount" value="{{ perch_mount['perch_mount_id'] }}">取消認領</button>
                                 {% else %}
-                                {{ perch_mount["claim_by"] }}
+                                <span class="text-light">
+                                    {{ perch_mount["claim_by"] }}
+                                </span>
                                 {% endif %}
                             </div>
                             {% else %}
@@ -108,16 +110,27 @@
                             <a class="text-decoration-none" href="{{ url_for('perch_mount', perch_mount_id=perch_mount['perch_mount_id']) }}">{{ perch_mount["perch_mount_name"] }}</a>
                         </td>
                         <td>
-                            {{ perch_mount["project"] }}
+                            <span class="text-light">
+                                {{ perch_mount["project"] }}
+                            </span>
                             <input type="number" value="{{ perch_mount['project_id'] }}" name="project_id" hidden>
                         </td>
-                        <td class="empty-count rounded align-middle">{% if perch_mount["empty_count"] %}{{ perch_mount["empty_count"] }}{% else
-                            %}0{% endif %}</td>
-                        <td class="detected-count rounded align-middle">{% if perch_mount["detected_count"] %}{{ perch_mount["detected_count"]
-                            }}{%
-                            else %}0{% endif %}</td>
+                        <td class="empty-count rounded align-middle">
+                            {% if perch_mount["empty_count"] %}
+                            {{ perch_mount["empty_count"] }}
+                            {% else %}
+                            0
+                            {% endif %}</td>
+                        <td class="detected-count rounded align-middle">
+                            {% if perch_mount["detected_count"] %}
+                            {{ perch_mount["detected_count"]}}
+                            {% else %}
+                            0
+                            {% endif %}</td>
                         <td>
-                            {{ perch_mount["latest_note"] }}
+                            <span class="text-light">
+                                {{ perch_mount["latest_note"] }}
+                            </span>
                         </td>
                         <td>
                             <button class="btn btn-white" type="button">
