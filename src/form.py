@@ -99,3 +99,7 @@ class RowData(FlaskForm):
         self.species.choices = [
             (m["taxon_order_by_human"], m["chinese_common_name"]) for m in species
         ]
+
+class NewProject(FlaskForm):
+    name = StringField("計畫名稱", validators=[DataRequired()])
+    submit_project = SubmitField("新增")

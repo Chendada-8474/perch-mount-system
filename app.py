@@ -96,6 +96,7 @@ def index():
     layers = req.get("/api/layers")
     updates = req.get("/api/updates")
 
+    project_form = form.NewProject()
     perch_mount_form = form.NewPerchMount()
     perch_mount_form.init_choices(
         habitats=[(h["habitat_id"], h["chinese_name"]) for h in habitats],
@@ -110,6 +111,7 @@ def index():
         habitats=habitats,
         layers=layers,
         perch_mount_form=perch_mount_form,
+        project_form=project_form,
         updates=updates,
     )
 
@@ -630,6 +632,7 @@ api.add_resource(res_options.AllEvents, api_urls.EVENTS)
 api.add_resource(res_options.Layers, api_urls.LAYERS)
 api.add_resource(res_options.MountTypes, api_urls.MOUNT_TYPES)
 api.add_resource(res_options.Projects, api_urls.PROJECTS)
+api.add_resource(res_options.Project, api_urls.PROJECT)
 api.add_resource(res_options.AllSpecies, api_urls.SPECIES)
 
 api.add_resource(res_options.Behavior, api_urls.BEHAVIOR)

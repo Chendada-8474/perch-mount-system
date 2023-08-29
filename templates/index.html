@@ -254,13 +254,14 @@
                         <div class="row mb-3">
                             <div class="col">
                                 <div class="form-floating">
-
+                                    {{ project_form.name(class="form-control", placeholder="") }}
+                                    {{ project_form.name.label }}
                                 </div>
                             </div>
                         </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-
+                        {{ project_form.submit_project(class="btn btn-primary", type="button") }}
                     </div>
                 </form>
             </div>
@@ -271,6 +272,7 @@
 <script src="{{ url_for('static', filename='js/components/filter.js')}}"></script>
 <script src="{{ url_for('static', filename='js/api/patch_perch_mount.js')}}"></script>
 <script src="{{ url_for('static', filename='js/api/post_perch_mount.js')}}"></script>
+<script src="{{ url_for('static', filename='js/api/post_project.js')}}"></script>
 <script src="{{ url_for('static', filename='js/api/patch_update.js')}}"></script>
 <script src="{{ url_for('static', filename='js/components/markdown.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
