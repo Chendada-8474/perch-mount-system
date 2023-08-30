@@ -424,6 +424,7 @@ def pending():
 
 
 @app.route("/parameter")
+@cache.cached(timeout=3600)
 @login_required
 def parameter_maker():
     perch_mounts_ = req.get("/api/perch_mounts")
