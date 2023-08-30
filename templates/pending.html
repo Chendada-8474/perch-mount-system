@@ -97,7 +97,7 @@
                                 {% if perch_mount["claim_by"] == current_user.first_name %}
                                 <button type="button" class="btn btn-sm btn-outline-primary unclaim-perch-mount" value="{{ perch_mount['perch_mount_id'] }}">取消認領</button>
                                 {% else %}
-                                <span class="text-light">
+                                <span class="text-light-emphasis">
                                     {{ perch_mount["claim_by"] }}
                                 </span>
                                 {% endif %}

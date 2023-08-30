@@ -11,6 +11,7 @@ document.documentElement.setAttribute("data-bs-theme", mode);
 
 darkSwitch.addEventListener("input", (event) => {
 
+
     if (event.target.checked) {
         document.documentElement.setAttribute("data-bs-theme", "dark");
         document.cookie = "dark_mode=true"
@@ -20,6 +21,8 @@ darkSwitch.addEventListener("input", (event) => {
     }
 
 })
+
+
 
 
 function getCookieByName(name) {

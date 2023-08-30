@@ -6,6 +6,7 @@ window.addEventListener('load', function () {
         var projectName = document.getElementById("name").value;
 
         if (!projectName) {
+            alert("請輸入計畫名稱。")
             return;
         }
 
