@@ -73,6 +73,8 @@ mysql> GRANT ALL PRIVILEGES ON perch_mount.* TO '<your user name>'@'hostname';
 
 ## Run Server
 
+Just use the way you like to run server.
+
 ## API Documentation
 
 https://perchmount.docs.apiary.io/
