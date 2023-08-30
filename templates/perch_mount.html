@@ -4,43 +4,50 @@
 {% block content %}
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <div>
             <h1 class="h1">
                 {{ perch_mount["perch_mount_name"] }}
                 {% if perch_mount["terminated"] %}
-                <span class=" text-secondary">
+                <span>
                     ( 已撤收 )
                 </span>
                 {% endif %}
                 <div class="btn-group ms-3" role="group">
-                    <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle border-0" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle border-0"
+                        data-bs-toggle="dropdown" aria-expanded="false">
                         <i data-feather="edit-2"></i>
                     </button>
                     <ul class="dropdown-menu">
                         {% if current_user.is_admin() %}
                         <li class="mb-1">
-                            <button id="updateCoordination" class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#coordinationModal">
+                            <button id="updateCoordination" class="dropdown-item" type="button" data-bs-toggle="modal"
+                                data-bs-target="#coordinationModal">
                                 <i data-feather="map-pin" class="me-2"></i>編輯座標
                             </button>
                         </li>
                         <li class="mb-1">
-                            <button id="updateProject" class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#projectModal">
+                            <button id="updateProject" class="dropdown-item" type="button" data-bs-toggle="modal"
+                                data-bs-target="#projectModal">
                                 <i data-feather="book" class="me-2"></i>變更計畫
                             </button>
                         </li>
                         <li class="mb-1">
-                            <button id="updateHabitat" class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#habitatModal">
+                            <button id="updateHabitat" class="dropdown-item" type="button" data-bs-toggle="modal"
+                                data-bs-target="#habitatModal">
                                 <i data-feather="globe" class="me-2"></i>變更棲地
                             </button>
                         </li>
                         <li class="mb-1">
                             {% if not perch_mount["terminated"] %}
-                            <button id="terminatePerchMount" class="dropdown-item" type="button" value="{{ perch_mount['perch_mount_id'] }}">
+                            <button id="terminatePerchMount" class="dropdown-item" type="button"
+                                value="{{ perch_mount['perch_mount_id'] }}">
                                 <i data-feather="x-circle" class="me-2"></i>撤收棲架
                             </button>
                             {% else %}
-                            <button id="resetPerchMount" class="dropdown-item" type="button" value="{{ perch_mount['perch_mount_id'] }}">
+                            <button id="resetPerchMount" class="dropdown-item" type="button"
+                                value="{{ perch_mount['perch_mount_id'] }}">
                                 <i data-feather="-circle" class="me-2"></i>回復棲架
                             </button>
                             {% endif %}
@@ -48,11 +55,13 @@
                         {% if current_user.is_super_admin() %}
                         <li class="mb-1">
                             {% if perch_mount["is_priority"] %}
-                            <button id="unpriorPerchMount" class="dropdown-item unprior-perch-mount" type="button" value="{{ perch_mount['perch_mount_id'] }}">
+                            <button id="unpriorPerchMount" class="dropdown-item unprior-perch-mount" type="button"
+                                value="{{ perch_mount['perch_mount_id'] }}">
                                 <i data-feather="zap-off" class="me-2"></i>取消優先
                             </button>
                             {% else %}
-                            <button id="priorPerchMount" class="dropdown-item prior-perch-mount" type="button" value="{{ perch_mount['perch_mount_id'] }}">
+                            <button id="priorPerchMount" class="dropdown-item prior-perch-mount" type="button"
+                                value="{{ perch_mount['perch_mount_id'] }}">
                                 <i data-feather="zap" class="me-2"></i>設為優先
                             </button>
                             {% endif %}
@@ -60,7 +69,8 @@
                         {% endif %}
                         <li class="mb-1">
                             {% if current_user.is_admin() %}
-                            <button id="asignPerchMount" class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#asignPerchMountModel">
+                            <button id="asignPerchMount" class="dropdown-item" type="button" data-bs-toggle="modal"
+                                data-bs-target="#asignPerchMountModel">
                                 <i data-feather="gift" class="me-2"></i>指派認領
                             </button>
                             {% endif %}
@@ -71,12 +81,15 @@
 
                             {% if perch_mount["claim_by"] %}
 
-                            <button id="cancelClaimPerchMount" class="dropdown-item {% if current_user.user_name != perch_mount['claim_by'] %}disabled{% endif %}" type="button" value="{{ perch_mount['perch_mount_id'] }}">
+                            <button id="cancelClaimPerchMount"
+                                class="dropdown-item {% if current_user.user_name != perch_mount['claim_by'] %}disabled{% endif %}"
+                                type="button" value="{{ perch_mount['perch_mount_id'] }}">
                                 <i data-feather="thumbs-down" class="me-2"></i>取消認領
                             </button>
 
                             {% else %}
-                            <button id="claimPerchMount" class="dropdown-item" type="button" value="{{ perch_mount['perch_mount_id'] }}">
+                            <button id="claimPerchMount" class="dropdown-item" type="button"
+                                value="{{ perch_mount['perch_mount_id'] }}">
                                 <i data-feather="thumbs-up" class="me-2"></i>認領棲架
                             </button>
                             {% endif %}
@@ -104,7 +117,7 @@
             </nav>
         </div>
     </div>
-    <div class="shadow-sm bg-light p-3 rounded-2 mb-3">
+    <div class="shadow-sm p-3 rounded-2 mb-3">
         <div class="row">
             <div class="col-2">
                 <ol class="list-group">
@@ -112,7 +125,8 @@
                     <li class="list-group-item">
                         座標：
                         {{ perch_mount['latitude'] }}, {{ perch_mount['longitude'] }}
-                        <a target="_blank" class="" href="https://www.google.com/maps/search/?api=1&query={{ perch_mount['latitude'] }},{{ perch_mount['longitude'] }}">
+                        <a target="_blank" class=""
+                            href="https://www.google.com/maps/search/?api=1&query={{ perch_mount['latitude'] }},{{ perch_mount['longitude'] }}">
                             <button type="button" class="btn btn-link btn-sm"><i data-feather="map-pin"></i></button>
                         </a>
                     </li>
@@ -177,7 +191,8 @@
                     {{ media_count["detected_count"] }}
                     {% endif %}
                 </h3>
-                <a href="{{ url_for('review_perch_mount', perch_mount_id=perch_mount['perch_mount_id']) }}" class="btn btn-outline-secondary btn-sm {% if not media_count['detected_count'] %}disabled{% endif %}">去檢視物種</a>
+                <a href="{{ url_for('review_perch_mount', perch_mount_id=perch_mount['perch_mount_id']) }}"
+                    class="btn btn-outline-secondary btn-sm {% if not media_count['detected_count'] %}disabled{% endif %}">去檢視物種</a>
             </div>
             <div class="col-2">
                 <p class="text-secondary">待空拍檢查</p>
@@ -194,24 +209,29 @@
                     {{ media_count["empty_count"] }}
                     {% endif %}
                 </h3>
-                <a href="{{ url_for('empty_check_perch_mount', perch_mount_id=perch_mount['perch_mount_id']) }}" class="btn btn-outline-secondary btn-sm {% if not media_count['empty_count'] %}disabled{% endif %}">去檢查空拍</a>
+                <a href="{{ url_for('empty_check_perch_mount', perch_mount_id=perch_mount['perch_mount_id']) }}"
+                    class="btn btn-outline-secondary btn-sm {% if not media_count['empty_count'] %}disabled{% endif %}">去檢查空拍</a>
             </div>
         </div>
     </div>
 
     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-section" type="button" role="tab" aria-controls="pills-media" aria-selected="true">Section</button>
+            <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-section"
+                type="button" role="tab" aria-controls="pills-media" aria-selected="true">Section</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-month" type="button" role="tab" aria-controls="pills-detected" aria-selected="false">Month</button>
+            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-month"
+                type="button" role="tab" aria-controls="pills-detected" aria-selected="false">Month</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-prey" type="button" role="tab" aria-controls="pills-prey" aria-selected="false">Prey</button>
+            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-prey"
+                type="button" role="tab" aria-controls="pills-prey" aria-selected="false">Prey</button>
         </li>
     </ul>
     <div class="tab-content" id="pills-tabContent">
-        <div class="tab-pane fade show active" id="pills-section" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+        <div class="tab-pane fade show active" id="pills-section" role="tabpanel" aria-labelledby="pills-home-tab"
+            tabindex="0">
 
             <table class="table table-striped table-hover">
                 <thead>
@@ -236,7 +256,8 @@
                         <td>{{ section["start_time"] }}</td>
                         <td>{{ section["end_time"] }}</td>
                         <td>
-                            <a href="{{ url_for('section',perch_mount_id=perch_mount['perch_mount_id'], section_id=section['section_id']) }}">
+                            <a
+                                href="{{ url_for('section',perch_mount_id=perch_mount['perch_mount_id'], section_id=section['section_id']) }}">
                                 {{ section["check_date"] }}
                             </a>
                         </td>
@@ -254,17 +275,22 @@
                         </td>
                         <td>
                             {% if section["detected_count"] %}
-                            <a href="{{ url_for('review_section', perch_mount_id=perch_mount['perch_mount_id'], section_id=section['section_id']) }}">
-                                <button type="button" class="btn btn-outline-secondary btn-sm" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
-                                    review <span class="badge text-bg-secondary ms-1">{{ section["detected_count"] }}</span>
+                            <a
+                                href="{{ url_for('review_section', perch_mount_id=perch_mount['perch_mount_id'], section_id=section['section_id']) }}">
+                                <button type="button" class="btn btn-outline-secondary btn-sm"
+                                    style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                                    review <span class="badge text-bg-secondary ms-1">{{ section["detected_count"]
+                                        }}</span>
                                 </button>
                             </a>
                             {% endif %}
                         </td>
                         <td>
                             {% if section["empty_count"] %}
-                            <a href="{{ url_for('empty_check_section', perch_mount_id=perch_mount['perch_mount_id'], section_id=section['section_id']) }}">
-                                <button type="button" class="btn btn-outline-secondary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                            <a
+                                href="{{ url_for('empty_check_section', perch_mount_id=perch_mount['perch_mount_id'], section_id=section['section_id']) }}">
+                                <button type="button" class="btn btn-outline-secondary"
+                                    style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
                                     check <span class="badge text-bg-secondary ms-1">{{ section["empty_count"] }}</span>
                                 </button>
                             </a>
@@ -302,9 +328,12 @@
                                 </td>
                                 <td>
                                     {% if count["count"] %}
-                                    <a href="{{ url_for('review_month_perch_mount', perch_mount_id=perch_mount['perch_mount_id'], year_month=count['year_month']) }}">
-                                        <button type="button" class="btn btn-outline-secondary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
-                                            review <span class="badge text-bg-secondary ms-1">{{ count["count"] }}</span>
+                                    <a
+                                        href="{{ url_for('review_month_perch_mount', perch_mount_id=perch_mount['perch_mount_id'], year_month=count['year_month']) }}">
+                                        <button type="button" class="btn btn-outline-secondary"
+                                            style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                                            review <span class="badge text-bg-secondary ms-1">{{ count["count"]
+                                                }}</span>
                                         </button>
                                     </a>
                                     {% endif %}
@@ -343,8 +372,10 @@
                                 </td>
                                 <td>
                                     {% if count["count"] %}
-                                    <a href="{{ url_for('empty_check_month_perch_mount', perch_mount_id=perch_mount['perch_mount_id'], year_month=count['year_month']) }}">
-                                        <button type="button" class="btn btn-outline-secondary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                                    <a
+                                        href="{{ url_for('empty_check_month_perch_mount', perch_mount_id=perch_mount['perch_mount_id'], year_month=count['year_month']) }}">
+                                        <button type="button" class="btn btn-outline-secondary"
+                                            style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
                                             check <span class="badge text-bg-secondary ms-1">{{ count["count"] }}</span>
                                         </button>
                                     </a>
@@ -381,8 +412,10 @@
                         <td>{{ count["check_date"] }}</td>
                         <td>
                             {% if count["prey_count"] %}
-                            <a href="{{ url_for('identify_prey', perch_mount_id=perch_mount['perch_mount_id'], section_id=count['section'], predator='raptor') }}">
-                                <button type="button" class="btn btn-outline-secondary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                            <a
+                                href="{{ url_for('identify_prey', perch_mount_id=perch_mount['perch_mount_id'], section_id=count['section'], predator='raptor') }}">
+                                <button type="button" class="btn btn-outline-secondary"
+                                    style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
                                     去認猛禽的獵物 <span class="badge text-bg-secondary ms-1">
                                         {% if count["raptor_count"] %}
                                         {{ count["raptor_count"] }}
@@ -396,8 +429,10 @@
                         </td>
                         <td>
                             {% if count["prey_count"] %}
-                            <a href="{{ url_for('identify_prey', perch_mount_id=perch_mount['perch_mount_id'], section_id=count['section'], predator='other') }}">
-                                <button type="button" class="btn btn-outline-secondary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                            <a
+                                href="{{ url_for('identify_prey', perch_mount_id=perch_mount['perch_mount_id'], section_id=count['section'], predator='other') }}">
+                                <button type="button" class="btn btn-outline-secondary"
+                                    style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
                                     去認其他鳥的獵物 <span class="badge text-bg-secondary ms-1">
                                         {% if count["other_count"] %}
                                         {{ count["other_count"] }}
@@ -443,17 +478,20 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-floating mb-3">
-                        <input type="number" step="0.00001" class="form-control" id="latitude" placeholder="" value="{{ perch_mount['latitude'] }}">
+                        <input type="number" step="0.00001" class="form-control" id="latitude" placeholder=""
+                            value="{{ perch_mount['latitude'] }}">
                         <label for="latitude">緯度</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="number" step="0.00001" class="form-control" id="longitude" placeholder="" value="{{ perch_mount['longitude'] }}">
+                        <input type="number" step="0.00001" class="form-control" id="longitude" placeholder=""
+                            value="{{ perch_mount['longitude'] }}">
                         <label for="longitude">經度</label>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id="submitCoordinate" type="button" class="btn btn-primary" value="{{ perch_mount['perch_mount_id'] }}">Save changes</button>
+                    <button id="submitCoordinate" type="button" class="btn btn-primary"
+                        value="{{ perch_mount['perch_mount_id'] }}">Save changes</button>
                 </div>
             </div>
         </div>
@@ -483,7 +521,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id="submitProject" type="button" class="btn btn-primary" value="{{ perch_mount['perch_mount_id'] }}">Save changes</button>
+                    <button id="submitProject" type="button" class="btn btn-primary"
+                        value="{{ perch_mount['perch_mount_id'] }}">Save changes</button>
                 </div>
             </div>
         </div>
@@ -513,14 +552,16 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id="submitHabitat" type="button" class="btn btn-primary" value="{{ perch_mount['perch_mount_id'] }}">Save changes</button>
+                    <button id="submitHabitat" type="button" class="btn btn-primary"
+                        value="{{ perch_mount['perch_mount_id'] }}">Save changes</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Asign Perch Mount Modal -->
-    <div class="modal fade" id="asignPerchMountModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="asignPerchMountModel" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -544,7 +585,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id="submitClaimBy" type="button" class="btn btn-primary" value="{{ perch_mount['perch_mount_id'] }}">Save changes</button>
+                    <button id="submitClaimBy" type="button" class="btn btn-primary"
+                        value="{{ perch_mount['perch_mount_id'] }}">Save changes</button>
                 </div>
             </div>
         </div>

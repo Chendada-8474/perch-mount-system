@@ -60,7 +60,7 @@
         </div>
     </div>
 
-    <div class="shadow-sm bg-light p-3 rounded-2">
+    <div class="shadow-sm bg-light-subtle p-3 rounded-2">
         <h4 class="fw-bold text-secondary mb-3">認領棲架</h4>
         {% if not perch_mounts %}
         <div class="alert alert-light" role="alert">
@@ -72,7 +72,7 @@
             <div id="perch_mount_{{ perch_mount['perch_mount_id'] }}" class="col project_{{ perch_mount['project_id'] }} habitat_{{ perch_mount['habitat_id'] }} filt-target">
                 <div class="card shadow border-0">
                     <div class="card-body">
-                        <a href="{{ url_for('perch_mount', perch_mount_id=perch_mount['perch_mount_id']) }}" class="text-decoration-none text-black fw-bolder">
+                        <a href="{{ url_for('perch_mount', perch_mount_id=perch_mount['perch_mount_id']) }}" class="text-decoration-none text-light fw-bolder">
                             <h5 class="card-title">
                                 {{ perch_mount["perch_mount_id"] }}. {{ perch_mount["perch_mount_name"] }}
                                 {% if perch_mount["layer"] %}

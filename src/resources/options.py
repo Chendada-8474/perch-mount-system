@@ -80,6 +80,17 @@ class Projects(Resource):
             ).all()
         return [result._asdict() for result in results]
 
+class Project(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument("name", type=str)
+
+    def post(self):
+        arg = self.parser.parse_args()
+        new_project = model.Projects(name=arg.name)
+        with Session(master_engine) as session:
+            session.add(new_project)
+            session.commit()
+
 
 class AllBehaviors(Resource):
     def get(self):

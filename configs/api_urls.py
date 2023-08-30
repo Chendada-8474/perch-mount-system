@@ -69,6 +69,7 @@ EVENTS = "/api/events"
 LAYERS = "/api/layers"
 MOUNT_TYPES = "/api/mount_types"
 PROJECTS = "/api/projects"
+PROJECT = "/api/project"
 MEMBERS = "/api/members"
 SPECIES = "/api/species"
 
