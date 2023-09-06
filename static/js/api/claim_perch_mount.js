@@ -34,7 +34,7 @@ if (button) {
 if (claimPerchMountButtons) {
     for (var button of claimPerchMountButtons) {
         button.addEventListener("click", (event) => {
-            var memberId = document.getElementById("member").value;
+            var memberId = document.getElementById("current_member_id").value;
 
             var ans = confirm("確定要認領嗎？");
             if (!ans) { return; }

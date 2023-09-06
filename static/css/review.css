@@ -10,31 +10,6 @@
   transition: 0.1s;
 }
 
-#pm-modal {
-  display: none;
-  z-index: 100;
-  background-color: rgba(0, 0, 0, 0.4);
-}
-
-#back-medium:hover,
-#next-medium:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-#back-medium,
-#next-medium {
-  transition: 0.1s;
-}
-
-#close-pm-modal:hover {
-  background-color: rgba(0, 0, 0, 0.2);
-  color: white;
-}
-
-#close-pm-modal {
-  transition: 0.1s;
-}
-
 .hover-pointer:hover {
   cursor: pointer;
 }
