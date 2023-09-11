@@ -22,7 +22,7 @@ class NewPerchMount(FlaskForm):
     habitat = SelectField("棲地類型", validators=[DataRequired()])
     project = SelectField("計畫", validators=[DataRequired()])
     layer = SelectField("分層")
-    submit = SubmitField("新增")
+    submit_perch_mount = SubmitField("新增")
 
     def init_choices(self, habitats=None, projects=None, layers=None):
         self.habitat.choices = habitats
@@ -99,6 +99,7 @@ class RowData(FlaskForm):
         self.species.choices = [
             (m["taxon_order_by_human"], m["chinese_common_name"]) for m in species
         ]
+
 
 class NewProject(FlaskForm):
     name = StringField("計畫名稱", validators=[DataRequired()])

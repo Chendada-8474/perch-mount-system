@@ -1,12 +1,17 @@
-
+var perchMountNameInput = document.getElementById("perch_mount_name");
+var latitudeInput = document.getElementById("latitude");
+var longitudeInput = document.getElementById("longitude");
+var projectSelect = document.getElementById("project");
+var habitatSelect = document.getElementById("habitat");
+var layerSelect = document.getElementById("layer");
 
 
 window.addEventListener('load', function () {
-    var postPerchMountForm = document.getElementById("newPerchMount");
+    var postPerchMountButton = document.getElementById("submit_perch_mount");
 
-    postPerchMountForm.addEventListener("submit", (event) => {
+    postPerchMountButton.addEventListener("click", (event) => {
         var api_url = "/api/perch_mount"
-        data = formToJson(postPerchMountForm);
+        data = getPerchMountData();
         fetch(api_url, {
             method: "POST",
             body: JSON.stringify(data),
@@ -16,17 +21,20 @@ window.addEventListener('load', function () {
         })
             .then(response => response.json())
             .then(json => {
-                window.location.replace(`/perch_mount/${json.perch_mount_id}`);
+                window.location = "/";
             })
             .catch(err => alert(err));
     });
 
 })
 
-function formToJson(form) {
-    var data = {}
-    for (let pair of new FormData(form)) {
-        data[pair[0]] = (pair[1]) ? pair[1] : null;
-    }
-    return data;
+function getPerchMountData() {
+    return {
+        "perch_mount_name": perchMountNameInput.value,
+        "latitude": latitudeInput.value,
+        "longitude": longitudeInput.value,
+        "project": projectSelect.value,
+        "habitat": habitatSelect.value,
+        "layer": layerSelect.value,
+    };
 }
