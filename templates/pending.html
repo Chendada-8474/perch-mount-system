@@ -180,7 +180,7 @@
         </div>
     </div>
 
-    <input type="number" id="member" value="{{ current_user.member_id }}" hidden>
+    <input type="number" id="current_member_id" value="{{ current_user.member_id }}" hidden>
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.2/echarts.min.js"></script>
 <script src="{{ url_for('static', filename='js/components/pending.js')}}"></script>

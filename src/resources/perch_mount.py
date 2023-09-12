@@ -62,21 +62,29 @@ class PerchMount(Resource):
     parser.add_argument("is_priority", type=bool)
     parser.add_argument("terminated", type=bool)
 
+    layer_ref = {1: "上層", 2: "中層", 3: "上層"}
+
     def get(self, perch_mount_id: int):
         return self._get_perch_mount(perch_mount_id)
 
     def post(self):
         arg = self.parser.parse_args()
 
+        perch_mount_name = arg.perch_mount_name
+
+        if arg.layer:
+            perch_mount_name += " %s" % self.layer_ref[int(arg.layer)]
+
         with Session(master_engine) as session:
             new_perch_mount = model.PerchMounts(
-                perch_mount_name=arg.perch_mount_name,
+                perch_mount_name=perch_mount_name,
                 longitude=arg.longitude,
                 latitude=arg.latitude,
                 habitat=arg.habitat,
                 project=arg.project,
                 layer=arg.layer,
             )
+
             session.add(new_perch_mount)
             session.commit()
             new_perch_mount_id = new_perch_mount.perch_mount_id

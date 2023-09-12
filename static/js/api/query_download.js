@@ -27,6 +27,12 @@ downloadSpeciesList.addEventListener("click", (event) => {
 })
 
 downloadRowData.addEventListener("click", (event) => {
+
+    if (!rowData.length) {
+        alert("你沒有篩選到資料！")
+        return;
+    }
+
     buildData(rowData).then(data => downloadJSONToCSV(data));
 })
 
