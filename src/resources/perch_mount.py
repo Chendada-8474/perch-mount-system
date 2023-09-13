@@ -62,7 +62,7 @@ class PerchMount(Resource):
     parser.add_argument("is_priority", type=bool)
     parser.add_argument("terminated", type=bool)
 
-    layer_ref = {1: "上層", 2: "中層", 3: "上層"}
+    layer_ref = {1: "上層", 2: "中層", 3: "下層"}
 
     def get(self, perch_mount_id: int):
         return self._get_perch_mount(perch_mount_id)
