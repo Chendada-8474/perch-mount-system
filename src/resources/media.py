@@ -92,6 +92,24 @@ class SectionMedia(Resource):
         empty_checker = aliased(model.Members)
 
         with Session(slave_engine) as session:
+            media_individual = (
+                session.query(
+                    model.Individuals.medium,
+                    func.group_concat(
+                        model.Species.chinese_common_name.distinct().op("SEPARATOR")(
+                            ", "
+                        )
+                    ).label("species"),
+                )
+                .join(
+                    model.Species,
+                    model.Species.taxon_order == model.Individuals.taxon_order_by_human,
+                    isouter=True,
+                )
+                .group_by(model.Individuals.medium)
+                .subquery()
+            )
+
             results = (
                 session.query(
                     model.Media.medium_id,
@@ -100,6 +118,7 @@ class SectionMedia(Resource):
                         model.Media.medium_datetime, "%Y-%m-%d %H:%i:%S"
                     ).label("medium_datetime"),
                     model.Media.path,
+                    media_individual.c.species,
                     model.Behaviors.behavior_id,
                     model.Behaviors.chinese_name.label("featured_behavior"),
                     model.Members.first_name.label("reviewer"),
@@ -124,6 +143,11 @@ class SectionMedia(Resource):
                 .join(
                     model.Behaviors,
                     model.Behaviors.behavior_id == model.Media.featured_behavior,
+                    isouter=True,
+                )
+                .join(
+                    media_individual,
+                    media_individual.c.medium == model.Media.medium_id,
                     isouter=True,
                 )
                 .order_by(model.Media.medium_datetime)
