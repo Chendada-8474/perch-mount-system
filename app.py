@@ -161,6 +161,7 @@ def perch_mount(perch_mount_id: int):
 
 
 @app.route("/perch_mount/<int:perch_mount_id>/section/<int:section_id>")
+@cache(timeout=600)
 @login_required
 def section(perch_mount_id: int, section_id: int):
     perch_mount_ = req.get(f"/api/perch_mount/{perch_mount_id}")
