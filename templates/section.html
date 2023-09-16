@@ -5,8 +5,7 @@
 
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-    <div
-        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h1">{{ perch_mount["perch_mount_name"] }} {{ section["check_date"] }}</h1>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -24,8 +23,7 @@
     <div class="p-3 rounded-2">
         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-media"
-                    type="button" role="tab" aria-controls="pills-media" aria-selected="true">
+                <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-media" type="button" role="tab" aria-controls="pills-media" aria-selected="true">
                     已辨識資料 (
                     {% if media|length > 999999 %}
                     {{ "%.1f M"|format(media|length / 1000000) }}
@@ -38,8 +36,7 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-detected"
-                    type="button" role="tab" aria-controls="pills-detected" aria-selected="false">
+                <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-detected" type="button" role="tab" aria-controls="pills-detected" aria-selected="false">
                     待物種檢視 (
                     {% if detected_media|length > 999999 %}
                     {{ "%.1f M"|format(detected_media|length / 1000000) }}
@@ -52,8 +49,7 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-empty"
-                    type="button" role="tab" aria-controls="pills-empty" aria-selected="false">
+                <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-empty" type="button" role="tab" aria-controls="pills-empty" aria-selected="false">
                     待空拍檢查 (
                     {% if empty_media|length > 999999 %}
                     {{ "%.1f M"|format(empty_media|length / 1000000) }}
@@ -68,14 +64,12 @@
         </ul>
         <div class="tab-content" id="pills-tabContent">
 
-            <div class="tab-pane fade show active" id="pills-media" role="tabpanel" aria-labelledby="pills-home-tab"
-                tabindex="0">
+            <div class="tab-pane fade show active" id="pills-media" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
                 <div class="mb-3">
                     {% for medium in media %}
                     {% if medium["medium_datetime"].split(' ')[0] != media[loop.index - 2]["medium_datetime"].split(' ')[0] %}
                     <a class="text-decoration-none" href="#day_{{ medium['medium_datetime'].split(' ')[0] }}">
-                        <button type="button" class="btn btn-outline-success rounded-pill mb-2 me-1"
-                            style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">{{
+                        <button type="button" class="btn btn-outline-success rounded-pill mb-2 me-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">{{
                             medium["medium_datetime"].split(" ")[0] }}</button>
                     </a>
                     {% endif %}
@@ -87,8 +81,7 @@
                 {% if loop.index == 1 or medium["medium_datetime"].split(" ")[0] != media[loop.index -
                 2]["medium_datetime"].split(" ")[0]
                 %}
-                <div id="day_{{ medium['medium_datetime'].split(' ')[0] }}"
-                    class="shadow-sm rounded bg-light-subtle p-3 mb-3">
+                <div id="day_{{ medium['medium_datetime'].split(' ')[0] }}" class="shadow-sm rounded bg-light-subtle p-3 mb-3">
                     <div>
                         <h5 class="fw-bold text-secondary">{{ medium["medium_datetime"].split(" ")[0] }}</h5>
                     </div>
@@ -96,6 +89,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">檔案</th>
+                                <th scope="col">物種</th>
                                 <th scope="col">Medium ID</th>
                                 <th scope="col">拍攝時間</th>
                                 <th scope="col">物種檢視</th>
@@ -108,8 +102,7 @@
                             {% endif %}
                             <tr>
                                 <th scope="row">
-                                    <a
-                                        href="{{ url_for('medium_page', perch_mount_id=perch_mount['perch_mount_id'], section_id=section['section_id'], medium_id=medium['medium_id']) }}">
+                                    <a href="{{ url_for('medium_page', perch_mount_id=perch_mount['perch_mount_id'], section_id=section['section_id'], medium_id=medium['medium_id']) }}">
                                         {% if medium["file_name"] %}
                                         {{ medium["file_name"] }}
                                         {% else %}
@@ -117,6 +110,7 @@
                                         {% endif %}
                                     </a>
                                 </th>
+                                <td>{{ medium["species"] }}</td>
                                 <td>{{ medium["medium_id"] }}</td>
                                 <td>{{ medium["medium_datetime"] }}</td>
                                 <td>
@@ -150,8 +144,7 @@
                 {% endfor %}
 
             </div>
-            <div class="tab-pane fade" id="pills-detected" role="tabpanel" aria-labelledby="pills-profile-tab"
-                tabindex="0">
+            <div class="tab-pane fade" id="pills-detected" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
 
                 <table class="table table-striped table-hover">
                     <thead>
@@ -174,8 +167,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="tab-pane fade" id="pills-empty" role="tabpanel" aria-labelledby="pills-contact-tab"
-                tabindex="0">
+            <div class="tab-pane fade" id="pills-empty" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
