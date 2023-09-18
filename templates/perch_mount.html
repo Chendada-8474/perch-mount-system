@@ -257,17 +257,16 @@
                             {% if section["detected_count"] %}
                             <a href="{{ url_for('review_section', perch_mount_id=perch_mount['perch_mount_id'], section_id=section['section_id']) }}">
                                 <button type="button" class="btn btn-outline-secondary btn-sm" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
-                                    review <span class="badge text-bg-secondary ms-1">{{ section["detected_count"]
-                                        }}</span>
+                                    review <span class="badge text-bg-secondary ms-1">{{ section["detected_count"]}}</span>
                                 </button>
                             </a>
                             {% endif %}
                         </td>
                         <td>
-                            {% if section["detected_count"] %}
+                            {% if section["pre_empty_count"] %}
                             <a href="{{ url_for('empty_check_detected_section', perch_mount_id=perch_mount['perch_mount_id'], section_id=section['section_id']) }}">
                                 <button type="button" class="btn btn-outline-secondary btn-sm" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
-                                    precheck <span class="badge text-bg-secondary ms-1"></span>
+                                    precheck <span class="badge text-bg-secondary ms-1">{{ section["pre_empty_count"]}}</span>
                                 </button>
                             </a>
                             {% endif %}
