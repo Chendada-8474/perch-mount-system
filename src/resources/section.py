@@ -34,6 +34,26 @@ class SectionsOfPerchMount(Resource):
                 .group_by(model.DetectedMedia.section)
                 .subquery()
             )
+
+            pre_empty_count = (
+                session.query(
+                    model.DetectedMedia.section,
+                    func.count(model.DetectedMedia.detected_medium_id).label("count"),
+                )
+                .join(
+                    model.Sections,
+                    model.Sections.section_id == model.DetectedMedia.section,
+                )
+                .filter(
+                    and_(
+                        model.Sections.perch_mount == perch_mount_id,
+                        model.DetectedMedia.empty_checked == 0,
+                    )
+                )
+                .group_by(model.DetectedMedia.section)
+                .subquery()
+            )
+
             empty_count = (
                 session.query(
                     model.EmptyMedia.section,
@@ -72,6 +92,7 @@ class SectionsOfPerchMount(Resource):
                         model.Members.first_name,
                         model.Sections.note,
                         detected_count.c.count.label("detected_count"),
+                        pre_empty_count.c.count.label("pre_empty_count"),
                         empty_count.c.count.label("empty_count"),
                     )
                     .join(
@@ -105,6 +126,11 @@ class SectionsOfPerchMount(Resource):
                         isouter=True,
                     )
                     .join(
+                        pre_empty_count,
+                        pre_empty_count.c.section == model.Sections.section_id,
+                        isouter=True,
+                    )
+                    .join(
                         empty_count,
                         empty_count.c.section == model.Sections.section_id,
                         isouter=True,
@@ -130,6 +156,7 @@ class SectionsOfPerchMount(Resource):
                     "model_name": result.model_name,
                     "note": result.note,
                     "detected_count": result.detected_count,
+                    "pre_empty_count": result.pre_empty_count,
                     "empty_count": result.empty_count,
                     "operators": [],
                 }
