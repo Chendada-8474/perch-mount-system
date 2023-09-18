@@ -41,11 +41,18 @@ EMPTY_CHECK_PERCH_MOUNT_2 = "/api/empty_check"
 EMPTY_CHECK_SECTION = "/api/empty_check/section/<int:section_id>/limit/<int:limit>"
 EMPTY_CHECK_MONTH_PERCH_MOUNT_ = "/api/empty_check/perch_mount/<int:perch_mount_id>/year_month/<string:year_month>/limit/<int:limit>"
 
+# detected empty check
+EMPTY_CHECK_DETECTED_MEDIA_1 = (
+    "/api/empty_check_detected/section/<int:section_id>/limit/<int:limit>"
+)
+EMPTY_CHECK_DETECTED_MEDIA_2 = "/api/empty_check_detected"
+
 # review
 REVIEW_PERCH_MOUNT_1 = "/api/review/perch_mount/<int:perch_mount_id>/limit/<int:limit>"
 REVIEW_PERCH_MOUNT_2 = "/api/review"
 REVIEW_MONTH_PERCH_MOUNT_ = "/api/review/perch_mount/<int:perch_mount_id>/year_month/<string:year_month>/limit/<int:limit>"
 REVIEW_SECTION = "/api/review/section/<int:section_id>/limit/<int:limit>"
+
 
 # prey identification
 IDENTIFY_PREY_SECTION = "/api/identify_prey/<string:predator>/section/<int:section_id>"

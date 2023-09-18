@@ -341,6 +341,30 @@ def empty_check_month_perch_mount(perch_mount_id: int, year_month: str):
 
 
 @app.route(
+    "/empty_check_detected/perch_mount/<int:perch_mount_id>/section/<int:section_id>"
+)
+@login_required
+def empty_check_detected_section(perch_mount_id: int, section_id: int):
+    perch_mount_ = req.get(f"/api/perch_mount/{perch_mount_id}")
+    media = req.get(
+        f"/api/empty_check_detected/section/{section_id}/limit/{config.DETECTED_EMPTY_CHECK_LIMIT}"
+    )
+    media = file.add_all_is_image(media)
+
+    for medium in media:
+        medium["epath"] = encryptor.encrypt(medium["path"])
+
+    print(perch_mount_)
+
+    return render_template(
+        "detected_empty_check.html",
+        media=media,
+        perch_mount=perch_mount_,
+        section_id=section_id,
+    )
+
+
+@app.route(
     "/identify_prey/<string:predator>/perch_mount/<int:perch_mount_id>/section/section/<int:section_id>"
 )
 @login_required
@@ -550,12 +574,16 @@ def send_media(path):
     path = encryptor.decrypt(path)
     _, extension = os.path.splitext(path)
     if extension.lower()[1:] in config.IMAGE_EXTENSIONS:
-        image_io = BytesIO()
-        image = Image.open(path)
-        image.thumbnail((960, 540))
-        image.save(image_io, "JPEG")
-        image_io.seek(0)
-        return send_file(image_io, mimetype="image/jpeg")
+        try:
+            image_io = BytesIO()
+            image = Image.open(path)
+            image.thumbnail((960, 540))
+            image.save(image_io, "JPEG")
+            image_io.seek(0)
+            return send_file(image_io, mimetype="image/jpeg")
+        except:
+            return send_from_directory("./static/img", "not_found.png")
+
     elif extension.lower()[1:] in config.VIDEO_EXTENSIONS:
         dir_path = os.path.dirname(path)
         file_name = os.path.basename(path)
@@ -603,6 +631,12 @@ api.add_resource(
 api.add_resource(
     res_media.EmptyCheckMonthPerchMount,
     api_urls.EMPTY_CHECK_MONTH_PERCH_MOUNT_,
+)
+
+api.add_resource(
+    res_media.DetectedUnCheckedSectionMedia,
+    api_urls.EMPTY_CHECK_DETECTED_MEDIA_1,
+    api_urls.EMPTY_CHECK_DETECTED_MEDIA_2,
 )
 
 api.add_resource(res_media.ReviewSection, api_urls.REVIEW_SECTION)

@@ -918,3 +918,40 @@ class ProcessedMedia(Resource):
                 model.DetectedMedia.reviewed == 1
             ).delete()
             session.commit()
+
+
+class DetectedUnCheckedSectionMedia(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument("medium_ids", action="append")
+
+    def get(self, section_id: int, limit: int):
+        with Session(master_engine) as session:
+            results = (
+                session.query(
+                    model.DetectedMedia.detected_medium_id, model.DetectedMedia.path
+                )
+                .filter(
+                    and_(
+                        model.DetectedMedia.section == section_id,
+                        model.DetectedMedia.reviewed == False,
+                        model.DetectedMedia.empty_checked == False,
+                    )
+                )
+                .limit(limit)
+                .all()
+            )
+        return [result._asdict() for result in results]
+
+    def patch(self):
+        arg = self.parser.parse_args()
+        medium_ids = arg.medium_ids
+        print(medium_ids)
+
+        if not medium_ids:
+            return
+
+        with Session(master_engine) as session:
+            session.query(model.DetectedMedia).filter(
+                model.DetectedMedia.detected_medium_id.in_(medium_ids)
+            ).update({"empty_checked": True})
+            session.commit()

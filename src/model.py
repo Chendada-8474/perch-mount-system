@@ -85,6 +85,7 @@ class DetectedMedia(db.Model):
     path = db.Column(db.String(255))
     reviewed = db.Column(db.Boolean, default=False)
     empty_checker = db.Column(db.Integer, db.ForeignKey("members.member_id"))
+    empty_checked = db.Column(db.Boolean, default=False)
 
 
 class Individuals(db.Model):
