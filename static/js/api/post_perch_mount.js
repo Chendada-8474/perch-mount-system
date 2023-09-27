@@ -30,14 +30,12 @@ window.addEventListener('load', function () {
 
 function getPerchMountData() {
 
-    var layer = (!layer) ? null : layer;
-
     return {
         "perch_mount_name": perchMountNameInput.value,
         "latitude": latitudeInput.value,
         "longitude": longitudeInput.value,
         "project": projectSelect.value,
         "habitat": habitatSelect.value,
-        "layer": layer,
+        "layer": layer.value,
     };
 }
