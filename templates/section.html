@@ -62,10 +62,18 @@
                 </button>
             </li>
         </ul>
+
+
         <div class="tab-content" id="pills-tabContent">
 
             <div class="tab-pane fade show active" id="pills-media" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+
+
+
                 <div class="mb-3">
+
+
+
                     {% for medium in media %}
                     {% if medium["medium_datetime"].split(' ')[0] != media[loop.index - 2]["medium_datetime"].split(' ')[0] %}
                     <a class="text-decoration-none" href="#day_{{ medium['medium_datetime'].split(' ')[0] }}">
@@ -74,6 +82,14 @@
                     </a>
                     {% endif %}
                     {% endfor %}
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-3">
+                        <select id="speicesFilter" class="form-select" aria-label="Default select example">
+                            <option value=""> -- 篩選物種 -- </option>
+                          </select>
+                    </div>
                 </div>
 
 
@@ -100,7 +116,7 @@
                         </thead>
                         <tbody>
                             {% endif %}
-                            <tr>
+                            <tr class="species-filt-target">
                                 <th scope="row">
                                     <a href="{{ url_for('medium_page', perch_mount_id=perch_mount['perch_mount_id'], section_id=section['section_id'], medium_id=medium['medium_id']) }}">
                                         {% if medium["file_name"] %}
@@ -110,7 +126,7 @@
                                         {% endif %}
                                     </a>
                                 </th>
-                                <td>{{ medium["species"] }}</td>
+                                <td class="species">{{ medium["species"] }}</td>
                                 <td>{{ medium["medium_id"] }}</td>
                                 <td>{{ medium["medium_datetime"] }}</td>
                                 <td>
@@ -194,4 +210,5 @@
 </main>
 <script src="{{ url_for('static', filename='js/components/medium_editor.js')}}"></script>
 <script src="{{ url_for('static', filename='js/components/full_screen_image.js')}}"></script>
+<script src="{{ url_for('static', filename='js/components/species_filter.js')}}"></script>
 {% endblock %}
