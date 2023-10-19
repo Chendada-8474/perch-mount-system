@@ -30,6 +30,11 @@ window.addEventListener('load', function () {
 
 function getPerchMountData() {
 
+    var layer = layerSelect.value;
+    if (layer == "") {
+        layer = null;
+    }
+
     return {
         "perch_mount_name": perchMountNameInput.value,
         "latitude": latitudeInput.value,
