@@ -34,8 +34,8 @@ class AllCameras(Resource):
     def get(self):
         with Session(slave_engine) as session:
             results = session.query(
-                model.Cameras.camera_id,
-                model.Cameras.model_name,
+                model.Events.camera_id,
+                model.Events.model_name,
             ).all()
         return [result._asdict() for result in results]
 
@@ -80,6 +80,7 @@ class Projects(Resource):
             ).all()
         return [result._asdict() for result in results]
 
+
 class Project(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument("name", type=str)
@@ -96,7 +97,7 @@ class AllBehaviors(Resource):
     def get(self):
         with Session(slave_engine) as session:
             results = session.query(
-                model.Behaviors.behavior_id, model.Behaviors.chinese_name
+                model.Positions.behavior_id, model.Positions.chinese_name
             ).all()
         return [result._asdict() for result in results]
 
@@ -107,7 +108,7 @@ class Behavior(Resource):
 
     def post(self):
         arg = self.parser.parse_args()
-        new_behavior = model.Behaviors(chinese_name=arg.chinese_name)
+        new_behavior = model.Positions(chinese_name=arg.chinese_name)
         with Session(master_engine) as session:
             session.add(new_behavior)
             session.commit()
@@ -119,7 +120,7 @@ class Camera(Resource):
 
     def post(self):
         arg = self.parser.parse_args()
-        new_camera = model.Cameras(model_name=arg.model_name)
+        new_camera = model.Events(model_name=arg.model_name)
         with Session(master_engine) as session:
             session.add(new_camera)
             session.commit()

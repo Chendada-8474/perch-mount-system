@@ -49,7 +49,7 @@ class Medium(Resource):
                         ).label("medium_datetime"),
                         model.Media.path,
                         model.Media.featured_title,
-                        model.Behaviors.chinese_name.label("featured_behavior"),
+                        model.Positions.chinese_name.label("featured_behavior"),
                         model.Events.chinese_name.label("event"),
                         reviewer.first_name.label("reviewer"),
                         featured_by.first_name.label("featured_by"),
@@ -76,8 +76,8 @@ class Medium(Resource):
                         isouter=True,
                     )
                     .join(
-                        model.Behaviors,
-                        model.Behaviors.behavior_id == model.Media.featured_behavior,
+                        model.Positions,
+                        model.Positions.behavior_id == model.Media.featured_behavior,
                         isouter=True,
                     )
                 )
@@ -119,8 +119,8 @@ class SectionMedia(Resource):
                     ).label("medium_datetime"),
                     model.Media.path,
                     media_individual.c.species,
-                    model.Behaviors.behavior_id,
-                    model.Behaviors.chinese_name.label("featured_behavior"),
+                    model.Positions.behavior_id,
+                    model.Positions.chinese_name.label("featured_behavior"),
                     model.Members.first_name.label("reviewer"),
                     empty_checker.first_name.label("empty_checker"),
                     model.Events.chinese_name.label("event"),
@@ -141,8 +141,8 @@ class SectionMedia(Resource):
                     isouter=True,
                 )
                 .join(
-                    model.Behaviors,
-                    model.Behaviors.behavior_id == model.Media.featured_behavior,
+                    model.Positions,
+                    model.Positions.behavior_id == model.Media.featured_behavior,
                     isouter=True,
                 )
                 .join(
