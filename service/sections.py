@@ -51,9 +51,9 @@ def get_section_by_id(section_id: int) -> Sections:
 
 
 def add_section(
-    perch_mount: int,
-    mount_type: int,
-    camera: int,
+    perch_mount_id: int,
+    mount_type_id: int,
+    camera_id: int,
     start_time: datetime,
     end_time: datetime,
     valid: bool,
@@ -61,9 +61,9 @@ def add_section(
     note: str,
 ) -> int:
     new_section = Sections(
-        perch_mount=perch_mount,
-        mount_type=mount_type,
-        camera=camera,
+        perch_mount=perch_mount_id,
+        mount_type=mount_type_id,
+        camera=camera_id,
         start_time=start_time,
         end_time=end_time,
         valid=valid,
@@ -71,21 +71,23 @@ def add_section(
     )
 
     with Session(db_engine) as session:
-        session.begin()
-
         try:
             session.add(new_section)
+            session.flush()
+            section_id = new_section.section_id
             new_section_operators = []
-            print(new_section.section_id)
             for operator in operators:
                 new_section_operators.append(
-                    SectionOperators(section=new_section.section_id, operator=operator)
+                    SectionOperators(
+                        section=section_id,
+                        operator=operator,
+                    )
                 )
             session.add_all(new_section_operators)
-        except:
-            session.rollback()
-            raise
-        else:
             session.commit()
+        except Exception as e:
+            session.rollback()
+            print(e)
+            raise
 
-    return new_section.section_id
+    return section_id
