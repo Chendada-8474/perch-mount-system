@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from service.db_engine import db_engine
+from service import db_engine
 from src.model import Projects
 
 

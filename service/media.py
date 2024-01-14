@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session, Query
-from service.db_engine import db_engine
+from service import db_engine
 from service.query_utils import get_section_indice_by_perch_mount_id
 from src.model import Media, Individuals, Species
 
