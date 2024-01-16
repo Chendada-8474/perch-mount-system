@@ -167,7 +167,7 @@ class SpeciesCodes(db.Model):
     code = db.Column(db.String(10), primary_key=True)
 
 
-class Behaviors(db.Model):
+class Positions(db.Model):
     __tablename__ = "behaviors"
     behavior_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     chinese_name = db.Column(db.String(20), nullable=False)
@@ -185,7 +185,7 @@ class MountTypes(db.Model):
     name = db.Column(db.String(15))
 
 
-class Cameras(db.Model):
+class Events(db.Model):
     __tablename__ = "cameras"
     camera_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     model_name = db.Column(db.String(10))

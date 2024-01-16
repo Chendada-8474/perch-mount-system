@@ -38,7 +38,7 @@ class FeaturedMedia(Resource):
             model.Media.medium_id,
             model.Media.path,
             model.Media.featured_title,
-            model.Behaviors.chinese_name.label("behavior"),
+            model.Positions.chinese_name.label("behavior"),
             model.Species.chinese_common_name.label("species"),
             model.PerchMounts.perch_mount_name,
             model.PerchMounts.perch_mount_id,
@@ -104,8 +104,8 @@ class FeaturedMedia(Resource):
                 isouter=True,
             )
             .join(
-                model.Behaviors,
-                model.Behaviors.behavior_id == model.Media.featured_behavior,
+                model.Positions,
+                model.Positions.behavior_id == model.Media.featured_behavior,
                 isouter=True,
             )
             .join(

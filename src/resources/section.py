@@ -88,7 +88,7 @@ class SectionsOfPerchMount(Resource):
                         model.Sections.valid,
                         model.PerchMounts.perch_mount_name,
                         model.MountTypes.name.label("mount_type"),
-                        model.Cameras.model_name.label("model_name"),
+                        model.Events.model_name.label("model_name"),
                         model.Members.first_name,
                         model.Sections.note,
                         detected_count.c.count.label("detected_count"),
@@ -106,8 +106,8 @@ class SectionsOfPerchMount(Resource):
                         isouter=True,
                     )
                     .join(
-                        model.Cameras,
-                        model.Cameras.camera_id == model.Sections.camera,
+                        model.Events,
+                        model.Events.camera_id == model.Sections.camera,
                         isouter=True,
                     )
                     .join(
@@ -274,7 +274,7 @@ class OneSection(Resource):
                     model.Sections.valid,
                     model.Sections.note,
                     model.MountTypes.name.label("mount_type"),
-                    model.Cameras.model_name.label("camera"),
+                    model.Events.model_name.label("camera"),
                     model.Members.first_name.label("operator"),
                 )
                 .join(
@@ -283,8 +283,8 @@ class OneSection(Resource):
                     isouter=True,
                 )
                 .join(
-                    model.Cameras,
-                    model.Cameras.camera_id == model.Sections.camera,
+                    model.Events,
+                    model.Events.camera_id == model.Sections.camera,
                     isouter=True,
                 )
                 .join(
