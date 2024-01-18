@@ -2,7 +2,6 @@ from datetime import datetime
 from flask import request
 from flask_restful import Resource, reqparse
 from api.utils import field_as_key, get_nodup_values
-from src.model import PerchMounts, Sections, Cameras
 import service.sections as ServiceSections
 import service.members as ServiceMembers
 import service.cameras as ServiceCameras
