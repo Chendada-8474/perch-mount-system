@@ -9,9 +9,9 @@ def get_positions() -> list[Positions]:
     return results
 
 
-def add_position(name: str) -> int:
+def add_position(name: str) -> Positions:
     new_position = Positions(name=name)
     with Session(db_engine) as session:
         session.add(new_position)
         session.commit()
-    return new_position.position_id
+    return new_position

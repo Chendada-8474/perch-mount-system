@@ -9,9 +9,9 @@ def get_layers() -> list[Layers]:
     return results
 
 
-def add_layer(name: str) -> int:
+def add_layer(name: str) -> Layers:
     new_layer = Layers(name=name)
     with Session(db_engine) as session:
         session.add(new_layer)
         session.commit()
-    return new_layer.layer_id
+    return new_layer

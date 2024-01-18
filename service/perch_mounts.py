@@ -4,19 +4,19 @@ from src.model import PerchMounts
 
 
 def get_perch_mounts(
-    project_id: int = None,
-    habitat_id: int = None,
+    project: int = None,
+    habitat: int = None,
     terminated: bool = None,
     claim_by: int = None,
 ) -> list[PerchMounts]:
     with Session(db_engine) as session:
         query = session.query(PerchMounts)
 
-        if project_id:
-            query = query.filter(PerchMounts.project == project_id)
+        if project:
+            query = query.filter(PerchMounts.project == project)
 
-        if habitat_id:
-            query = query.filter(PerchMounts.habitat == habitat_id)
+        if habitat:
+            query = query.filter(PerchMounts.habitat == habitat)
 
         if terminated is not None:
             query = query.filter(PerchMounts.terminated == terminated)
@@ -33,7 +33,7 @@ def get_perch_mount_by_id(perch_mount_id: int):
         result = (
             session.query(PerchMounts)
             .filter(PerchMounts.perch_mount_id == perch_mount_id)
-            .one()
+            .first()
         )
     return result
 
@@ -45,7 +45,7 @@ def add_perch_mount(
     habitat: int,
     project: int,
     layer: int,
-) -> int:
+) -> PerchMounts:
     new_perch_mount = PerchMounts(
         perch_mount_name=perch_mount_name,
         latitude=latitude,
@@ -57,8 +57,7 @@ def add_perch_mount(
     with Session(db_engine) as session:
         session.add(new_perch_mount)
         session.commit()
-        new_id = new_perch_mount.perch_mount_id
-    return new_id
+    return new_perch_mount
 
 
 def update_perch_mount(perch_mount_id: int, arg: dict):

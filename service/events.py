@@ -9,9 +9,9 @@ def get_events() -> list[Events]:
     return results
 
 
-def add_event(chinese_name: str, english_name: str) -> int:
+def add_event(chinese_name: str, english_name: str) -> Events:
     new_event = Events(model_name=chinese_name, english_name=english_name)
     with Session(db_engine) as session:
         session.add(new_event)
         session.commit()
-    return new_event.event_id
+    return new_event

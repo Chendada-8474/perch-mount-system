@@ -5,7 +5,7 @@ from src.model import Sections, SectionOperators
 
 
 def get_sections(
-    perch_mount_id: int = None,
+    perch_mount: int = None,
     check_date_from: datetime = None,
     check_date_to: datetime = None,
     valid: bool = None,
@@ -14,8 +14,8 @@ def get_sections(
     with Session(db_engine) as session:
         query = session.query(Sections)
 
-        if perch_mount_id:
-            query = query.filter(Sections.perch_mount == perch_mount_id)
+        if perch_mount:
+            query = query.filter(Sections.perch_mount == perch_mount)
 
         if check_date_from:
             query = query.filter(Sections.check_date >= check_date_from)
@@ -51,19 +51,19 @@ def get_section_by_id(section_id: int) -> Sections:
 
 
 def add_section(
-    perch_mount_id: int,
-    mount_type_id: int,
-    camera_id: int,
+    perch_mount: int,
+    mount_type: int,
+    camera: int,
     start_time: datetime,
     end_time: datetime,
     valid: bool,
     operators: list[int],
     note: str,
-) -> int:
+) -> Sections:
     new_section = Sections(
-        perch_mount=perch_mount_id,
-        mount_type=mount_type_id,
-        camera=camera_id,
+        perch_mount=perch_mount,
+        mount_type=mount_type,
+        camera=camera,
         start_time=start_time,
         end_time=end_time,
         valid=valid,
@@ -87,7 +87,6 @@ def add_section(
             session.commit()
         except Exception as e:
             session.rollback()
-            print(e)
             raise
 
-    return section_id
+    return new_section
