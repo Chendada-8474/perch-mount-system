@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from sqlalchemy.orm import Session
 from service import db_engine
 from src.model import Sections, SectionOperators
@@ -56,16 +56,18 @@ def add_section(
     camera: int,
     start_time: datetime,
     end_time: datetime,
+    check_date: date,
     valid: bool,
     operators: list[int],
     note: str,
-) -> Sections:
+) -> int:
     new_section = Sections(
         perch_mount=perch_mount,
         mount_type=mount_type,
         camera=camera,
         start_time=start_time,
         end_time=end_time,
+        check_date=check_date,
         valid=valid,
         note=note,
     )
@@ -85,8 +87,10 @@ def add_section(
                 )
             session.add_all(new_section_operators)
             session.commit()
+
+            new_id = new_section.section_id
         except Exception as e:
             session.rollback()
             raise
 
-    return new_section
+    return new_id

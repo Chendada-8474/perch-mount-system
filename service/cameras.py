@@ -9,6 +9,12 @@ def get_cameras() -> list[Cameras]:
     return results
 
 
+def get_camera_by_id(camera_id: int) -> Cameras:
+    with Session(db_engine) as session:
+        result = session.query(Cameras).filter(Cameras.camera_id == camera_id).first()
+    return result
+
+
 def add_camera(model_name: str) -> Cameras:
     new_camera = Cameras(model_name=model_name)
     with Session(db_engine) as session:

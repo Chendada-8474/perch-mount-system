@@ -45,7 +45,7 @@ def add_perch_mount(
     habitat: int,
     project: int,
     layer: int,
-) -> PerchMounts:
+) -> int:
     new_perch_mount = PerchMounts(
         perch_mount_name=perch_mount_name,
         latitude=latitude,
@@ -57,7 +57,8 @@ def add_perch_mount(
     with Session(db_engine) as session:
         session.add(new_perch_mount)
         session.commit()
-    return new_perch_mount
+        new_id = new_perch_mount.perch_mount_id
+    return new_id
 
 
 def update_perch_mount(perch_mount_id: int, arg: dict):

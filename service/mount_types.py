@@ -9,6 +9,16 @@ def get_mount_types() -> list[MountTypes]:
     return results
 
 
+def get_mount_type_by_id(mount_type_id: int) -> MountTypes:
+    with Session(db_engine) as session:
+        result = (
+            session.query(MountTypes)
+            .filter(MountTypes.mount_type_id == mount_type_id)
+            .first()
+        )
+    return result
+
+
 def get_mount_types_by_indice(indice: list[int]) -> list[MountTypes]:
     with Session(db_engine) as session:
         results = (

@@ -1,22 +1,27 @@
-from sqlalchemy.orm import Session
+import sqlalchemy.orm
 from service import db_engine
-from service.query_utils import get_section_indice_by_perch_mount_id
+from service import query_utils
 from src.model import EmptyMedia
 
 
 def get_empty_media(
-    section_id: int = None,
-    perch_mount_id: int = None,
+    section: int = None,
+    perch_mount: int = None,
     offset: int = 0,
     limit: int = 250,
+    order_by_datetime: bool = True,
 ) -> list[EmptyMedia]:
-    with Session(db_engine) as session:
+    with sqlalchemy.orm.Session(db_engine) as session:
         query = session.query(EmptyMedia)
-        if section_id:
-            query = query.filter(EmptyMedia.section == section_id)
-        if perch_mount_id:
-            section_indice = get_section_indice_by_perch_mount_id(perch_mount_id)
+        if section:
+            query = query.filter(EmptyMedia.section == section)
+        if perch_mount:
+            section_indice = query_utils.get_section_indice_by_perch_mount_id(
+                perch_mount
+            )
             query = query.filter(EmptyMedia.section.in_(section_indice))
+        if order_by_datetime:
+            query = query.order_by(EmptyMedia.medium_datetime)
         query = query.offset(offset).limit(limit)
         results = query.all()
     return results
@@ -24,13 +29,13 @@ def get_empty_media(
 
 def add_empty_media(empty_media: list[dict]):
     new_media = [EmptyMedia(**medium) for medium in empty_media]
-    with Session(db_engine) as session:
+    with sqlalchemy.orm.Session(db_engine) as session:
         session.add_all(new_media)
         session.commit()
 
 
 def checked_empty_media(medium_indice: list[str]):
-    with Session(db_engine) as session:
+    with sqlalchemy.orm.Session(db_engine) as session:
         session.query(EmptyMedia).filter(
             EmptyMedia.empty_medium_id.in_(medium_indice)
         ).update()
@@ -38,6 +43,6 @@ def checked_empty_media(medium_indice: list[str]):
 
 
 def delete_checked_empty_media():
-    with Session(db_engine) as session:
+    with sqlalchemy.orm.Session(db_engine) as session:
         session.query(EmptyMedia).filter(EmptyMedia.checked == True).delete()
         session.commit()
