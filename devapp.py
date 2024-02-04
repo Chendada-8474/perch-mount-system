@@ -4,6 +4,7 @@ from service import SQLALCHEMY_DATABASE_URI
 import api.perch_mounts as APIPerchMounts
 import api.sections as APISections
 import api.empty_media as APIEmptyMedia
+import api.detected_media as APIDetectedMedia
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "key"
@@ -19,6 +20,7 @@ api.add_resource(
 api.add_resource(APISections.Sections, "/sections")
 api.add_resource(APISections.Section, "/sections/<int:section_id>", "/sections")
 api.add_resource(APIEmptyMedia.EmptyMedia, "/empty_media")
+api.add_resource(APIDetectedMedia.DetectedMedia, "/detected_media")
 
 
 if __name__ == "__main__":
