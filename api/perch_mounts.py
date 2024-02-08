@@ -1,23 +1,24 @@
 import flask
 import flask_restful
-from flask_restful import reqparse
+import flask_restful.reqparse
 
 import service.perch_mounts as ServicePerchMounts
 import service.habitats as ServiceHabitats
 import service.members as ServiceMembers
 import service.projects as ServiceProjects
-from api import utils
+import api
+import api.utils
 
 
-class PerchMounts(flask_restful.Resource):
+class PerchMounts(api.PerchMountModel):
     def get(self):
         args = dict(flask.request.args)
         args = self._correct_types(args)
         results = ServicePerchMounts.get_perch_mounts(**args)
         results = [row.to_json() for row in results]
-        project_indice = utils.get_nodup_values(results, "project")
-        habitat_indice = utils.get_nodup_values(results, "habitat")
-        claimer_indice = utils.get_nodup_values(results, "claim_by")
+        project_indice = api.utils.get_nodup_values(results, "project")
+        habitat_indice = api.utils.get_nodup_values(results, "habitat")
+        claimer_indice = api.utils.get_nodup_values(results, "claim_by")
 
         projects = ServiceProjects.get_projects_by_indice(project_indice)
         habitats = ServiceHabitats.get_habitats_by_indice(habitat_indice)
@@ -29,25 +30,14 @@ class PerchMounts(flask_restful.Resource):
 
         return {
             "perch_mounts": results,
-            "projects": utils.field_as_key(projects, "project_id"),
-            "habitats": utils.field_as_key(habitats, "habitat_id"),
-            "members": utils.field_as_key(members, "member_id"),
+            "projects": api.utils.field_as_key(projects, "project_id"),
+            "habitats": api.utils.field_as_key(habitats, "habitat_id"),
+            "members": api.utils.field_as_key(members, "member_id"),
         }
-
-    def _correct_types(self, args: dict) -> dict:
-        if "project" in args:
-            args["project"] == int(args["project"])
-        if "habitat" in args:
-            args["habitat"] == int(args["habitat"])
-        if "terminated" in args:
-            args["terminated"] = args["terminated"].lower() == "true"
-        if "claim_by" in args:
-            args["claim_by"] == int(args["claim_by"])
-        return args
 
 
 class PerchMount(flask_restful.Resource):
-    post_parser = reqparse.RequestParser()
+    post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument("perch_mount_name", type=str, required=True)
     post_parser.add_argument("latitude", type=float, required=True)
     post_parser.add_argument("longitude", type=float, required=True)
@@ -55,7 +45,7 @@ class PerchMount(flask_restful.Resource):
     post_parser.add_argument("project", type=int, required=True)
     post_parser.add_argument("layer", type=int)
 
-    patch_parser = reqparse.RequestParser()
+    patch_parser = flask_restful.reqparse.RequestParser()
     patch_parser.add_argument("perch_mount_name", type=str)
     patch_parser.add_argument("latitude", type=float)
     patch_parser.add_argument("longitude", type=float)

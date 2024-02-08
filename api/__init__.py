@@ -1,3 +1,4 @@
+import datetime
 import flask_restful
 
 
@@ -18,10 +19,18 @@ TYPE_MAP = {
     "order": str,
     "family": str,
     "prey": _query_bool,
+    "project": int,
+    "habitat": int,
+    "terminated": _query_bool,
+    "claim_by": int,
+    "perch_mount": int,
+    "check_date_from": datetime.datetime.fromisoformat,
+    "check_date_to": datetime.datetime.fromisoformat,
+    "operator": int,
 }
 
 
-class BasicMedia(flask_restful.Resource):
+class PerchMountModel(flask_restful.Resource):
     def _correct_types(self, args: dict) -> dict:
 
         for k, v in TYPE_MAP.items():
