@@ -1,10 +1,11 @@
 import datetime
 import flask_restful
 
+TRUES = {"true", "1", "yes"}
+
 
 def _query_bool(phase: str) -> bool:
-    phase = phase.lower()
-    return phase == "true" or phase == "1"
+    return phase.lower() in TRUES
 
 
 TYPE_MAP = {
