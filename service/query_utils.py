@@ -1,13 +1,13 @@
 from sqlalchemy.orm import Session
 from service import db_engine
-from src.model import Sections
+import src.model as model
 
 
 def get_section_indice_by_perch_mount_id(perch_mount_id: int) -> list[int]:
     with Session(db_engine) as session:
         results = (
-            session.query(Sections.section_id)
-            .filter(Sections.perch_mount == perch_mount_id)
+            session.query(model.Sections.section_id)
+            .filter(model.Sections.perch_mount == perch_mount_id)
             .all()
         )
     return [row.section_id for row in results]
@@ -26,3 +26,20 @@ def pop_media_individual(media: list[dict]) -> list[dict]:
     for medium in media:
         medium.pop("individuals")
     return media
+
+
+def meida_to_insert_format(
+    detected_media: list[dict],
+) -> (
+    list[model.Media] | list[model.DetectedMedia],
+    list[model.Individuals] | list[model.DetectedIndividuals],
+):
+    individauls = get_individauls_from_media(detected_media)
+    detected_media = pop_media_individual(detected_media)
+    new_meida: list[model.DetectedMedia] = []
+    new_individuals: list[model.DetectedIndividuals] = []
+    for medium in detected_media:
+        new_meida.append(model.DetectedMedia(**medium))
+    for individual in individauls:
+        new_individuals.append(model.DetectedIndividuals(**individual))
+    return new_meida, new_individuals

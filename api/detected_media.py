@@ -6,11 +6,11 @@ import service.detected_media as ServiceDetectedMedia
 
 
 class DetectedMedia(api.BasicMedia):
-    put_parser = reqparse.RequestParser()
     post_parser = reqparse.RequestParser()
     post_parser.add_argument(
         "detected_media", type=list[dict], required=True, location="json"
     )
+    put_parser = reqparse.RequestParser()
     put_parser.add_argument(
         "detected_media", type=list[dict], required=True, location="json"
     )

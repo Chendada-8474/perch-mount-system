@@ -25,7 +25,7 @@ def get_detected_media(
 
 
 def add_media_individuals(detected_media: list[dict]):
-    new_meida, new_individuals = _detected_meida_to_insert_format(detected_media)
+    new_meida, new_individuals = query_utils.meida_to_insert_format(detected_media)
 
     with sqlalchemy.orm.Session(service.db_engine) as session:
         try:
@@ -76,7 +76,7 @@ def _get_reviewed_detected_medium_indice() -> list[str]:
 
 
 def detect(empty_indices: list[str], detected_media: list[dict]):
-    new_meida, new_individuals = _detected_meida_to_insert_format(detected_media)
+    new_meida, new_individuals = query_utils.meida_to_insert_format(detected_media)
     with sqlalchemy.orm.Session(service.db_engine) as session:
         try:
             session.query(model.EmptyMedia).filter(
@@ -89,18 +89,3 @@ def detect(empty_indices: list[str], detected_media: list[dict]):
         except:
             session.rollback()
             raise
-    return
-
-
-def _detected_meida_to_insert_format(
-    detected_media: list[dict],
-) -> (list[model.DetectedMedia], list[model.DetectedIndividuals]):
-    individauls = query_utils.get_individauls_from_media(detected_media)
-    detected_media = query_utils.pop_media_individual(detected_media)
-    new_meida: list[model.DetectedMedia] = []
-    new_individuals: list[model.DetectedIndividuals] = []
-    for medium in detected_media:
-        new_meida.append(model.DetectedMedia(**medium))
-    for individual in individauls:
-        new_individuals.append(model.DetectedIndividuals(**individual))
-    return new_meida, new_individuals
