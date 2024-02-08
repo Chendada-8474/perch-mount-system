@@ -10,7 +10,7 @@ import api
 import api.utils
 
 
-class PerchMounts(api.PerchMountModel):
+class PerchMounts(api.PerchMountResource):
     def get(self):
         args = dict(flask.request.args)
         args = self._correct_types(args)

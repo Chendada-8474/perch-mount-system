@@ -5,7 +5,7 @@ import api
 import service.detected_media as ServiceDetectedMedia
 
 
-class DetectedMedia(api.PerchMountModel):
+class DetectedMedia(api.PerchMountResource):
     post_parser = reqparse.RequestParser()
     post_parser.add_argument(
         "detected_media", type=list[dict], required=True, location="json"

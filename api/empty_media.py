@@ -5,7 +5,7 @@ import flask_restful.reqparse
 import service.empty_media as ServiceEmptyMedia
 
 
-class EmptyMedia(api.PerchMountModel):
+class EmptyMedia(api.PerchMountResource):
     post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument("media", type=list[dict], required=True, location="json")
 

@@ -1,7 +1,7 @@
 import datetime
 import flask_restful
 
-TRUES = {"true", "1", "yes"}
+TRUES = {"true", "1", "yes", "y"}
 
 
 def _query_bool(phase: str) -> bool:
@@ -31,7 +31,7 @@ TYPE_MAP = {
 }
 
 
-class PerchMountModel(flask_restful.Resource):
+class PerchMountResource(flask_restful.Resource):
     def _correct_types(self, args: dict) -> dict:
 
         for k, v in TYPE_MAP.items():

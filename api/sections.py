@@ -11,7 +11,7 @@ import service.cameras as ServiceCameras
 import service.mount_types as ServiceMountTypes
 
 
-class Sections(api.PerchMountModel):
+class Sections(api.PerchMountResource):
     def get(self):
         args = dict(flask.request.args)
         args = self._correct_types(args)
