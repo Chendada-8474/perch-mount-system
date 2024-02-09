@@ -1,17 +1,16 @@
-from sqlalchemy.orm import Session
-from service import db_engine
-from src.model import Positions
+import service
+from src import model
 
 
-def get_positions() -> list[Positions]:
-    with Session(db_engine) as session:
-        results = session.query(Positions).all()
+def get_positions() -> list[model.Positions]:
+    with service.session.begin() as session:
+        results = session.query(model.Positions).all()
     return results
 
 
-def add_position(name: str) -> Positions:
-    new_position = Positions(name=name)
-    with Session(db_engine) as session:
+def add_position(name: str) -> model.Positions:
+    new_position = model.Positions(name=name)
+    with service.session.begin() as session:
         session.add(new_position)
         session.commit()
     return new_position

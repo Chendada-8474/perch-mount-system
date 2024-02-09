@@ -1,23 +1,26 @@
-from sqlalchemy.orm import Session
-from service import db_engine
-from src.model import Cameras
+import service
+import src.model as model
 
 
-def get_cameras() -> list[Cameras]:
-    with Session(db_engine) as session:
-        results = session.query(Cameras).all()
+def get_cameras() -> list[model.Cameras]:
+    with service.session.begin() as session:
+        results = session.query(model.Cameras).all()
     return results
 
 
-def get_camera_by_id(camera_id: int) -> Cameras:
-    with Session(db_engine) as session:
-        result = session.query(Cameras).filter(Cameras.camera_id == camera_id).first()
+def get_camera_by_id(camera_id: int) -> model.Cameras:
+    with service.session.begin() as session:
+        result = (
+            session.query(model.Cameras)
+            .filter(model.Cameras.camera_id == camera_id)
+            .first()
+        )
     return result
 
 
-def add_camera(model_name: str) -> Cameras:
-    new_camera = Cameras(model_name=model_name)
-    with Session(db_engine) as session:
+def add_camera(model_name: str) -> model.Cameras:
+    new_camera = model.Cameras(model_name=model_name)
+    with service.session.begin() as session:
         session.add(new_camera)
         session.commit()
     return new_camera

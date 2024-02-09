@@ -1,7 +1,8 @@
-import sqlalchemy.orm
+from sqlalchemy.orm import Query
+
 import service
-import service.query_utils as query_utils
-import src.model as model
+from service import query_utils
+from src import model
 
 
 def get_media(
@@ -15,7 +16,7 @@ def get_media(
     offset: int = 0,
     limit: int = 50,
 ) -> list[model.Media]:
-    with sqlalchemy.orm.Session(service.db_engine) as session:
+    with service.session.begin() as session:
         query = session.query(model.Media)
 
         if section_id:
@@ -43,13 +44,13 @@ def get_media(
 
 
 def _filter_media_query_by_individual_conditions(
-    query: sqlalchemy.orm.Query[model.Media],
+    query: Query[model.Media],
     taxon_order: int = None,
     category: str = None,
     order: str = None,
     family: str = None,
     prey: bool = None,
-) -> sqlalchemy.orm.Query[model.Media]:
+) -> Query[model.Media]:
     if taxon_order or category or order or family or prey is not None:
         query = query.join(
             model.Individuals, model.Media.medium_id == model.Individuals.medium
@@ -71,7 +72,7 @@ def _filter_media_query_by_individual_conditions(
 
 
 def get_medium_by_id(medium_id: str) -> model.Media:
-    with sqlalchemy.orm.Session(service.db_engine) as session:
+    with service.session.begin() as session:
         result = (
             session.query(model.Media).filter(model.Media.medium_id == medium_id).one()
         )
@@ -88,7 +89,7 @@ def add_media_individuals(media: list[dict]):
     for individual in individauls:
         new_individuals.append(model.Individuals(**individual))
 
-    with sqlalchemy.orm.Session(service.db_engine) as session:
+    with service.session.begin() as session:
         try:
             session.add_all(new_meida)
             session.flush()
@@ -122,7 +123,7 @@ def _get_taxon_orders_indice_by_taxon(
     if not category and not order and not family:
         return
 
-    with sqlalchemy.orm.Session(service.db_engine) as session:
+    with service.session.begin() as session:
         query = session.query(model.Species.taxon_order)
         if category:
             query = query.filter(model.Species.category == category)
@@ -136,7 +137,7 @@ def _get_taxon_orders_indice_by_taxon(
 
 def review(detected_indice: list[str], media: list[dict]):
     new_meida, new_individuals = query_utils.meida_to_insert_format(media)
-    with sqlalchemy.orm.Session(service.db_engine) as session:
+    with service.session.begin() as session:
         try:
             session.query(model.DetectedMedia).filter(
                 model.DetectedMedia.detected_medium_id.in_(detected_indice)

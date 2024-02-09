@@ -1,7 +1,7 @@
 import sqlalchemy
 import sqlalchemy.orm
 
-import src.config as config
+from src import config
 
 DATABASE_NAME = "perch_mount"
 

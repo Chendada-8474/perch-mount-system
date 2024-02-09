@@ -1,7 +1,7 @@
 from datetime import datetime, date
-from sqlalchemy.orm import Session
-from service import db_engine
-from src.model import Sections, SectionOperators
+
+import service
+from src import model
 
 
 def get_sections(
@@ -10,43 +10,47 @@ def get_sections(
     check_date_to: datetime = None,
     valid: bool = None,
     operator: int = None,
-) -> list[Sections]:
-    with Session(db_engine) as session:
-        query = session.query(Sections)
+) -> list[model.Sections]:
+    with service.session.begin() as session:
+        query = session.query(model.Sections)
 
         if perch_mount:
-            query = query.filter(Sections.perch_mount == perch_mount)
+            query = query.filter(model.Sections.perch_mount == perch_mount)
 
         if check_date_from:
-            query = query.filter(Sections.check_date >= check_date_from)
+            query = query.filter(model.Sections.check_date >= check_date_from)
 
         if check_date_to:
-            query = query.filter(Sections.check_date < check_date_to)
+            query = query.filter(model.Sections.check_date < check_date_to)
 
         if valid is not None:
-            query = query.filter(Sections.valid == valid)
+            query = query.filter(model.Sections.valid == valid)
 
         if operator:
             section_indice = _get_section_indice_by_operator(operator)
-            query = query.filter(Sections.section_id.in_(section_indice))
+            query = query.filter(model.Sections.section_id.in_(section_indice))
 
         results = query.all()
     return results
 
 
 def _get_section_indice_by_operator(member_id: int) -> list[int]:
-    with Session(db_engine) as session:
+    with service.session.begin() as session:
         results = (
-            session.query(SectionOperators.section)
-            .filter(SectionOperators.operator == member_id)
+            session.query(model.SectionOperators.section)
+            .filter(model.SectionOperators.operator == member_id)
             .all()
         )
         return [row.section for row in results]
 
 
-def get_section_by_id(section_id: int) -> Sections:
-    with Session(db_engine) as session:
-        result = session.query(Sections).filter(Sections.section_id == section_id).one()
+def get_section_by_id(section_id: int) -> model.Sections:
+    with service.session.begin() as session:
+        result = (
+            session.query(model.Sections)
+            .filter(model.Sections.section_id == section_id)
+            .one()
+        )
     return result
 
 
@@ -61,7 +65,7 @@ def add_section(
     operators: list[int],
     note: str,
 ) -> int:
-    new_section = Sections(
+    new_section = model.Sections(
         perch_mount=perch_mount,
         mount_type=mount_type,
         camera=camera,
@@ -72,7 +76,7 @@ def add_section(
         note=note,
     )
 
-    with Session(db_engine) as session:
+    with service.session.begin() as session:
         try:
             session.add(new_section)
             session.flush()
@@ -80,7 +84,7 @@ def add_section(
             new_section_operators = []
             for operator in operators:
                 new_section_operators.append(
-                    SectionOperators(
+                    model.SectionOperators(
                         section=section_id,
                         operator=operator,
                     )

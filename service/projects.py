@@ -1,31 +1,36 @@
-from sqlalchemy.orm import Session
-from service import db_engine
-from src.model import Projects
+import service
+from src import model
 
 
-def get_projects() -> list[Projects]:
-    with Session(db_engine) as session:
-        results = session.query(Projects).all()
+def get_projects() -> list[model.Projects]:
+    with service.session.begin() as session:
+        results = session.query(model.Projects).all()
     return results
 
 
-def get_projects_by_indice(indice: list[int]) -> list[Projects]:
-    with Session(db_engine) as session:
-        results = session.query(Projects).filter(Projects.project_id.in_(indice)).all()
+def get_projects_by_indice(indice: list[int]) -> list[model.Projects]:
+    with service.session.begin() as session:
+        results = (
+            session.query(model.Projects)
+            .filter(model.Projects.project_id.in_(indice))
+            .all()
+        )
     return results
 
 
-def get_project_by_id(project_id: int) -> Projects:
-    with Session(db_engine) as session:
+def get_project_by_id(project_id: int) -> model.Projects:
+    with service.session.begin() as session:
         result = (
-            session.query(Projects).filter(Projects.project_id == project_id).first()
+            session.query(model.Projects)
+            .filter(model.Projects.project_id == project_id)
+            .first()
         )
     return result
 
 
-def add_project(name: str) -> Projects:
-    new_project = Projects(name=name)
-    with Session(db_engine) as session:
+def add_project(name: str) -> model.Projects:
+    new_project = model.Projects(name=name)
+    with service.session.begin() as session:
         session.add(new_project)
         session.commit()
     return new_project

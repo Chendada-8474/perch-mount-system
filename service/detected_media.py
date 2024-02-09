@@ -1,4 +1,3 @@
-import sqlalchemy.orm
 import service
 import src.model as model
 import service.query_utils as query_utils
@@ -10,7 +9,7 @@ def get_detected_media(
     offset: int = 0,
     limit: int = 250,
 ) -> list[model.DetectedMedia]:
-    with sqlalchemy.orm.Session(service.db_engine) as session:
+    with service.session.begin() as session:
         query = session.query(model.DetectedMedia)
         if section_id:
             query = query.filter(model.DetectedMedia.section == section_id)
@@ -27,7 +26,7 @@ def get_detected_media(
 def add_media_individuals(detected_media: list[dict]):
     new_meida, new_individuals = query_utils.meida_to_insert_format(detected_media)
 
-    with sqlalchemy.orm.Session(service.db_engine) as session:
+    with service.session.begin() as session:
         try:
             session.add_all(new_meida)
             session.flush()
@@ -39,7 +38,7 @@ def add_media_individuals(detected_media: list[dict]):
 
 
 def checked_detected_media(medium_indice: list[str]):
-    with sqlalchemy.orm.Session(service.db_engine) as session:
+    with service.session.begin() as session:
         session.query(model.DetectedMedia).filter(
             model.DetectedMedia.detected_medium_id.in_(medium_indice)
         ).update({"reviewed": True})
@@ -49,7 +48,7 @@ def checked_detected_media(medium_indice: list[str]):
 def delete_checked_detected_media():
     reviewed_medium_indice = _get_reviewed_detected_medium_indice()
 
-    with sqlalchemy.orm.Session(service.db_engine) as session:
+    with service.session.begin() as session:
         try:
             session.query(model.DetectedMedia).filter(
                 model.DetectedMedia.reviewed == True
@@ -66,7 +65,7 @@ def delete_checked_detected_media():
 
 
 def _get_reviewed_detected_medium_indice() -> list[str]:
-    with sqlalchemy.orm.Session(service.db_engine) as session:
+    with service.session.begin() as session:
         results = (
             session.query(model.DetectedMedia.detected_medium_id)
             .filter(model.DetectedMedia.reviewed == True)
@@ -77,7 +76,7 @@ def _get_reviewed_detected_medium_indice() -> list[str]:
 
 def detect(empty_indices: list[str], detected_media: list[dict]):
     new_meida, new_individuals = query_utils.meida_to_insert_format(detected_media)
-    with sqlalchemy.orm.Session(service.db_engine) as session:
+    with service.session.begin() as session:
         try:
             session.query(model.EmptyMedia).filter(
                 model.EmptyMedia.empty_medium_id.in_(empty_indices)

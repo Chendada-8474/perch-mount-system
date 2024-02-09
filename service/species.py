@@ -1,6 +1,5 @@
-from sqlalchemy.orm import Session
-from service import db_engine
-import src.model as model
+import service
+from src import model
 
 
 def get_species(
@@ -9,7 +8,7 @@ def get_species(
     family: str = None,
     conservation: str = None,
 ) -> list[model.Species]:
-    with Session(db_engine) as session:
+    with service.session.begin() as session:
         query = session.query(model.Species)
 
         if species:
@@ -27,7 +26,7 @@ def get_species(
 
 
 def get_species_by_taxon_orders(taxon_orders: list[int]) -> list[model.Species]:
-    with Session(db_engine) as session:
+    with service.session.begin() as session:
         results = (
             session.query(model.Species)
             .filter(model.Species.taxon_order.in_(taxon_orders))
@@ -37,7 +36,7 @@ def get_species_by_taxon_orders(taxon_orders: list[int]) -> list[model.Species]:
 
 
 def get_species_by_taxon_order(taxon_order: int) -> model.Species:
-    with Session(db_engine) as session:
+    with service.session.begin() as session:
         result = (
             session.query(model.Species)
             .filter(model.Species.taxon_order == taxon_order)

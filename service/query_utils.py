@@ -1,10 +1,9 @@
-from sqlalchemy.orm import Session
-from service import db_engine
-import src.model as model
+import service
+from src import model
 
 
 def get_section_indice_by_perch_mount_id(perch_mount_id: int) -> list[int]:
-    with Session(db_engine) as session:
+    with service.session.begin() as session:
         results = (
             session.query(model.Sections.section_id)
             .filter(model.Sections.perch_mount == perch_mount_id)
