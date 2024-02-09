@@ -8,6 +8,16 @@ def get_positions() -> list[model.Positions]:
     return results
 
 
+def get_position_by_id(position_id: int) -> model.Positions:
+    with service.session.begin() as session:
+        result = (
+            session.query(model.Positions)
+            .filter(model.Positions.position_id == position_id)
+            .one()
+        )
+    return result
+
+
 def add_position(name: str) -> model.Positions:
     new_position = model.Positions(name=name)
     with service.session.begin() as session:

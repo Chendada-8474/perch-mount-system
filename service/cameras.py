@@ -18,9 +18,9 @@ def get_camera_by_id(camera_id: int) -> model.Cameras:
     return result
 
 
-def add_camera(model_name: str) -> model.Cameras:
+def add_camera(model_name: str) -> int:
     new_camera = model.Cameras(model_name=model_name)
     with service.session.begin() as session:
         session.add(new_camera)
         session.commit()
-    return new_camera
+    return new_camera.camera_id
