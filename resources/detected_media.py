@@ -1,11 +1,11 @@
 import flask
 from flask_restful import reqparse
 
-import api
+import resources
 import service.detected_media as ServiceDetectedMedia
 
 
-class DetectedMedia(api.PerchMountResource):
+class DetectedMedia(resources.PerchMountResource):
     post_parser = reqparse.RequestParser()
     post_parser.add_argument(
         "detected_media", type=list[dict], required=True, location="json"

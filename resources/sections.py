@@ -3,22 +3,22 @@ import flask
 import flask_restful
 import flask_restful.reqparse
 
-import api
-import api.utils
+import resources
+import resources.utils
 import service.sections as ServiceSections
 import service.members as ServiceMembers
 import service.cameras as ServiceCameras
 import service.mount_types as ServiceMountTypes
 
 
-class Sections(api.PerchMountResource):
+class Sections(resources.PerchMountResource):
     def get(self):
         args = dict(flask.request.args)
         args = self._correct_types(args)
         results = ServiceSections.get_sections(**args)
         results = [row.to_json() for row in results]
 
-        section_indice = api.utils.get_nodup_values(results, "section_id")
+        section_indice = resources.utils.get_nodup_values(results, "section_id")
 
         members = ServiceMembers.get_operators_by_section_indice(section_indice)
         cameras = ServiceCameras.get_cameras()
@@ -30,9 +30,9 @@ class Sections(api.PerchMountResource):
 
         return {
             "sections": results,
-            "members": api.utils.field_as_key(members, "member_id"),
-            "cameras": api.utils.field_as_key(cameras, "camera_id"),
-            "mount_types": api.utils.field_as_key(mount_types, "mount_type_id"),
+            "members": resources.utils.field_as_key(members, "member_id"),
+            "cameras": resources.utils.field_as_key(cameras, "camera_id"),
+            "mount_types": resources.utils.field_as_key(mount_types, "mount_type_id"),
         }
 
 
@@ -49,7 +49,7 @@ class Section(flask_restful.Resource):
             "section": section.to_json(),
             "camera": camera.to_json(),
             "mount_type": mount_type.to_json(),
-            "members": api.utils.field_as_key(members, "member_id"),
+            "members": resources.utils.field_as_key(members, "member_id"),
         }
 
     post_parser = flask_restful.reqparse.RequestParser()

@@ -1,17 +1,17 @@
 import flask
 import flask_restful.reqparse
 
-import api
+import resources
 import service.members as ServiceMembers
 
 
-class Members(api.PerchMountResource):
+class Members(resources.PerchMountResource):
     def get(self):
         results = ServiceMembers.get_members()
         return {"members": [result.to_json() for result in results]}
 
 
-class Member(api.PerchMountResource):
+class Member(resources.PerchMountResource):
     post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument("user_name", type=str, required=True)
     post_parser.add_argument("first_name", type=str, required=True)

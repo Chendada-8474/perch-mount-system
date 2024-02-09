@@ -6,19 +6,19 @@ import service.perch_mounts as ServicePerchMounts
 import service.habitats as ServiceHabitats
 import service.members as ServiceMembers
 import service.projects as ServiceProjects
-import api
-import api.utils
+import resources
+import resources.utils
 
 
-class PerchMounts(api.PerchMountResource):
+class PerchMounts(resources.PerchMountResource):
     def get(self):
         args = dict(flask.request.args)
         args = self._correct_types(args)
         results = ServicePerchMounts.get_perch_mounts(**args)
         results = [row.to_json() for row in results]
-        project_indice = api.utils.get_nodup_values(results, "project")
-        habitat_indice = api.utils.get_nodup_values(results, "habitat")
-        claimer_indice = api.utils.get_nodup_values(results, "claim_by")
+        project_indice = resources.utils.get_nodup_values(results, "project")
+        habitat_indice = resources.utils.get_nodup_values(results, "habitat")
+        claimer_indice = resources.utils.get_nodup_values(results, "claim_by")
 
         projects = ServiceProjects.get_projects_by_indice(project_indice)
         habitats = ServiceHabitats.get_habitats_by_indice(habitat_indice)
@@ -30,9 +30,9 @@ class PerchMounts(api.PerchMountResource):
 
         return {
             "perch_mounts": results,
-            "projects": api.utils.field_as_key(projects, "project_id"),
-            "habitats": api.utils.field_as_key(habitats, "habitat_id"),
-            "members": api.utils.field_as_key(members, "member_id"),
+            "projects": resources.utils.field_as_key(projects, "project_id"),
+            "habitats": resources.utils.field_as_key(habitats, "habitat_id"),
+            "members": resources.utils.field_as_key(members, "member_id"),
         }
 
 

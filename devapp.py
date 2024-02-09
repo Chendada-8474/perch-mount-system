@@ -1,10 +1,10 @@
 from flask import Flask
 from flask_restful import Api
 from service import SQLALCHEMY_DATABASE_URI
-import api.perch_mounts as APIPerchMounts
-import api.sections as APISections
-import api.empty_media as APIEmptyMedia
-import api.detected_media as APIDetectedMedia
+import resources.perch_mounts as APIPerchMounts
+import resources.sections as APISections
+import resources.empty_media as APIEmptyMedia
+import resources.detected_media as APIDetectedMedia
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "key"
