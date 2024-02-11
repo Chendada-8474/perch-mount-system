@@ -6,10 +6,10 @@ from src import config
 DATABASE_NAME = "perch_mount"
 
 SQLALCHEMY_DATABASE_URI = "mysql+pymysql://%s:%s@%s:%s/%s" % (
-    config.MySQL.get_mysql_user(),
-    config.MySQL.get_mysql_password(),
-    config.MySQL.get_mysql_host(),
-    config.MySQL.get_mysql_port(),
+    config.get_env(config.EnvKeys.MYSQL_USER),
+    config.get_env(config.EnvKeys.MYSQL_PASSWORD),
+    config.get_env(config.EnvKeys.MYSQL_HOST),
+    config.get_env(config.EnvKeys.MINIO_PORT),
     DATABASE_NAME,
 )
 
