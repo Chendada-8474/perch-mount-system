@@ -9,7 +9,7 @@ SQLALCHEMY_DATABASE_URI = "mysql+pymysql://%s:%s@%s:%s/%s" % (
     config.get_env(config.EnvKeys.MYSQL_USER),
     config.get_env(config.EnvKeys.MYSQL_PASSWORD),
     config.get_env(config.EnvKeys.MYSQL_HOST),
-    config.get_env(config.EnvKeys.MINIO_PORT),
+    config.get_env(config.EnvKeys.MYSQL_PORT),
     DATABASE_NAME,
 )
 
