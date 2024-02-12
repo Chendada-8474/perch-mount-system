@@ -15,6 +15,7 @@ class Behaviors(resources.PerchMountResource):
 
     def get(self):
         behaviors = ServiceBehaviors.get_behaviors()
+        print(behaviors[0].to_json())
         return {"behaviors": [behavior.to_json() for behavior in behaviors]}
 
 

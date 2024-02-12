@@ -37,7 +37,7 @@ def get_member_by_id(member_id: int) -> model.Members:
         result = (
             session.query(model.Members)
             .filter(model.Members.member_id == member_id)
-            .first()
+            .one()
         )
     return result
 

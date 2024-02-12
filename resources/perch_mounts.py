@@ -14,6 +14,7 @@ class PerchMounts(resources.PerchMountResource):
     def get(self):
         args = dict(flask.request.args)
         args = self._correct_types(args)
+
         results = ServicePerchMounts.get_perch_mounts(**args)
         results = [row.to_json() for row in results]
         project_indice = resources.utils.get_nodup_values(results, "project")

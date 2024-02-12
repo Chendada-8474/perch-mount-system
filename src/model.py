@@ -1,4 +1,3 @@
-
 from datetime import datetime, date
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
@@ -133,8 +132,8 @@ class Members(db.Model, JsonAbleModel):
     __tablename__ = "members"
     member_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_name = db.Column(db.String(20), unique=True, nullable=False)
-    first_name = db.Column(db.String(5))
-    last_name = db.Column(db.String(5))
+    first_name = db.Column(db.String(50))
+    last_name = db.Column(db.String(50))
     position = db.Column(db.Integer, db.ForeignKey("positions.position_id"))
     phone_number = db.Column(db.String(10), unique=True, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)

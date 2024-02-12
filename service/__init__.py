@@ -21,4 +21,4 @@ db_engine = sqlalchemy.create_engine(
 )
 
 
-session = sqlalchemy.orm.sessionmaker(db_engine)
+session = sqlalchemy.orm.sessionmaker(db_engine, expire_on_commit=False)

@@ -1,30 +1,20 @@
 from flask import Flask
-from flask_restful import Api
-from src import model
+
+from routes import route_helper
+from routes import routing
 import service
-import resources.perch_mounts as APIPerchMounts
-import resources.sections as APISections
-import resources.empty_media as APIEmptyMedia
-import resources.detected_media as APIDetectedMedia
+from src import model
+from src import config
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "key"
+app.config["SECRET_KEY"] = config.get_file(config.EnvKeys.FLASK_SECRET)
 app.config["SQLALCHEMY_DATABASE_URI"] = service.SQLALCHEMY_DATABASE_URI
 
-api = Api(app)
+api = route_helper.PerchMountApi(app)
+api.init_resources(routing.ROUTES)
 
 model.db.init_app(app)
 model.migrate.init_app(app, model.db)
-
-
-api.add_resource(APIPerchMounts.PerchMounts, "/perch_mounts")
-api.add_resource(
-    APIPerchMounts.PerchMount, "/perch_mounts/<int:perch_mount_id>", "/perch_mounts"
-)
-api.add_resource(APISections.Sections, "/sections")
-api.add_resource(APISections.Section, "/sections/<int:section_id>", "/sections")
-api.add_resource(APIEmptyMedia.EmptyMedia, "/empty_media")
-api.add_resource(APIDetectedMedia.DetectedMedia, "/detected_media")
 
 
 if __name__ == "__main__":

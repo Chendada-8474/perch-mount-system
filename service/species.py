@@ -3,7 +3,7 @@ from src import model
 
 
 def get_species(
-    species: str = None,
+    category: str = None,
     order: str = None,
     family: str = None,
     conservation: str = None,
@@ -11,8 +11,8 @@ def get_species(
     with service.session.begin() as session:
         query = session.query(model.Species)
 
-        if species:
-            query = query.filter(model.Species.category == species)
+        if category:
+            query = query.filter(model.Species.category == category)
         if order:
             query = query.filter(model.Species.order == order)
         if family:

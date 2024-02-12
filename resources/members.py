@@ -31,11 +31,11 @@ class Member(resources.PerchMountResource):
         member = ServiceMembers.get_member_by_id(member_id)
         return member.to_json()
 
-    def patch(self, memeber_id: int):
+    def patch(self, member_id: int):
         self.patch_parser.parse_args(strict=True)
         args = flask.request.get_json()
-        ServiceMembers.update_member(memeber_id, args)
-        member = ServiceMembers.get_member_by_id(memeber_id)
+        ServiceMembers.update_member(member_id, args)
+        member = ServiceMembers.get_member_by_id(member_id)
         return member.to_json()
 
     def post(self):

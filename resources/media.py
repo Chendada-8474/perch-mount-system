@@ -34,5 +34,5 @@ class Medium(flask_restful.Resource):
         medium = ServiceMedia.get_medium_by_id(medium_id)
         return medium.to_json()
 
-    def patch(self):
+    def patch(self, medium_id: str):
         return

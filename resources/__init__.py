@@ -13,7 +13,7 @@ __all__ = [
 ]
 
 
-TRUES = {"true", "1", "yes", "y"}
+TRUES = {"true", "1", "yes", "y", "ya"}
 
 
 def _query_bool(phase: str) -> bool:
@@ -45,9 +45,7 @@ TYPE_MAP = (
 
 class PerchMountResource(flask_restful.Resource):
     def _correct_types(self, args: dict) -> dict:
-
         for colname, type in TYPE_MAP:
             if colname in args:
-                args[colname] == type(args[colname])
-
+                args[colname] = type(args[colname])
         return args
