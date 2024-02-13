@@ -43,17 +43,7 @@ def get_section_operators(section_indice: list[int]) -> list[model.SectionOperat
             .filter(model.SectionOperators.section.in_(section_indice))
             .all()
         )
-    return results
-
-
-def _get_section_indice_by_operator(member_id: int) -> list[int]:
-    with service.session.begin() as session:
-        results = (
-            session.query(model.SectionOperators.section)
-            .filter(model.SectionOperators.operator == member_id)
-            .all()
-        )
-        return [row.section for row in results]
+    return result
 
 
 def get_section_by_id(section_id: int) -> model.Sections:
