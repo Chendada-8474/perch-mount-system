@@ -32,7 +32,7 @@ def get_env(key: EnvKeys) -> str:
     return os.environ.get(f"{PREFIX}_{key.upper()}")
 
 
-def get_file(key: EnvKeys) -> str:
+def get_file_content(key: EnvKeys) -> str:
     path = get_env(key)
     with open(path) as file:
         content = file.readline()
