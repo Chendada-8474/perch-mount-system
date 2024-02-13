@@ -1,42 +1,32 @@
-from sqlalchemy.orm import Session
-from service import db_engine
-from service.query_utils import (
-    get_section_indice_by_perch_mount_id,
-    get_individauls_from_media,
-    pop_media_individual,
-)
-from src.model import DetectedMedia, DetectedIndividuals
+import service
+import src.model as model
+import service.query_utils as query_utils
 
 
-def get_empty_media(
+def get_detected_media(
     section_id: int = None,
     perch_mount_id: int = None,
     offset: int = 0,
     limit: int = 250,
-) -> list[DetectedMedia]:
-    with Session(db_engine) as session:
-        query = session.query(DetectedMedia)
+) -> list[model.DetectedMedia]:
+    with service.session.begin() as session:
+        query = session.query(model.DetectedMedia)
         if section_id:
-            query = query.filter(DetectedMedia.section == section_id)
+            query = query.filter(model.DetectedMedia.section == section_id)
         if perch_mount_id:
-            section_indice = get_section_indice_by_perch_mount_id(perch_mount_id)
-            query = query.filter(DetectedMedia.section.in_(section_indice))
+            section_indice = query_utils.get_section_indice_by_perch_mount_id(
+                perch_mount_id
+            )
+            query = query.filter(model.DetectedMedia.section.in_(section_indice))
         query = query.offset(offset).limit(limit)
         results = query.all()
     return results
 
 
 def add_media_individuals(detected_media: list[dict]):
-    individauls = get_individauls_from_media(detected_media)
-    detected_media = pop_media_individual(detected_media)
-    new_meida: list[DetectedMedia] = []
-    new_individuals: list[DetectedIndividuals] = []
-    for medium in detected_media:
-        new_meida.append(DetectedMedia(**medium))
-    for individual in individauls:
-        new_individuals.append(DetectedIndividuals(**individual))
+    new_meida, new_individuals = query_utils.meida_to_insert_format(detected_media)
 
-    with Session(db_engine) as session:
+    with service.session.begin() as session:
         try:
             session.add_all(new_meida)
             session.flush()
@@ -48,9 +38,9 @@ def add_media_individuals(detected_media: list[dict]):
 
 
 def checked_detected_media(medium_indice: list[str]):
-    with Session(db_engine) as session:
-        session.query(DetectedMedia).filter(
-            DetectedMedia.detected_medium_id.in_(medium_indice)
+    with service.session.begin() as session:
+        session.query(model.DetectedMedia).filter(
+            model.DetectedMedia.detected_medium_id.in_(medium_indice)
         ).update({"reviewed": True})
         session.commit()
 
@@ -58,11 +48,15 @@ def checked_detected_media(medium_indice: list[str]):
 def delete_checked_detected_media():
     reviewed_medium_indice = _get_reviewed_detected_medium_indice()
 
-    with Session(db_engine) as session:
+    with service.session.begin() as session:
         try:
-            session.query(DetectedMedia).filter(DetectedMedia.reviewed == True).delete()
-            session.query(DetectedIndividuals).filter(
-                DetectedIndividuals.pending_individual_id.in_(reviewed_medium_indice)
+            session.query(model.DetectedMedia).filter(
+                model.DetectedMedia.reviewed == True
+            ).delete()
+            session.query(model.DetectedIndividuals).filter(
+                model.DetectedIndividuals.pending_individual_id.in_(
+                    reviewed_medium_indice
+                )
             ).delete()
             session.commit()
         except:
@@ -71,10 +65,26 @@ def delete_checked_detected_media():
 
 
 def _get_reviewed_detected_medium_indice() -> list[str]:
-    with Session(db_engine) as session:
+    with service.session.begin() as session:
         results = (
-            session.query(DetectedMedia.detected_medium_id)
-            .filter(DetectedMedia.reviewed == True)
+            session.query(model.DetectedMedia.detected_medium_id)
+            .filter(model.DetectedMedia.reviewed == True)
             .all()
         )
     return results
+
+
+def detect(empty_indices: list[str], detected_media: list[dict]):
+    new_meida, new_individuals = query_utils.meida_to_insert_format(detected_media)
+    with service.session.begin() as session:
+        try:
+            session.query(model.EmptyMedia).filter(
+                model.EmptyMedia.empty_medium_id.in_(empty_indices)
+            ).delete()
+            session.add_all(new_meida)
+            session.flush()
+            session.add_all(new_individuals)
+            session.commit()
+        except:
+            session.rollback()
+            raise

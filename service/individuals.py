@@ -1,29 +1,32 @@
-from sqlalchemy.orm import Session
-from service import db_engine
-from src.model import Individuals
+import service
+from src import model
 
 
-def get_individauls_by_medium_indice(medium_indice: list[str]) -> list[Individuals]:
-    with Session(db_engine) as session:
+def get_individauls_by_medium_indice(
+    medium_indice: list[str],
+) -> list[model.Individuals]:
+    with service.session.begin() as session:
         results = (
-            session.query(Individuals)
-            .filter(Individuals.medium.in_(medium_indice))
+            session.query(model.Individuals)
+            .filter(model.Individuals.medium.in_(medium_indice))
             .all()
         )
     return results
 
 
-def get_individauls_by_medium_indice(medium_id: str) -> list[Individuals]:
-    with Session(db_engine) as session:
+def get_individauls_by_medium_indice(medium_id: str) -> list[model.Individuals]:
+    with service.session.begin() as session:
         result = (
-            session.query(Individuals).filter(Individuals.medium == medium_id).one()
+            session.query(model.Individuals)
+            .filter(model.Individuals.medium == medium_id)
+            .one()
         )
     return result
 
 
 def update_individaul(individual_id: int, arg: dict):
-    with Session(db_engine) as session:
-        session.query(Individuals).filter(
-            Individuals.individual_id == individual_id
+    with service.session.begin() as session:
+        session.query(model.Individuals).filter(
+            model.Individuals.individual_id == individual_id
         ).update(arg)
         session.commit()

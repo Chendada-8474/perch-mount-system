@@ -1,76 +1,94 @@
-from datetime import datetime
-from sqlalchemy.orm import Session
-from service import db_engine
-from src.model import Sections, SectionOperators
+from datetime import datetime, date
+
+import service
+from src import model
 
 
 def get_sections(
-    perch_mount_id: int = None,
+    perch_mount: int = None,
     check_date_from: datetime = None,
     check_date_to: datetime = None,
     valid: bool = None,
     operator: int = None,
-) -> list[Sections]:
-    with Session(db_engine) as session:
-        query = session.query(Sections)
+) -> list[model.Sections]:
+    with service.session.begin() as session:
+        query = session.query(model.Sections)
 
-        if perch_mount_id:
-            query = query.filter(Sections.perch_mount == perch_mount_id)
+        if perch_mount:
+            query = query.filter(model.Sections.perch_mount == perch_mount)
 
         if check_date_from:
-            query = query.filter(Sections.check_date >= check_date_from)
+            query = query.filter(model.Sections.check_date >= check_date_from)
 
         if check_date_to:
-            query = query.filter(Sections.check_date < check_date_to)
+            query = query.filter(model.Sections.check_date < check_date_to)
 
         if valid is not None:
-            query = query.filter(Sections.valid == valid)
+            query = query.filter(model.Sections.valid == valid)
 
         if operator:
-            section_indice = _get_section_indice_by_operator(operator)
-            query = query.filter(Sections.section_id.in_(section_indice))
+            query = query.join(
+                model.SectionOperators,
+                model.SectionOperators.section == model.Sections.section_id,
+            ).filter(model.SectionOperators.operator == operator)
 
         results = query.all()
     return results
 
 
-def _get_section_indice_by_operator(member_id: int) -> list[int]:
-    with Session(db_engine) as session:
+def get_section_operators(section_indice: list[int]) -> list[model.SectionOperators]:
+    with service.session.begin() as session:
         results = (
-            session.query(SectionOperators.section)
-            .filter(SectionOperators.operator == member_id)
+            session.query(model.SectionOperators)
+            .filter(model.SectionOperators.section.in_(section_indice))
+            .all()
+        )
+    return results
+
+
+def _get_section_indice_by_operator(member_id: int) -> list[int]:
+    with service.session.begin() as session:
+        results = (
+            session.query(model.SectionOperators.section)
+            .filter(model.SectionOperators.operator == member_id)
             .all()
         )
         return [row.section for row in results]
 
 
-def get_section_by_id(section_id: int) -> Sections:
-    with Session(db_engine) as session:
-        result = session.query(Sections).filter(Sections.section_id == section_id).one()
+def get_section_by_id(section_id: int) -> model.Sections:
+    with service.session.begin() as session:
+        result = (
+            session.query(model.Sections)
+            .filter(model.Sections.section_id == section_id)
+            .one()
+        )
     return result
 
 
 def add_section(
-    perch_mount_id: int,
-    mount_type_id: int,
-    camera_id: int,
+    perch_mount: int,
+    mount_type: int,
+    camera: int,
     start_time: datetime,
     end_time: datetime,
+    check_date: date,
     valid: bool,
     operators: list[int],
     note: str,
 ) -> int:
-    new_section = Sections(
-        perch_mount=perch_mount_id,
-        mount_type=mount_type_id,
-        camera=camera_id,
+    new_section = model.Sections(
+        perch_mount=perch_mount,
+        mount_type=mount_type,
+        camera=camera,
         start_time=start_time,
         end_time=end_time,
+        check_date=check_date,
         valid=valid,
         note=note,
     )
 
-    with Session(db_engine) as session:
+    with service.session.begin() as session:
         try:
             session.add(new_section)
             session.flush()
@@ -78,16 +96,17 @@ def add_section(
             new_section_operators = []
             for operator in operators:
                 new_section_operators.append(
-                    SectionOperators(
+                    model.SectionOperators(
                         section=section_id,
                         operator=operator,
                     )
                 )
             session.add_all(new_section_operators)
             session.commit()
+
+            new_id = new_section.section_id
         except Exception as e:
             session.rollback()
-            print(e)
             raise
 
-    return section_id
+    return new_id

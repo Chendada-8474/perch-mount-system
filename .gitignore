@@ -142,3 +142,5 @@ app.wsgi
 new_update.py
 update_info.md
 perch_mount_data-ca-certificate.crt
+
+.DS_Store
