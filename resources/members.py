@@ -2,12 +2,12 @@ import flask
 import flask_restful.reqparse
 
 import resources
-import service.members as ServiceMembers
+import service.members
 
 
 class Members(resources.PerchMountResource):
     def get(self):
-        results = ServiceMembers.get_members()
+        results = service.members.get_members()
         return {"members": [result.to_json() for result in results]}
 
 
@@ -28,18 +28,18 @@ class Member(resources.PerchMountResource):
     patch_parser.add_argument("is_admin", type=bool)
 
     def get(self, member_id: int):
-        member = ServiceMembers.get_member_by_id(member_id)
+        member = service.members.get_member_by_id(member_id)
         return member.to_json()
 
     def patch(self, member_id: int):
         self.patch_parser.parse_args(strict=True)
         args = flask.request.get_json()
-        ServiceMembers.update_member(member_id, args)
-        member = ServiceMembers.get_member_by_id(member_id)
+        service.members.update_member(member_id, args)
+        member = service.members.get_member_by_id(member_id)
         return member.to_json()
 
     def post(self):
         args = self.post_parser.parse_args(strict=True)
-        member_id = ServiceMembers.add_member(**args)
-        member = ServiceMembers.get_member_by_id(member_id)
+        member_id = service.members.add_member(**args)
+        member = service.members.get_member_by_id(member_id)
         return member.to_json()

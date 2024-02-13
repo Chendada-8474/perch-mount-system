@@ -2,7 +2,7 @@ import flask
 import resources
 import flask_restful.reqparse
 
-import service.empty_media as ServiceEmptyMedia
+import service.empty_media
 
 
 class EmptyMedia(resources.PerchMountResource):
@@ -12,10 +12,10 @@ class EmptyMedia(resources.PerchMountResource):
     def get(self):
         args = dict(flask.request.args)
         args = self._correct_types(args)
-        media = ServiceEmptyMedia.get_empty_media(**args)
+        media = service.empty_media.get_empty_media(**args)
         return {"media": [medium.to_json() for medium in media]}
 
     def post(self):
         args = self.post_parser.parse_args(strict=True)
-        ServiceEmptyMedia.add_empty_media(args["media"])
+        service.empty_media.add_empty_media(args["media"])
         return {"message": "success"}
