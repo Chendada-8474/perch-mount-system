@@ -43,7 +43,7 @@ def get_section_operators(section_indice: list[int]) -> list[model.SectionOperat
             .filter(model.SectionOperators.section.in_(section_indice))
             .all()
         )
-    return result
+    return results
 
 
 def get_section_by_id(section_id: int) -> model.Sections:
