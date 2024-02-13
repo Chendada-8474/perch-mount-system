@@ -1,6 +1,6 @@
 import service
-import src.model as model
-import service.query_utils as query_utils
+from src import model
+from service import query_utils
 
 
 def get_detected_media(

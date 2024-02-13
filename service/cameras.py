@@ -1,5 +1,5 @@
 import service
-import src.model as model
+from src import model
 
 
 def get_cameras() -> list[model.Cameras]:

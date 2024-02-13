@@ -1,6 +1,6 @@
 import service
-import service.query_utils
-import src.model as model
+from service import query_utils
+from src import model
 
 
 def get_empty_media(
@@ -15,7 +15,7 @@ def get_empty_media(
         if section:
             query = query.filter(model.EmptyMedia.section == section)
         if perch_mount:
-            section_indice = service.query_utils.get_section_indice_by_perch_mount_id(
+            section_indice = query_utils.get_section_indice_by_perch_mount_id(
                 perch_mount
             )
             query = query.filter(model.EmptyMedia.section.in_(section_indice))
