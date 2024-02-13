@@ -15,10 +15,12 @@ class Sections(resources.PerchMountResource):
     def get(self):
         args = dict(flask.request.args)
         args = self._correct_types(args)
-        results = ServiceSections.get_sections(**args)
-        results = [row.to_json() for row in results]
+        sections = ServiceSections.get_sections(**args)
+        sections = [row.to_json() for row in sections]
 
-        section_indice = resources.utils.get_nodup_values(results, "section_id")
+        section_indice = resources.utils.get_nodup_values(sections, "section_id")
+        operator_map = self._get_operator_map(section_indice)
+        self._find_operator_to_sections(sections, operator_map)
 
         members = ServiceMembers.get_operators_by_section_indice(section_indice)
         cameras = ServiceCameras.get_cameras()
@@ -29,11 +31,20 @@ class Sections(resources.PerchMountResource):
         mount_types = [row.to_json() for row in mount_types]
 
         return {
-            "sections": results,
+            "sections": sections,
             "members": resources.utils.field_as_key(members, "member_id"),
             "cameras": resources.utils.field_as_key(cameras, "camera_id"),
             "mount_types": resources.utils.field_as_key(mount_types, "mount_type_id"),
         }
+
+    def _get_operator_map(self, section_indice: list[int]) -> dict:
+        operators = ServiceSections.get_section_operators(section_indice)
+        operator_map = resources.utils.find_section_operator_map(operators)
+        return operator_map
+
+    def _find_operator_to_sections(self, sections: list[dict], operator_map: dict):
+        for section in sections:
+            section["operators"] = operator_map[section["section_id"]]
 
 
 class Section(flask_restful.Resource):

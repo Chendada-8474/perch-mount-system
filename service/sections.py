@@ -27,10 +27,22 @@ def get_sections(
             query = query.filter(model.Sections.valid == valid)
 
         if operator:
-            section_indice = _get_section_indice_by_operator(operator)
-            query = query.filter(model.Sections.section_id.in_(section_indice))
+            query = query.join(
+                model.SectionOperators,
+                model.SectionOperators.section == model.Sections.section_id,
+            ).filter(model.SectionOperators.operator == operator)
 
         results = query.all()
+    return results
+
+
+def get_section_operators(section_indice: list[int]) -> list[model.SectionOperators]:
+    with service.session.begin() as session:
+        results = (
+            session.query(model.SectionOperators)
+            .filter(model.SectionOperators.section.in_(section_indice))
+            .all()
+        )
     return results
 
 

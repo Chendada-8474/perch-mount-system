@@ -79,7 +79,15 @@ def get_medium_by_id(medium_id: str) -> model.Media:
     return result
 
 
-def add_media_individuals(media: list[dict]):
+def update_medium(medium_id: str, arg: dict):
+    with service.session.begin() as session:
+        session.query(model.Media).filter(model.Media.medium_id == medium_id).update(
+            arg
+        )
+        session.commit()
+
+
+def add_media_and_individuals(media: list[dict]):
     individauls = _get_individauls_from_media(media)
     media = _pop_media_individual(media)
     new_meida: list[model.Media] = []
