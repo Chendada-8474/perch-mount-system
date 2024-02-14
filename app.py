@@ -4,8 +4,8 @@ from routes import routing
 from src import model
 from src import app
 import login
-import login.app
-import species_trie.app
+import login.apps
+import species_trie.apps
 import cache.key
 
 resources.api.init_resources(routing.ROUTES)
