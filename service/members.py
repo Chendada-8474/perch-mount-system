@@ -32,6 +32,29 @@ def get_member_by_indice(indice: list[int]) -> list[model.Members]:
     return result
 
 
+def get_member_by_username(user_name: str) -> model.Members:
+    with service.session.begin() as session:
+        result = (
+            session.query(model.Members)
+            .filter(model.Members.user_name == user_name)
+            .one()
+        )
+    return result
+
+
+def get_member_by_authentication(user_name: str, phone_number: str) -> model.Members:
+    with service.session.begin() as session:
+        result = (
+            session.query(model.Members)
+            .filter(
+                model.Members.user_name == user_name
+                and model.Members.phone_number == phone_number
+            )
+            .one_or_none()
+        )
+    return result
+
+
 def get_member_by_id(member_id: int) -> model.Members:
     with service.session.begin() as session:
         result = (
