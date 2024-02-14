@@ -29,6 +29,9 @@ class EnvKeys(enum.StrEnum):
     MYSQL_HOST = enum.auto()
     MYSQL_PORT = enum.auto()
 
+    CACHE_REDIS_HOST = enum.auto()
+    CACHE_REDIS_PORT = enum.auto()
+
 
 def get_env(key: EnvKeys) -> str:
     return os.environ.get(f"{PREFIX}_{key.upper()}")
