@@ -1,8 +1,0 @@
-.full-screen {
-    transition: 0.15s;
-}
-
-.full-screen:hover {
-    transform: scale(1.02);
-    cursor: zoom-in;
-}

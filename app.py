@@ -3,8 +3,8 @@ import flask
 import flask_jwt_extended
 import http
 
-from routes import route_helper
-from routes import routing
+from src.routes import route_helper
+from src.routes import routing
 import service
 from src import model
 from src import config
