@@ -43,3 +43,9 @@ def get_species_by_taxon_order(taxon_order: int) -> model.Species:
             .one()
         )
     return result
+
+
+def get_species_codes() -> list[model.SpeciesCodes]:
+    with service.session.begin() as session:
+        results = session.query(model.SpeciesCodes).all()
+    return results

@@ -1,17 +1,9 @@
 import datetime
 import flask_restful
 
-__all__ = [
-    "detected_media",
-    "empty_media",
-    "media",
-    "members",
-    "options",
-    "perch_mounts",
-    "sections",
-    "species",
-]
+from routes import route_helper
 
+api = route_helper.PerchMountApi()
 
 TRUES = {"true", "1", "yes", "y", "ya"}
 
