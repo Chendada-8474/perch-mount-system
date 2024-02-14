@@ -9,7 +9,7 @@ from src import config
 from src import app
 import login
 import login.app
-import tools.species_trie.app
+import species_trie.app
 
 
 app.app.config["SQLALCHEMY_DATABASE_URI"] = service.SQLALCHEMY_DATABASE_URI
