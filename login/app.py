@@ -42,3 +42,11 @@ def refresh_expiring_jwts(response: flask.Response):
         return response
     except (RuntimeError, KeyError):
         return response
+
+
+@app.app.route("/test", methods=["GET"])
+@flask_jwt_extended.jwt_required()
+def test():
+    current_user = flask_jwt_extended.get_jwt_identity()
+    claims = flask_jwt_extended.get_jwt()
+    return flask.jsonify({"user": current_user, "claims": claims})
