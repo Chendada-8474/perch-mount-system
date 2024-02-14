@@ -1,6 +1,8 @@
 import os
 import enum
+from datetime import timedelta
 import dotenv
+
 
 dotenv.load_dotenv()
 
@@ -49,3 +51,11 @@ def get_vedio_extenstions() -> set:
 
 def get_raptor_orders() -> set:
     return RAPTOR_ORDERS
+
+
+def get_jwt_access_token_expires() -> timedelta:
+    return timedelta(seconds=60)
+
+
+def get_jwt_refresh_expires() -> timedelta:
+    return timedelta(seconds=50)
