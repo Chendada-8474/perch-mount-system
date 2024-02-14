@@ -9,4 +9,5 @@ def key_generate() -> str:
 def phrase_key(args: dict) -> str:
     args_list = [f"{k}={v}" for k, v in args.items()]
     args_list.sort()
-    return "&".join(args_list)
+    key = "&".join(args_list)
+    return f"{flask.request.path}?{key}"
