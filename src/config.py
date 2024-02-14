@@ -57,8 +57,8 @@ def get_raptor_orders() -> set:
 
 
 def get_jwt_access_token_expires() -> timedelta:
-    return timedelta(seconds=60)
+    return timedelta(weeks=7)
 
 
 def get_jwt_refresh_expires() -> timedelta:
-    return timedelta(seconds=50)
+    return timedelta(days=1)
