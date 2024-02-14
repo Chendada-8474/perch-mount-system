@@ -1,7 +1,7 @@
 import flask
 from service import species
 from src import app
-from tools.species_trie import trie
+from species_trie import trie
 
 
 trier = trie.SpeciesTrie(
