@@ -32,15 +32,6 @@ cache.cache.init_app(app)
 app.register_blueprint(login.apps.blueprint)
 app.register_blueprint(species_trie.apps.blueprint)
 
-import cache.redis_client
-
-
-@app.route("/keys")
-def keys():
-    return flask.jsonify([str(key) for key in cache.redis_client.client.keys()])
-
-
 if __name__ == "__main__":
-
     cache.cache.clear()
     app.run(host="127.0.0.1", debug=True)
