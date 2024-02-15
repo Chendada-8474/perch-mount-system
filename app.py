@@ -1,13 +1,13 @@
 import cache
 import flask
 
-import resources
-from routes import routing
-from src import model
 import login
 import login.apps
+import resources
+from routes import routing
 import service
 import species_trie.apps
+from src import model
 from src import config
 
 app = flask.Flask(__name__)

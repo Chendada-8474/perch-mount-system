@@ -2,7 +2,6 @@ import flask
 import flask_jwt_extended
 import http
 
-import login
 from login import authenticate
 from login import utils
 
