@@ -1,5 +1,7 @@
 import flask_restful.reqparse
 
+import cache
+import cache.key
 import resources
 import service.behaviors
 import service.cameras
@@ -12,7 +14,7 @@ import service.positions
 
 
 class Behaviors(resources.PerchMountResource):
-
+    @cache.cache.cached(make_cache_key=cache.key.key_generate)
     def get(self):
         behaviors = service.behaviors.get_behaviors()
         return {"behaviors": [behavior.to_json() for behavior in behaviors]}
@@ -26,10 +28,12 @@ class Behavior(resources.PerchMountResource):
         args = self.post_parser.parse_args(strict=True)
         behavior_id = service.behaviors.add_behavior(args["chinese_name"])
         behavior = service.behaviors.get_behavior_by_id(behavior_id)
+        cache.key.evict_same_path_keys()
         return behavior.to_json()
 
 
 class Cameras(resources.PerchMountResource):
+    @cache.cache.cached(make_cache_key=cache.key.key_generate)
     def get(self):
         cameras = service.cameras.get_cameras()
         return {"cameras": [camera.to_json() for camera in cameras]}
@@ -47,6 +51,7 @@ class Camera(resources.PerchMountResource):
 
 
 class Events(resources.PerchMountResource):
+    @cache.cache.cached(make_cache_key=cache.key.key_generate)
     def get(self):
         events = service.events.get_events()
         return {"events": [event.to_json() for event in events]}
@@ -65,6 +70,7 @@ class Event(resources.PerchMountResource):
 
 
 class Habitats(resources.PerchMountResource):
+    @cache.cache.cached(make_cache_key=cache.key.key_generate)
     def get(self):
         habitats = service.habitats.get_habitats()
         return {"habitats": [habitat.to_json() for habitat in habitats]}
@@ -94,6 +100,7 @@ class Habitat(resources.PerchMountResource):
 
 
 class Layers(resources.PerchMountResource):
+    @cache.cache.cached(make_cache_key=cache.key.key_generate)
     def get(self):
         layers = service.layers.get_layers()
         return {"layers": [layer.to_json() for layer in layers]}
@@ -103,6 +110,7 @@ class Layer(resources.PerchMountResource):
     post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument("name", type=str, required=True)
 
+    @cache.cache.cached(make_cache_key=cache.key.key_generate)
     def get(self, layer_id: int):
         layer = service.layers.get_layer_by_id(layer_id)
         return layer.to_json()
@@ -115,6 +123,7 @@ class Layer(resources.PerchMountResource):
 
 
 class MountTypes(resources.PerchMountResource):
+    @cache.cache.cached(make_cache_key=cache.key.key_generate)
     def get(self):
         mount_types = service.mount_types.get_mount_types()
         return {"mount_types": [mount_type.to_json() for mount_type in mount_types]}
@@ -124,6 +133,7 @@ class MountType(resources.PerchMountResource):
     post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument("name", type=str, required=True)
 
+    @cache.cache.cached(make_cache_key=cache.key.key_generate)
     def get(self, mount_type_id: int):
         mount_type = service.mount_types.get_mount_type_by_id(mount_type_id)
         return mount_type.to_json()
@@ -136,6 +146,7 @@ class MountType(resources.PerchMountResource):
 
 
 class Projects(resources.PerchMountResource):
+    @cache.cache.cached(make_cache_key=cache.key.key_generate)
     def get(self):
         projects = service.projects.get_projects()
         return {"projects": [project.to_json() for project in projects]}
@@ -145,6 +156,7 @@ class Project(resources.PerchMountResource):
     post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument("name", type=str, required=True)
 
+    @cache.cache.cached(make_cache_key=cache.key.key_generate)
     def get(self, project_id: int):
         project = service.projects.get_project_by_id(project_id)
         return project.to_json()
@@ -157,6 +169,7 @@ class Project(resources.PerchMountResource):
 
 
 class Positions(resources.PerchMountResource):
+    @cache.cache.cached(make_cache_key=cache.key.key_generate)
     def get(self):
         positions = service.positions.get_positions()
         return {"positions": [position.to_json() for position in positions]}
@@ -166,6 +179,7 @@ class Position(resources.PerchMountResource):
     post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument("name", type=str, required=True)
 
+    @cache.cache.cached(make_cache_key=cache.key.key_generate)
     def get(self, position_id: int):
         postion = service.positions.get_position_by_id(position_id)
         return postion.to_json()

@@ -2,12 +2,14 @@ import flask
 import flask_jwt_extended
 import http
 
-from src import app
+import login
 from login import authenticate
 from login import utils
 
+blueprint = flask.Blueprint("login", __name__)
 
-@app.app.route("/login", methods=[http.HTTPMethod.POST])
+
+@blueprint.route("/login", methods=[http.HTTPMethod.POST])
 def login():
     username = flask.request.json.get("username", None)
     phone_number = flask.request.json.get("phone_number", None)
@@ -25,14 +27,14 @@ def login():
     return flask.jsonify(access_token=access_token)
 
 
-@app.app.route("/logout", methods=[http.HTTPMethod.POST])
+@blueprint.route("/logout", methods=[http.HTTPMethod.POST])
 def logout():
     response = flask.jsonify({"msg": "logout successful"})
     flask_jwt_extended.unset_jwt_cookies(response)
     return response
 
 
-@app.app.after_request
+@blueprint.after_request
 def refresh_expiring_jwts(response: flask.Response):
     try:
         response.delete_cookie("access_token_cookie")
@@ -44,7 +46,7 @@ def refresh_expiring_jwts(response: flask.Response):
         return response
 
 
-@app.app.route("/test", methods=["GET"])
+@blueprint.route("/test", methods=["GET"])
 @flask_jwt_extended.jwt_required()
 def test():
     current_user = flask_jwt_extended.get_jwt_identity()
