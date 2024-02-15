@@ -29,6 +29,7 @@ class EnvKeys(enum.StrEnum):
     MYSQL_HOST = enum.auto()
     MYSQL_PORT = enum.auto()
 
+    CACHE_DEFAULT_TIMEOUT = enum.auto()
     CACHE_KEY_PREFIX = enum.auto()
     CACHE_REDIS_HOST = enum.auto()
     CACHE_REDIS_PORT = enum.auto()
@@ -69,3 +70,7 @@ def get_jwt_refresh_expires() -> timedelta:
 
 def get_cache_type() -> str:
     return "RedisCache"
+
+
+def get_data_cache_timeout() -> int:
+    return 3600
