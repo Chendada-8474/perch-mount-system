@@ -29,8 +29,11 @@ class EnvKeys(enum.StrEnum):
     MYSQL_HOST = enum.auto()
     MYSQL_PORT = enum.auto()
 
+    CACHE_KEY_PREFIX = enum.auto()
     CACHE_REDIS_HOST = enum.auto()
     CACHE_REDIS_PORT = enum.auto()
+    REDIS_MAXMEMORY = enum.auto()
+    REDIS_MAXMEMORY_POLICY = enum.auto()
 
 
 def get_env(key: EnvKeys) -> str:
@@ -62,3 +65,7 @@ def get_jwt_access_token_expires() -> timedelta:
 
 def get_jwt_refresh_expires() -> timedelta:
     return timedelta(days=1)
+
+
+def get_cache_type() -> str:
+    return "RedisCache"

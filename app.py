@@ -6,7 +6,6 @@ from src import app
 import login
 import login.apps
 import species_trie.apps
-import cache.key
 
 resources.api.init_resources(routing.ROUTES)
 resources.api.init_app(app.app)
@@ -16,9 +15,9 @@ model.migrate.init_app(app.app, model.db)
 cache.cache.init_app(app.app)
 
 
-@app.app.route("/testing")
-def testing():
-    return cache.key.key_generate()
+@app.app.route("/keys")
+def keys():
+    return "hi"
 
 
 if __name__ == "__main__":
