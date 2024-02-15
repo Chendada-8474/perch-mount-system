@@ -3,9 +3,9 @@ from flask_restful import reqparse
 
 import cache
 import cache.key
-import config
 import resources
 import service.detected_media
+from src import config
 
 TIMEOUT = config.get_data_cache_timeout()
 

@@ -4,14 +4,13 @@ import flask_restful.reqparse
 
 import cache
 import cache.key
-import config
 import service.perch_mounts
 import service.habitats
 import service.members
 import service.projects
 import resources
 import resources.utils
-
+from src import config
 
 TIMEOUT = config.get_data_cache_timeout()
 

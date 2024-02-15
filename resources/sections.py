@@ -5,13 +5,13 @@ import flask_restful.reqparse
 
 import cache
 import cache.key
-import config
 import resources
 import resources.utils
 import service.sections
 import service.members
 import service.cameras
 import service.mount_types
+from src import config
 
 TIMEOUT = config.get_data_cache_timeout()
 
