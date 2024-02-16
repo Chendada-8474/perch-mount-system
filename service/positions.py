@@ -18,9 +18,9 @@ def get_position_by_id(position_id: int) -> model.Positions:
     return result
 
 
-def add_position(name: str) -> model.Positions:
+def add_position(name: str) -> int:
     new_position = model.Positions(name=name)
     with service.session.begin() as session:
         session.add(new_position)
         session.commit()
-    return new_position
+    return new_position.position_id

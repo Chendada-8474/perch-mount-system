@@ -3,15 +3,21 @@ import flask
 import flask_restful
 import flask_restful.reqparse
 
+import cache
+import cache.key
 import resources
 import resources.utils
 import service.sections
 import service.members
 import service.cameras
 import service.mount_types
+from src import config
+
+TIMEOUT = config.get_data_cache_timeout()
 
 
 class Sections(resources.PerchMountResource):
+    @cache.cache.cached(timeout=TIMEOUT, make_cache_key=cache.key.key_generate)
     def get(self):
         args = dict(flask.request.args)
         args = self._correct_types(args)
@@ -48,6 +54,7 @@ class Sections(resources.PerchMountResource):
 
 
 class Section(flask_restful.Resource):
+    @cache.cache.cached(timeout=TIMEOUT, make_cache_key=cache.key.key_generate)
     def get(self, section_id: int):
         section = service.sections.get_section_by_id(section_id)
         members = service.members.get_operators_by_section_indice([section.section_id])
@@ -85,4 +92,5 @@ class Section(flask_restful.Resource):
     def post(self):
         args = self.post_parser.parse_args(strict=True)
         section_id = service.sections.add_section(**args)
+        cache.key.evict_same_path_keys()
         return self.get(section_id)

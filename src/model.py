@@ -179,7 +179,7 @@ class SpeciesCodes(db.Model, JsonAbleModel):
 class Behaviors(db.Model, JsonAbleModel):
     __tablename__ = "behaviors"
     behavior_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    chinese_name = db.Column(db.String(20), nullable=False)
+    chinese_name = db.Column(db.String(20), nullable=False, unique=True)
 
 
 class Positions(db.Model, JsonAbleModel):

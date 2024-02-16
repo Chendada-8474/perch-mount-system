@@ -1,5 +1,6 @@
-from src.model import SectionOperators
 from collections import defaultdict
+
+from src.model import SectionOperators
 
 
 def get_habitat_indice(resources: list) -> list[int]:
