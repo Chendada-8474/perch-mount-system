@@ -1,10 +1,11 @@
 import flask
 
-from cache import redis_client
+import cache.pathlib
+import cache.redis_client
 from src import config
 
 
-def key_generate(_=None) -> str:
+def key_generate(*_, **__) -> str:
     args = flask.request.args
     return phrase_key(args)
 
@@ -22,6 +23,7 @@ def group_of_key(key: str) -> str:
 
 def evict_same_path_keys():
     prefix = config.get_env(config.EnvKeys.CACHE_KEY_PREFIX)
-    path = flask.request.path
-    for key in redis_client.client.scan_iter(prefix + path):
-        redis_client.client.delete(key)
+    path = cache.pathlib.CachePath(flask.request.path)
+    group = path.ancestor.as_posix()
+    for key in cache.redis_client.client.scan_iter(f"{prefix}{group}*"):
+        cache.redis_client.client.delete(key)

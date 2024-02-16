@@ -1,7 +1,7 @@
 import datetime
 import flask_restful
 
-from routes import route_helper
+from resources.routes import route_helper
 
 api = route_helper.PerchMountApi()
 

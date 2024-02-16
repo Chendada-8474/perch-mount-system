@@ -188,4 +188,5 @@ class Position(resources.PerchMountResource):
         args = self.post_parser.parse_args(strict=True)
         position_id = service.positions.add_position(args["name"])
         position = service.positions.get_position_by_id(position_id)
+        cache.key.evict_same_path_keys()
         return position.to_json()

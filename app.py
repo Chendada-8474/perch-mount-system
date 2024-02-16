@@ -4,7 +4,7 @@ import flask
 import login
 import login.apps
 import resources
-from routes import routing
+from resources.routes import routing
 import service
 import species_trie.apps
 from src import model
@@ -29,8 +29,26 @@ model.db.init_app(app)
 model.migrate.init_app(app, model.db)
 cache.cache.init_app(app)
 
+
+import cache.key
+import cache.redis_client
+
+
+@app.route("/test/a/b/c")
+def test():
+    cache.key.evict_same_path_keys()
+    return flask.request.root_path
+
+
+@app.route("/keys")
+def keys():
+
+    return flask.jsonify([str(key) for key in cache.redis_client.client.keys()])
+
+
 app.register_blueprint(login.apps.blueprint)
 app.register_blueprint(species_trie.apps.blueprint)
+
 
 if __name__ == "__main__":
     cache.cache.clear()
