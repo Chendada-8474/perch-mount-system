@@ -47,6 +47,7 @@ class Camera(resources.PerchMountResource):
         args = self.post_parser.parse_args(strict=True)
         camera_id = service.cameras.add_camera(args["model_name"])
         camera = service.cameras.get_camera_by_id(camera_id)
+        cache.key.evict_same_path_keys()
         return camera.to_json()
 
 
@@ -66,6 +67,7 @@ class Event(resources.PerchMountResource):
         args = self.post_parser.parse_args(strict=True)
         event_id = service.events.add_event(args["chinese_name"], args["english_name"])
         event = service.events.get_event_by_id(event_id)
+        cache.key.evict_same_path_keys()
         return event.to_json()
 
 
@@ -96,6 +98,7 @@ class Habitat(resources.PerchMountResource):
             args["english_name"],
         )
         habitat = service.habitats.get_habitat_by_id(habitat_id)
+        cache.key.evict_same_path_keys()
         return habitat.to_json()
 
 
@@ -119,6 +122,7 @@ class Layer(resources.PerchMountResource):
         args = self.post_parser.parse_args(strict=True)
         layer_id = service.layers.add_layer(args["name"])
         layer = service.layers.get_layer_by_id(layer_id)
+        cache.key.evict_same_path_keys()
         return layer.to_json()
 
 
@@ -142,6 +146,7 @@ class MountType(resources.PerchMountResource):
         args = self.post_parser.parse_args(strict=True)
         layer_id = service.layers.add_layer(args["name"])
         layer = service.layers.get_layer_by_id(layer_id)
+        cache.key.evict_same_path_keys()
         return layer.to_json()
 
 
@@ -165,6 +170,7 @@ class Project(resources.PerchMountResource):
         args = self.post_parser.parse_args(strict=True)
         project_id = service.projects.add_project(args["name"])
         project = service.projects.get_project_by_id(project_id)
+        cache.key.evict_same_path_keys()
         return project.to_json()
 
 

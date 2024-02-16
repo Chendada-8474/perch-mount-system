@@ -48,7 +48,6 @@ class Medium(flask_restful.Resource):
     @cache.cache.cached(timeout=TIMEOUT, make_cache_key=cache.key.key_generate)
     def get(self, medium_id: str):
         medium = service.media.get_medium_by_id(medium_id)
-        cache.key.evict_same_path_keys()
         return medium.to_json()
 
     def patch(self, medium_id: str):
