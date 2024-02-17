@@ -21,6 +21,7 @@ MarkupSafe==2.1.5
 mypy-extensions==1.0.0
 packaging==23.2
 pathspec==0.12.1
+pillow==10.2.0
 platformdirs==4.2.0
 pycparser==2.21
 PyJWT==2.8.0
