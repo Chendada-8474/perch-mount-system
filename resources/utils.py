@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from src.model import SectionOperators
+from src.model import SectionOperators, Individuals, DetectedIndividuals
 
 
 def get_habitat_indice(resources: list) -> list[int]:
@@ -34,3 +34,22 @@ def find_section_operator_map(
     for row in section_operators:
         mapping[row.section].append(row.operator)
     return mapping
+
+
+def _medium_id_as_key(individuals: list[dict]) -> dict:
+    medium_key_individuals = defaultdict(list)
+    for individual in individuals:
+        medium_id = individual["medium"]
+        individual.pop("medium")
+        medium_key_individuals[medium_id].append(individual)
+    return medium_key_individuals
+
+
+def embed_individuals_to_media(media: dict, individuals: dict) -> list[dict]:
+    media_key_individuals = _medium_id_as_key(individuals)
+    medium_key = (
+        media[0]["medium_id"] if "medium_id" in media[0] else "detected_medium_id"
+    )
+    for medium in media:
+        medium["individuals"] = media_key_individuals[medium[medium_key]]
+    return media

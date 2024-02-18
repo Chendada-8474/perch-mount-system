@@ -4,7 +4,9 @@ import flask_restful.reqparse
 import cache
 import cache.key
 import resources
+from resources import utils
 import service.media
+import service.individuals
 from src import config
 
 TIMEOUT = config.get_data_cache_timeout()
@@ -24,7 +26,15 @@ class Media(resources.PerchMountResource):
         args = dict(flask.request.args)
         args = self._correct_types(args)
         media = service.media.get_media(**args)
-        return {"media": [medium.to_json() for medium in media]}
+
+        media_indice = [medium.medium_id for medium in media]
+        individuals = service.individuals.get_individauls_by_medium_indice(media_indice)
+        media = [medium.to_json() for medium in media]
+        individuals = [individual.to_json() for individual in individuals]
+
+        media_with_individuals = utils.embed_individuals_to_media(media, individuals)
+
+        return {"media": media_with_individuals}
 
     def post(self):
         args = self.post_parser.parse_args(strict=True)
