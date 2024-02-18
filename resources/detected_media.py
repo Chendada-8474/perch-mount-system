@@ -16,6 +16,7 @@ class DetectedMedia(resources.PerchMountResource):
         "detected_media", type=list[dict], required=True, location="json"
     )
     put_parser = reqparse.RequestParser()
+    put_parser.add_argument("section", type=dict, required=True, location="json")
     put_parser.add_argument(
         "detected_media", type=list[dict], required=True, location="json"
     )
@@ -37,5 +38,9 @@ class DetectedMedia(resources.PerchMountResource):
 
     def put(self):
         args = self.put_parser.parse_args(strict=True)
-        service.detected_media.detect(args["empty_indices"], args["detected_media"])
+        service.detected_media.detect(
+            args["section"],
+            args["empty_indices"],
+            args["detected_media"],
+        )
         cache.key.evict_same_path_keys()

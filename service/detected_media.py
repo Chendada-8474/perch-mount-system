@@ -74,10 +74,19 @@ def _get_reviewed_detected_medium_indice() -> list[str]:
     return results
 
 
-def detect(empty_indices: list[str], detected_media: list[dict]):
+def detect(section: dict, empty_indices: list[str], detected_media: list[dict]):
     new_meida, new_individuals = query_utils.meida_to_insert_format(detected_media)
+    operators = [operator for operator in section["operators"]]
+    section.pop("operators")
+    new_section = model.Sections(**section)
     with service.session.begin() as session:
         try:
+            session.add(new_section)
+            session.flush()
+            new_section_operators = query_utils.find_section_operators(
+                new_section.section_id, operators
+            )
+            session.add_all(new_section_operators)
             session.query(model.EmptyMedia).filter(
                 model.EmptyMedia.empty_medium_id.in_(empty_indices)
             ).delete()
