@@ -87,6 +87,9 @@ def detect(section: dict, empty_indices: list[str], detected_media: list[dict]):
                 new_section.section_id, operators
             )
             session.add_all(new_section_operators)
+            session.query(model.PerchMounts).filter(
+                model.PerchMounts.perch_mount_id == section["perch_mount"]
+            ).update({"latest_note": section["note"]})
             session.query(model.EmptyMedia).filter(
                 model.EmptyMedia.empty_medium_id.in_(empty_indices)
             ).delete()

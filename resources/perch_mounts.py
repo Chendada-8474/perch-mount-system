@@ -65,7 +65,7 @@ class PerchMount(flask_restful.Resource):
     @cache.cache.cached(timeout=TIMEOUT, make_cache_key=cache.key.key_generate)
     def get(self, perch_mount_id: int):
         result = service.perch_mounts.get_perch_mount_by_id(perch_mount_id)
-
+        print(result.to_json())
         if not result:
             return
 

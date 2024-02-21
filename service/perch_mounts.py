@@ -32,7 +32,7 @@ def get_perch_mount_by_id(perch_mount_id: int):
         result = (
             session.query(model.PerchMounts)
             .filter(model.PerchMounts.perch_mount_id == perch_mount_id)
-            .first()
+            .one_or_none()
         )
     return result
 
