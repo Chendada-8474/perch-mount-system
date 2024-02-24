@@ -33,16 +33,29 @@ def pop_media_individual(media: list[dict]) -> list[dict]:
     return media
 
 
-def meida_to_insert_format(media: list[dict]) -> tuple[list, list]:
+def detected_meida_to_insert_format(
+    media: list[dict], section: int
+) -> tuple[list, list]:
     individauls = get_individauls_from_detected_media(media)
     media = pop_media_individual(media)
     new_meida: list[model.DetectedMedia] = []
     new_individuals: list[model.DetectedIndividuals] = []
     for medium in media:
+        medium["section"] = section
         new_meida.append(model.DetectedMedia(**medium))
     for individual in individauls:
         new_individuals.append(model.DetectedIndividuals(**individual))
     return new_meida, new_individuals
+
+
+def empty_media_to_insert_format(media: list[dict], section) -> list[model.EmptyMedia]:
+    new_media: list[model.EmptyMedia] = []
+
+    for medium in media:
+        medium["section"] = section
+        new_media.append(model.EmptyMedia(**medium))
+
+    return new_media
 
 
 def find_section_operators(

@@ -66,7 +66,7 @@ class Section(flask_restful.Resource):
         section = section.to_json()
         section["camera"] = camera.to_json()
         section["mount_type"] = mount_type.to_json()
-        section["members"] = resources.utils.field_as_key(members, "member_id")
+        section["operators"] = resources.utils.field_as_key(members, "member_id")
 
         return section
 

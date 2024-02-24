@@ -59,15 +59,16 @@ class PerchMount(flask_restful.Resource):
     patch_parser.add_argument("habitat", type=int)
     patch_parser.add_argument("project", type=int)
     patch_parser.add_argument("layer", type=int)
+    patch_parser.add_argument("claim_by", type=int)
     patch_parser.add_argument("terminated", type=bool)
     patch_parser.add_argument("is_priority", type=bool)
 
     @cache.cache.cached(timeout=TIMEOUT, make_cache_key=cache.key.key_generate)
     def get(self, perch_mount_id: int):
         result = service.perch_mounts.get_perch_mount_by_id(perch_mount_id)
-        print(result.to_json())
+
         if not result:
-            return
+            return {}, 404
 
         project = service.projects.get_project_by_id(result.project)
         habitat = service.habitats.get_habitat_by_id(result.habitat)
