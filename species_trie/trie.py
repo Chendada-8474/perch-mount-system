@@ -30,7 +30,11 @@ class SpeciesTrie:
                     results.extend(value)
                 else:
                     tasks.append(value)
-        return list(set(results))
+
+        answer = {}
+        for result in results:
+            answer[result[0]] = result[1]
+        return answer
 
     def _trie_init(self, species) -> dict:
         trie = {}

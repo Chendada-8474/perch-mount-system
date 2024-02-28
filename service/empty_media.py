@@ -4,19 +4,19 @@ from src import model
 
 
 def get_empty_media(
-    section: int = None,
-    perch_mount: int = None,
+    section_id: int = None,
+    perch_mount_id: int = None,
     offset: int = 0,
     limit: int = 250,
     order_by_datetime: bool = True,
 ) -> list[model.EmptyMedia]:
     with service.session.begin() as session:
         query = session.query(model.EmptyMedia)
-        if section:
-            query = query.filter(model.EmptyMedia.section == section)
-        if perch_mount:
+        if section_id:
+            query = query.filter(model.EmptyMedia.section == section_id)
+        if perch_mount_id:
             section_indice = query_utils.get_section_indice_by_perch_mount_id(
-                perch_mount
+                perch_mount_id
             )
             query = query.filter(model.EmptyMedia.section.in_(section_indice))
         if order_by_datetime:

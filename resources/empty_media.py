@@ -15,7 +15,7 @@ class EmptyMedia(resources.PerchMountResource):
     post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument("media", type=list[dict], required=True, location="json")
 
-    @cache.cache.cached(timeout=TIMEOUT, make_cache_key=cache.key.key_generate)
+    # @cache.cache.cached(timeout=TIMEOUT, make_cache_key=cache.key.key_generate)
     def get(self):
         args = dict(flask.request.args)
         args = self._correct_types(args)

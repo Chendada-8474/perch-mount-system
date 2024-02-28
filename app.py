@@ -8,6 +8,7 @@ import resources
 from resources.routes import routing
 import service
 import species_trie.apps
+import summary.apps
 from src import model
 from src import config
 
@@ -43,13 +44,12 @@ def test():
 
 @app.route("/keys")
 def keys():
-
     return flask.jsonify([str(key) for key in cache.redis_client.client.keys()])
 
 
 app.register_blueprint(login.apps.blueprint)
 app.register_blueprint(species_trie.apps.blueprint)
-
+app.register_blueprint(summary.apps.blueprint)
 
 if __name__ == "__main__":
     cache.cache.clear()

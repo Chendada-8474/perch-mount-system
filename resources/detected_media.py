@@ -7,7 +7,9 @@ import resources
 from resources import utils
 import service.detected_media
 import service.detected_individuals
+import service.species
 from src import config
+from src import model
 
 TIMEOUT = config.get_data_cache_timeout()
 
@@ -26,7 +28,6 @@ class DetectedMedia(resources.PerchMountResource):
         "empty_indices", type=list[str], required=True, location="json"
     )
 
-    @cache.cache.cached(timeout=TIMEOUT, make_cache_key=cache.key.key_generate)
     def get(self):
         args = dict(flask.request.args)
         args = self._correct_types(args)
@@ -37,11 +38,17 @@ class DetectedMedia(resources.PerchMountResource):
                 media_indice
             )
         )
+        taxon_orders = self._get_indiivduals_taxon_orders(individuals)
+        species = service.species.get_species_by_taxon_orders(taxon_orders)
+        species = utils.taxon_order_as_key(species)
         media = [medium.to_json() for medium in media]
         individuals = [individual.to_json() for individual in individuals]
         media_with_individuals = utils.embed_individuals_to_media(media, individuals)
 
-        return {"media": media_with_individuals}
+        return {
+            "media": media_with_individuals,
+            "species": species,
+        }
 
     def post(self):
         args = self.post_parser.parse_args(strict=True)
@@ -56,3 +63,8 @@ class DetectedMedia(resources.PerchMountResource):
             args["detected_media"],
         )
         cache.key.evict_same_path_keys()
+
+    def _get_indiivduals_taxon_orders(
+        self, individuals: list[model.DetectedIndividuals]
+    ) -> list[int]:
+        return [sp.taxon_order_by_ai for sp in individuals]

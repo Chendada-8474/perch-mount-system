@@ -10,7 +10,10 @@ def get_detected_media(
     limit: int = 250,
 ) -> list[model.DetectedMedia]:
     with service.session.begin() as session:
-        query = session.query(model.DetectedMedia)
+        query = session.query(model.DetectedMedia).filter(
+            model.DetectedMedia.reviewed != True
+        )
+
         if section_id:
             query = query.filter(model.DetectedMedia.section == section_id)
         if perch_mount_id:

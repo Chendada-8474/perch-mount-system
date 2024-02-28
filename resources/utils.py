@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from src.model import SectionOperators, Individuals, DetectedIndividuals
+from src.model import SectionOperators, Individuals, DetectedIndividuals, Species
 
 
 def get_habitat_indice(resources: list) -> list[int]:
@@ -46,6 +46,8 @@ def _medium_id_as_key(individuals: list[dict]) -> dict:
 
 
 def embed_individuals_to_media(media: dict, individuals: dict) -> list[dict]:
+    if not media:
+        return []
     media_key_individuals = _medium_id_as_key(individuals)
     medium_key = (
         media[0]["medium_id"] if "medium_id" in media[0] else "detected_medium_id"
@@ -53,3 +55,13 @@ def embed_individuals_to_media(media: dict, individuals: dict) -> list[dict]:
     for medium in media:
         medium["individuals"] = media_key_individuals[medium[medium_key]]
     return media
+
+
+def taxon_order_as_key(species: list[Species]) -> dict[int, dict]:
+    key_species = {}
+    for sp in species:
+        d = sp.to_json()
+        key = d["taxon_order"]
+        d.pop("taxon_order")
+        key_species[key] = d
+    return key_species
