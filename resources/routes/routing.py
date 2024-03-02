@@ -54,7 +54,13 @@ ROUTES = [
         # detected_media
         "route": "detected_media",
         "resources": [detected_media.DetectedMedia],
-        "children": [],
+        "children": [
+            {
+                "route": "<string:detected_medium_id>",
+                "resources": [detected_media.DetectedMedium],
+                "children": [],
+            }
+        ],
     },
     {
         # species

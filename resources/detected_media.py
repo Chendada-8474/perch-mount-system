@@ -38,7 +38,7 @@ class DetectedMedia(resources.PerchMountResource):
                 media_indice
             )
         )
-        taxon_orders = self._get_indiivduals_taxon_orders(individuals)
+        taxon_orders = utils.get_indiivduals_taxon_orders(individuals)
         species = service.species.get_species_by_taxon_orders(taxon_orders)
         species = utils.taxon_order_as_key(species)
         media = [medium.to_json() for medium in media]
@@ -68,3 +68,21 @@ class DetectedMedia(resources.PerchMountResource):
         self, individuals: list[model.DetectedIndividuals]
     ) -> list[int]:
         return [sp.taxon_order_by_ai for sp in individuals]
+
+
+class DetectedMedium(resources.PerchMountResource):
+    def get(self, detected_medium_id: str):
+        medium = service.detected_media.get_detected_medium_by_id(detected_medium_id)
+        individuals = (
+            service.detected_individuals.get_detected_individauls_by_medium_indice(
+                [medium.detected_medium_id]
+            )
+        )
+
+        taxon_orders = utils.get_indiivduals_taxon_orders(individuals)
+        species = service.species.get_species_by_taxon_orders(taxon_orders)
+        species = utils.taxon_order_as_key(species)
+        medium = medium.to_json()
+        medium["individuals"] = [individual.to_json() for individual in individuals]
+        medium["species"] = species
+        return medium

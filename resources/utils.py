@@ -1,6 +1,12 @@
 from collections import defaultdict
 
-from src.model import SectionOperators, Individuals, DetectedIndividuals, Species
+from src.model import (
+    SectionOperators,
+    Individuals,
+    DetectedIndividuals,
+    DetectedMedia,
+    Species,
+)
 
 
 def get_habitat_indice(resources: list) -> list[int]:
@@ -65,3 +71,7 @@ def taxon_order_as_key(species: list[Species]) -> dict[int, dict]:
         d.pop("taxon_order")
         key_species[key] = d
     return key_species
+
+
+def get_indiivduals_taxon_orders(individuals: list[DetectedIndividuals]) -> list[int]:
+    return [sp.taxon_order_by_ai for sp in individuals]

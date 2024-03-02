@@ -26,6 +26,16 @@ def get_detected_media(
     return results
 
 
+def get_detected_medium_by_id(detected_medium_id: str) -> model.DetectedMedia:
+    with service.session.begin() as session:
+        result = (
+            session.query(model.DetectedMedia)
+            .filter(model.DetectedMedia.detected_medium_id == detected_medium_id)
+            .one_or_none()
+        )
+    return result
+
+
 def add_media_individuals(detected_media: list[dict]):
     new_meida, new_individuals = query_utils.detected_meida_to_insert_format(
         detected_media
