@@ -14,7 +14,7 @@ def get_individauls_by_medium_indice(
     return results
 
 
-def get_individauls_by_medium_indice(medium_id: str) -> list[model.Individuals]:
+def get_individauls_by_medium_id(medium_id: str) -> list[model.Individuals]:
     with service.session.begin() as session:
         result = (
             session.query(model.Individuals)

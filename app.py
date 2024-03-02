@@ -1,5 +1,6 @@
 import cache
 import flask
+import flask_cors
 
 import login
 import login.apps
@@ -7,6 +8,7 @@ import resources
 from resources.routes import routing
 import service
 import species_trie.apps
+import summary.apps
 from src import model
 from src import config
 
@@ -21,7 +23,7 @@ app.config["CACHE_KEY_PREFIX"] = config.get_env(config.EnvKeys.CACHE_KEY_PREFIX)
 app.config["CACHE_REDIS_HOST"] = config.get_env(config.EnvKeys.CACHE_REDIS_HOST)
 app.config["CACHE_REDIS_PORT"] = config.get_env(config.EnvKeys.CACHE_REDIS_PORT)
 
-
+flask_cors.CORS(app)
 resources.api.init_resources(routing.ROUTES)
 resources.api.init_app(app)
 login.jwt.init_app(app)
@@ -42,13 +44,12 @@ def test():
 
 @app.route("/keys")
 def keys():
-
     return flask.jsonify([str(key) for key in cache.redis_client.client.keys()])
 
 
 app.register_blueprint(login.apps.blueprint)
 app.register_blueprint(species_trie.apps.blueprint)
-
+app.register_blueprint(summary.apps.blueprint)
 
 if __name__ == "__main__":
     cache.cache.clear()

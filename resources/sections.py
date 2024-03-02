@@ -63,12 +63,12 @@ class Section(flask_restful.Resource):
 
         members = [row.to_json() for row in members]
 
-        return {
-            "section": section.to_json(),
-            "camera": camera.to_json(),
-            "mount_type": mount_type.to_json(),
-            "members": resources.utils.field_as_key(members, "member_id"),
-        }
+        section = section.to_json()
+        section["camera"] = camera.to_json()
+        section["mount_type"] = mount_type.to_json()
+        section["operators"] = resources.utils.field_as_key(members, "member_id")
+
+        return section
 
     post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument("perch_mount", type=int, required=True)

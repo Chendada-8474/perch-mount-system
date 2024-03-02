@@ -144,7 +144,7 @@ def _get_taxon_orders_indice_by_taxon(
 
 
 def review(detected_indice: list[str], media: list[dict]):
-    new_meida, new_individuals = query_utils.meida_to_insert_format(media)
+    new_meida, new_individuals = query_utils.detected_meida_to_insert_format(media)
     with service.session.begin() as session:
         try:
             session.query(model.DetectedMedia).filter(

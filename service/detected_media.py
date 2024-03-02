@@ -10,7 +10,10 @@ def get_detected_media(
     limit: int = 250,
 ) -> list[model.DetectedMedia]:
     with service.session.begin() as session:
-        query = session.query(model.DetectedMedia)
+        query = session.query(model.DetectedMedia).filter(
+            model.DetectedMedia.reviewed != True
+        )
+
         if section_id:
             query = query.filter(model.DetectedMedia.section == section_id)
         if perch_mount_id:
@@ -23,8 +26,20 @@ def get_detected_media(
     return results
 
 
+def get_detected_medium_by_id(detected_medium_id: str) -> model.DetectedMedia:
+    with service.session.begin() as session:
+        result = (
+            session.query(model.DetectedMedia)
+            .filter(model.DetectedMedia.detected_medium_id == detected_medium_id)
+            .one_or_none()
+        )
+    return result
+
+
 def add_media_individuals(detected_media: list[dict]):
-    new_meida, new_individuals = query_utils.meida_to_insert_format(detected_media)
+    new_meida, new_individuals = query_utils.detected_meida_to_insert_format(
+        detected_media
+    )
 
     with service.session.begin() as session:
         try:
@@ -74,16 +89,34 @@ def _get_reviewed_detected_medium_indice() -> list[str]:
     return results
 
 
-def detect(empty_indices: list[str], detected_media: list[dict]):
-    new_meida, new_individuals = query_utils.meida_to_insert_format(detected_media)
+def detect(section: dict, empty_media: list[dict], detected_media: list[dict]):
+    operators = [operator for operator in section["operators"]]
+    section.pop("operators")
+    new_section = model.Sections(**section)
     with service.session.begin() as session:
         try:
-            session.query(model.EmptyMedia).filter(
-                model.EmptyMedia.empty_medium_id.in_(empty_indices)
-            ).delete()
-            session.add_all(new_meida)
+            session.add(new_section)
             session.flush()
-            session.add_all(new_individuals)
+            new_section_operators = query_utils.find_section_operators(
+                new_section.section_id, operators
+            )
+            session.add_all(new_section_operators)
+            session.query(model.PerchMounts).filter(
+                model.PerchMounts.perch_mount_id == section["perch_mount"]
+            ).update({"latest_note": section["note"]})
+
+            new_detected_meida, new_detected_individuals = (
+                query_utils.detected_meida_to_insert_format(
+                    detected_media, new_section.section_id
+                )
+            )
+            new_empty_media = query_utils.empty_media_to_insert_format(
+                empty_media, new_section.section_id
+            )
+            session.add_all(new_empty_media)
+            session.add_all(new_detected_meida)
+            session.flush()
+            session.add_all(new_detected_individuals)
             session.commit()
         except:
             session.rollback()

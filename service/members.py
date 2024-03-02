@@ -37,7 +37,7 @@ def get_member_by_username(user_name: str) -> model.Members:
         result = (
             session.query(model.Members)
             .filter(model.Members.user_name == user_name)
-            .one()
+            .one_or_none()
         )
     return result
 
@@ -60,7 +60,7 @@ def get_member_by_id(member_id: int) -> model.Members:
         result = (
             session.query(model.Members)
             .filter(model.Members.member_id == member_id)
-            .one()
+            .one_or_none()
         )
     return result
 

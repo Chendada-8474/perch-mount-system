@@ -45,9 +45,15 @@ def refresh_expiring_jwts(response: flask.Response):
         return response
 
 
-@blueprint.route("/test", methods=["GET"])
+@blueprint.route("/me", methods=["GET"])
 @flask_jwt_extended.jwt_required()
 def test():
     current_user = flask_jwt_extended.get_jwt_identity()
     claims = flask_jwt_extended.get_jwt()
-    return flask.jsonify({"user": current_user, "claims": claims})
+    return flask.jsonify(
+        {
+            "user": current_user,
+            "is_admin": claims["is_admin"],
+            "is_super_admin": claims["is_super_admin"],
+        }
+    )

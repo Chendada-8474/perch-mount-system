@@ -1,5 +1,9 @@
 import service
+import typing
 from src import model
+
+
+ID_COLUMN_TABLE = {"medium": "medium_id", "detected_medium": "detected_medium_id"}
 
 
 def get_section_indice_by_perch_mount_id(perch_mount_id: int) -> list[int]:
@@ -12,11 +16,13 @@ def get_section_indice_by_perch_mount_id(perch_mount_id: int) -> list[int]:
     return [row.section_id for row in results]
 
 
-def get_individauls_from_media(media: list[dict]) -> list[dict]:
+def get_individauls_from_detected_media(media: list[dict]) -> list[dict]:
     individuals = []
+    id_field = "medium_id" if "medium_id" in media[0] else "detected_medium_id"
+
     for medium in media:
         for individual in medium["individuals"]:
-            individual["medium"] = medium["medium_id"]
+            individual["medium"] = medium[id_field]
             individuals.append(individual)
     return individuals
 
@@ -27,18 +33,36 @@ def pop_media_individual(media: list[dict]) -> list[dict]:
     return media
 
 
-def meida_to_insert_format(
-    detected_media: list[dict],
-) -> (
-    list[model.Media] | list[model.DetectedMedia],
-    list[model.Individuals] | list[model.DetectedIndividuals],
-):
-    individauls = get_individauls_from_media(detected_media)
-    detected_media = pop_media_individual(detected_media)
+def detected_meida_to_insert_format(
+    media: list[dict], section: int
+) -> tuple[list, list]:
+    individauls = get_individauls_from_detected_media(media)
+    media = pop_media_individual(media)
     new_meida: list[model.DetectedMedia] = []
     new_individuals: list[model.DetectedIndividuals] = []
-    for medium in detected_media:
+    for medium in media:
+        medium["section"] = section
         new_meida.append(model.DetectedMedia(**medium))
     for individual in individauls:
         new_individuals.append(model.DetectedIndividuals(**individual))
     return new_meida, new_individuals
+
+
+def empty_media_to_insert_format(media: list[dict], section) -> list[model.EmptyMedia]:
+    new_media: list[model.EmptyMedia] = []
+
+    for medium in media:
+        medium["section"] = section
+        new_media.append(model.EmptyMedia(**medium))
+
+    return new_media
+
+
+def find_section_operators(
+    section_id: int, operators: list[int]
+) -> list[model.SectionOperators]:
+    section_operators = [
+        model.SectionOperators(section=section_id, operator=operator)
+        for operator in operators
+    ]
+    return section_operators
