@@ -14,6 +14,8 @@ TIMEOUT = config.get_data_cache_timeout()
 class EmptyMedia(resources.PerchMountResource):
     post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument("media", type=list[dict], required=True, location="json")
+    put_parser = flask_restful.reqparse.RequestParser()
+    put_parser.add_argument("media", type=list[dict], required=True, location="json")
 
     # @cache.cache.cached(timeout=TIMEOUT, make_cache_key=cache.key.key_generate)
     def get(self):
@@ -27,3 +29,7 @@ class EmptyMedia(resources.PerchMountResource):
         service.empty_media.add_empty_media(args["media"])
         cache.key.evict_same_path_keys()
         return {"message": "success"}
+
+    def put(self):
+        args = self.put_parser.parse_args(strict=True)
+        service.empty_media.empty_check(args.media)

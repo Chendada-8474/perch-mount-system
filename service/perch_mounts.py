@@ -132,15 +132,59 @@ def section_media_count(perch_mount_id: int) -> dict:
     }
 
 
-def _get_section_indice_by_perch_mount_id(perch_mount_id: int) -> list[int]:
+def perch_mounts_pending_media_count():
     with service.session.begin() as session:
-        query = (
-            session.query(model.Sections.section_id)
-            .join(
-                model.PerchMounts,
-                model.PerchMounts.perch_mount_id == model.Sections.perch_mount,
+        empty = (
+            session.query(
+                model.Sections.perch_mount,
+                sqlalchemy.func.count(model.EmptyMedia.empty_medium_id).label(
+                    "empty_count"
+                ),
             )
-            .filter(model.PerchMounts.perch_mount_id == perch_mount_id)
+            .filter(model.EmptyMedia.checked == False)
+            .join(model.Sections, model.Sections.section_id == model.EmptyMedia.section)
+            .group_by(model.Sections.perch_mount)
+            .subquery()
         )
-        section_indice = [section.section_id for section in query.all()]
-    return section_indice
+        detected = (
+            session.query(
+                model.Sections.perch_mount,
+                sqlalchemy.func.count(model.DetectedMedia.detected_medium_id).label(
+                    "detected_count"
+                ),
+            )
+            .filter(model.DetectedMedia.reviewed == False)
+            .join(
+                model.Sections, model.Sections.section_id == model.DetectedMedia.section
+            )
+            .group_by(model.Sections.perch_mount)
+            .subquery()
+        )
+
+        results = (
+            session.query(
+                model.PerchMounts.perch_mount_id,
+                model.PerchMounts.perch_mount_name,
+                model.PerchMounts.project,
+                model.PerchMounts.claim_by,
+                detected.c.detected_count,
+                empty.c.empty_count,
+            )
+            .join(
+                empty,
+                empty.c.perch_mount == model.PerchMounts.perch_mount_id,
+                isouter=True,
+            )
+            .join(
+                detected,
+                detected.c.perch_mount == model.PerchMounts.perch_mount_id,
+                isouter=True,
+            )
+            .order_by(model.PerchMounts.perch_mount_id)
+            .filter(
+                sqlalchemy.or_(detected.c.detected_count > 0, empty.c.empty_count > 0)
+            )
+            .all()
+        )
+
+    return results

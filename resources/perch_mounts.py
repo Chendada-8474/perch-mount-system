@@ -1,6 +1,7 @@
 import flask
 import flask_restful
 import flask_restful.reqparse
+import flask_jwt_extended
 
 import cache
 import cache.key
@@ -17,6 +18,7 @@ TIMEOUT = config.get_data_cache_timeout()
 
 class PerchMounts(resources.PerchMountResource):
     @cache.cache.cached(timeout=TIMEOUT, make_cache_key=cache.key.key_generate)
+    @flask_jwt_extended.jwt_required()
     def get(self):
         args = dict(flask.request.args)
         args = self._correct_types(args)
@@ -63,6 +65,7 @@ class PerchMount(flask_restful.Resource):
     patch_parser.add_argument("terminated", type=bool)
     patch_parser.add_argument("is_priority", type=bool)
 
+    @flask_jwt_extended.jwt_required()
     @cache.cache.cached(timeout=TIMEOUT, make_cache_key=cache.key.key_generate)
     def get(self, perch_mount_id: int):
         result = service.perch_mounts.get_perch_mount_by_id(perch_mount_id)
@@ -80,6 +83,7 @@ class PerchMount(flask_restful.Resource):
             "members": member.to_json() if member else {},
         }
 
+    @flask_jwt_extended.jwt_required()
     def post(self):
         args = self.post_parser.parse_args()
         perch_mount_id = service.perch_mounts.add_perch_mount(**args)
@@ -87,6 +91,7 @@ class PerchMount(flask_restful.Resource):
         cache.key.evict_same_path_keys()
         return perch_mount.to_json()
 
+    @flask_jwt_extended.jwt_required()
     def patch(self, perch_mount_id: int):
         self.patch_parser.parse_args(strict=True)
         args = flask.request.get_json()

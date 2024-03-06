@@ -49,22 +49,28 @@ def delete_checked_empty_media():
         session.commit()
 
 
-def empty_check(true_empty_indice: list[str], false_empty_media: list[dict]):
-    new_media = [
-        model.DetectedMedia(
-            detected_medium_id=medium["detected_medium_id"],
-            medium_datetime=medium["medium_datetime"],
-            section=medium["section"],
-            empty_checker=medium["empty_checker"],
-            path=medium["path"],
+def empty_check(media: list[dict]):
+    all_indice = [medium["empty_medium_id"] for medium in media]
+    new_media = []
+
+    for medium in media:
+        if medium["empty"]:
+            continue
+        new_media.append(
+            model.DetectedMedia(
+                detected_medium_id=medium["empty_medium_id"],
+                medium_datetime=medium["medium_datetime"],
+                section=medium["section"],
+                empty_checker=medium["empty_checker"],
+                path=medium["path"],
+            )
         )
-        for medium in false_empty_media
-    ]
+        all_indice.append(medium["empty_medium_id"])
 
     with service.session.begin() as session:
         try:
             session.query(model.EmptyMedia).filter(
-                model.EmptyMedia.empty_medium_id.in_(true_empty_indice)
+                model.EmptyMedia.empty_medium_id.in_(all_indice)
             ).update({"checked": True})
             session.add_all(new_media)
             session.commit()

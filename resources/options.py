@@ -1,4 +1,5 @@
 import flask_restful.reqparse
+import flask_jwt_extended
 
 import cache
 import cache.key
@@ -151,6 +152,7 @@ class MountType(resources.PerchMountResource):
 
 
 class Projects(resources.PerchMountResource):
+    @flask_jwt_extended.jwt_required()
     @cache.cache.cached(make_cache_key=cache.key.key_generate)
     def get(self):
         projects = service.projects.get_projects()
@@ -161,6 +163,7 @@ class Project(resources.PerchMountResource):
     post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument("name", type=str, required=True)
 
+    @flask_jwt_extended.jwt_required()
     @cache.cache.cached(make_cache_key=cache.key.key_generate)
     def get(self, project_id: int):
         project = service.projects.get_project_by_id(project_id)
