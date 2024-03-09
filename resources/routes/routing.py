@@ -48,7 +48,13 @@ ROUTES = [
         # empty_media
         "route": "empty_media",
         "resources": [empty_media.EmptyMedia],
-        "children": [],
+        "children": [
+            {
+                "route": "<string:empty_medium_id>",
+                "resources": [empty_media.emptyMedium],
+                "children": [],
+            }
+        ],
     },
     {
         # detected_media

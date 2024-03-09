@@ -1,6 +1,7 @@
 import cache
 import flask
 import flask_cors
+import flask_jwt_extended
 
 import login
 import login.apps
@@ -19,9 +20,9 @@ app.config["SQLALCHEMY_DATABASE_URI"] = service.SQLALCHEMY_DATABASE_URI
 app.config["SECRET_KEY"] = config.get_file_content(config.EnvKeys.FLASK_SECRET)
 app.config["JWT_SECRET_KEY"] = config.get_file_content(config.EnvKeys.JWT_SECRET)
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = config.get_jwt_access_token_expires()
-# app.config["JWT_COOKIE_CSRF_PROTECT  "] = False
 app.config["JWT_COOKIE_SAMESITE"] = "None"
 app.config["JWT_CSRF_IN_COOKIES"] = True
+app.config["JWT_CSRF_METHODS"] = []
 app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
 app.config["JWT_COOKIE_SECURE"] = True
 
@@ -49,8 +50,6 @@ cache.cache.init_app(app)
 
 import cache.key
 import cache.redis_client
-import flask_jwt_extended
-
 
 app.register_blueprint(login.apps.blueprint)
 app.register_blueprint(species_trie.apps.blueprint)

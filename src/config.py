@@ -62,13 +62,13 @@ def get_raptor_orders() -> set:
 
 
 def get_jwt_access_token_expires() -> timedelta:
-    return timedelta(hours=1)
-    # return timedelta(days=7)
+    # return timedelta(hours=1)
+    return timedelta(days=7)
 
 
 def get_jwt_refresh_expires() -> timedelta:
-    return timedelta(seconds=3599)
-    # return timedelta(days=1)
+    # return timedelta(seconds=3599)
+    return timedelta(days=1)
 
 
 def get_cache_type() -> str:

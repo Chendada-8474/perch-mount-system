@@ -55,9 +55,7 @@ def embed_individuals_to_media(media: dict, individuals: dict) -> list[dict]:
     if not media:
         return []
     media_key_individuals = _medium_id_as_key(individuals)
-    medium_key = (
-        media[0]["medium_id"] if "medium_id" in media[0] else "detected_medium_id"
-    )
+    medium_key = "medium_id" if "medium_id" in media[0] else "detected_medium_id"
     for medium in media:
         medium["individuals"] = media_key_individuals[medium[medium_key]]
     return media

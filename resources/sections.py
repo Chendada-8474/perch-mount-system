@@ -2,6 +2,7 @@ import datetime
 import flask
 import flask_restful
 import flask_restful.reqparse
+import flask_jwt_extended
 
 import cache
 import cache.key
@@ -17,6 +18,7 @@ TIMEOUT = config.get_data_cache_timeout()
 
 
 class Sections(resources.PerchMountResource):
+    @flask_jwt_extended.jwt_required()
     @cache.cache.cached(timeout=TIMEOUT, make_cache_key=cache.key.key_generate)
     def get(self):
         args = dict(flask.request.args)
@@ -89,6 +91,7 @@ class Section(flask_restful.Resource):
     )
     post_parser.add_argument("note", type=str)
 
+    @flask_jwt_extended.jwt_required()
     def post(self):
         args = self.post_parser.parse_args(strict=True)
         section_id = service.sections.add_section(**args)

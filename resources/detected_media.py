@@ -1,5 +1,6 @@
 import flask
 from flask_restful import reqparse
+import flask_jwt_extended
 
 import cache
 import cache.key
@@ -28,6 +29,7 @@ class DetectedMedia(resources.PerchMountResource):
         "empty_indices", type=list[str], required=True, location="json"
     )
 
+    @flask_jwt_extended.jwt_required()
     def get(self):
         args = dict(flask.request.args)
         args = self._correct_types(args)
@@ -50,11 +52,13 @@ class DetectedMedia(resources.PerchMountResource):
             "species": species,
         }
 
+    @flask_jwt_extended.jwt_required()
     def post(self):
         args = self.post_parser.parse_args(strict=True)
         service.detected_media.add_media_individuals(args["detected_media"])
         cache.key.evict_same_path_keys()
 
+    @flask_jwt_extended.jwt_required()
     def put(self):
         args = self.put_parser.parse_args(strict=True)
         service.detected_media.detect(
@@ -71,6 +75,7 @@ class DetectedMedia(resources.PerchMountResource):
 
 
 class DetectedMedium(resources.PerchMountResource):
+    @flask_jwt_extended.jwt_required()
     def get(self, detected_medium_id: str):
         medium = service.detected_media.get_detected_medium_by_id(detected_medium_id)
         individuals = (

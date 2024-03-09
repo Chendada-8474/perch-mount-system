@@ -21,9 +21,21 @@ def get_empty_media(
             query = query.filter(model.EmptyMedia.section.in_(section_indice))
         if order_by_datetime:
             query = query.order_by(model.EmptyMedia.medium_datetime)
+        query = query.filter(model.EmptyMedia.checked == False)
         query = query.offset(offset).limit(limit)
         results = query.all()
     return results
+
+
+def get_empty_medium_by_id(empty_medium_id: str) -> model.EmptyMedia:
+    with service.session.begin() as session:
+        result = (
+            session.query(model.EmptyMedia)
+            .filter(model.EmptyMedia.empty_medium_id == empty_medium_id)
+            .filter(model.EmptyMedia.checked == False)
+            .one_or_none()
+        )
+    return result
 
 
 def add_empty_media(empty_media: list[dict]):
