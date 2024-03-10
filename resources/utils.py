@@ -84,5 +84,5 @@ def _to_dict(result) -> dict:
     return new_result
 
 
-def customResultsToDict(results) -> list[dict]:
+def custom_results_to_dict(results) -> list[dict]:
     return [_to_dict(result) for result in results]
