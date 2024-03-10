@@ -32,12 +32,20 @@ class Media(resources.PerchMountResource):
 
         media_indice = [medium.medium_id for medium in media]
         individuals = service.individuals.get_individauls_by_medium_indice(media_indice)
-        media = [medium.to_json() for medium in media]
+
+        taxon_orders = utils.get_indiivduals_taxon_orders(individuals)
+        species = service.species.get_species_by_taxon_orders(taxon_orders)
+        species = utils.taxon_order_as_key(species)
+
+        media = utils.custom_results_to_dict(media)
         individuals = [individual.to_json() for individual in individuals]
 
         media_with_individuals = utils.embed_individuals_to_media(media, individuals)
 
-        return {"media": media_with_individuals}
+        return {
+            "media": media_with_individuals,
+            "species": species,
+        }
 
     @flask_jwt_extended.jwt_required()
     def post(self):

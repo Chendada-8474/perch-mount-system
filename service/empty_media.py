@@ -19,17 +19,19 @@ def get_empty_media(
             model.Sections.check_date,
             model.Sections.perch_mount,
             model.PerchMounts.perch_mount_name,
+            model.Projects.name.label("project_name"),
         )
+
+        query = query.filter(model.EmptyMedia.checked == False)
+
         if section_id:
             query = query.filter(model.EmptyMedia.section == section_id)
+
         if perch_mount_id:
-            section_indice = query_utils.get_section_indice_by_perch_mount_id(
-                perch_mount_id
-            )
-            query = query.filter(model.EmptyMedia.section.in_(section_indice))
+            query = query.filter(model.Sections.perch_mount == perch_mount_id)
+
         if order_by_datetime:
             query = query.order_by(model.EmptyMedia.medium_datetime)
-        query = query.filter(model.EmptyMedia.checked == False)
 
         query = query.join(
             model.Sections,
@@ -38,6 +40,10 @@ def get_empty_media(
         query = query.join(
             model.PerchMounts,
             model.PerchMounts.perch_mount_id == model.Sections.perch_mount,
+        )
+        query = query.join(
+            model.Projects,
+            model.Projects.project_id == model.PerchMounts.project,
         )
 
         query = query.offset(offset).limit(limit)

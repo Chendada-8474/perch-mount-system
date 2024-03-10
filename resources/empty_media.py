@@ -23,7 +23,7 @@ class EmptyMedia(resources.PerchMountResource):
         args = dict(flask.request.args)
         args = self._correct_types(args)
         media = service.empty_media.get_empty_media(**args)
-        return {"media": resources.utils.customResultsToDict(media)}
+        return {"media": resources.utils.custom_results_to_dict(media)}
 
     @flask_jwt_extended.jwt_required()
     def post(self):
