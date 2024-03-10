@@ -17,7 +17,22 @@ def get_media(
     limit: int = 50,
 ) -> list[model.Media]:
     with service.session.begin() as session:
-        query = session.query(model.Media)
+        query = session.query(
+            model.Media.medium_id,
+            model.Media.medium_datetime,
+            model.Media.section,
+            model.Media.path,
+            model.Media.empty_checker,
+            model.Media.reviewer,
+            model.Media.event,
+            model.Media.featured_behavior,
+            model.Media.featured_by,
+            model.Media.featured_title,
+            model.Sections.check_date,
+            model.PerchMounts.perch_mount_id,
+            model.PerchMounts.perch_mount_name,
+            model.Projects.name.label("projedct_name"),
+        )
 
         if section_id:
             query = query.filter(model.Media.section == section_id)
@@ -35,6 +50,19 @@ def get_media(
             order=order,
             family=family,
             prey=prey,
+        )
+
+        query = query.join(
+            model.Sections,
+            model.Sections.section_id == model.Media.section,
+        )
+        query = query.join(
+            model.PerchMounts,
+            model.PerchMounts.perch_mount_id == model.Sections.perch_mount,
+        )
+        query = query.join(
+            model.Projects,
+            model.Projects.project_id == model.PerchMounts.project,
         )
 
         query = query.offset(offset).limit(limit)
