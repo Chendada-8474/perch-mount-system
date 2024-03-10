@@ -11,7 +11,15 @@ def get_empty_media(
     order_by_datetime: bool = True,
 ) -> list[model.EmptyMedia]:
     with service.session.begin() as session:
-        query = session.query(model.EmptyMedia)
+        query = session.query(
+            model.EmptyMedia.empty_medium_id,
+            model.EmptyMedia.section,
+            model.EmptyMedia.medium_datetime,
+            model.EmptyMedia.path,
+            model.Sections.check_date,
+            model.Sections.perch_mount,
+            model.PerchMounts.perch_mount_name,
+        )
         if section_id:
             query = query.filter(model.EmptyMedia.section == section_id)
         if perch_mount_id:
@@ -22,6 +30,16 @@ def get_empty_media(
         if order_by_datetime:
             query = query.order_by(model.EmptyMedia.medium_datetime)
         query = query.filter(model.EmptyMedia.checked == False)
+
+        query = query.join(
+            model.Sections,
+            model.Sections.section_id == model.EmptyMedia.section,
+        )
+        query = query.join(
+            model.PerchMounts,
+            model.PerchMounts.perch_mount_id == model.Sections.perch_mount,
+        )
+
         query = query.offset(offset).limit(limit)
         results = query.all()
     return results

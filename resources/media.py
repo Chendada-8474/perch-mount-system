@@ -23,8 +23,8 @@ class Media(resources.PerchMountResource):
         "detected_indices", type=list[str], required=True, location="json"
     )
 
-    @flask_jwt_extended.jwt_required()
-    @cache.cache.cached(timeout=TIMEOUT, make_cache_key=cache.key.key_generate)
+    # @flask_jwt_extended.jwt_required()
+    # @cache.cache.cached(timeout=TIMEOUT, make_cache_key=cache.key.key_generate)
     def get(self):
         args = dict(flask.request.args)
         args = self._correct_types(args)

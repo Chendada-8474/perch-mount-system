@@ -4,10 +4,10 @@ import flask_jwt_extended
 
 import cache
 import cache.key
-
 import service.empty_media
 from src import config
 import resources
+import resources.utils
 
 TIMEOUT = config.get_data_cache_timeout()
 
@@ -18,13 +18,12 @@ class EmptyMedia(resources.PerchMountResource):
     put_parser = flask_restful.reqparse.RequestParser()
     put_parser.add_argument("media", type=list[dict], required=True, location="json")
 
-    # @cache.cache.cached(timeout=TIMEOUT, make_cache_key=cache.key.key_generate)
-    @flask_jwt_extended.jwt_required()
+    # @flask_jwt_extended.jwt_required()
     def get(self):
         args = dict(flask.request.args)
         args = self._correct_types(args)
         media = service.empty_media.get_empty_media(**args)
-        return {"media": [medium.to_json() for medium in media]}
+        return {"media": resources.utils.customResultsToDict(media)}
 
     @flask_jwt_extended.jwt_required()
     def post(self):

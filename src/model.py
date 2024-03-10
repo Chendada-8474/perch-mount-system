@@ -2,6 +2,8 @@ from datetime import datetime, date
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
+import src.utils
+
 db = SQLAlchemy()
 migrate = Migrate()
 

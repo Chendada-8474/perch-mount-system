@@ -1,4 +1,5 @@
 from collections import defaultdict
+from datetime import datetime, date
 
 from src.model import (
     SectionOperators,
@@ -73,3 +74,15 @@ def taxon_order_as_key(species: list[Species]) -> dict[int, dict]:
 
 def get_indiivduals_taxon_orders(individuals: list[DetectedIndividuals]) -> list[int]:
     return [sp.taxon_order_by_ai for sp in individuals]
+
+
+def _to_dict(result) -> dict:
+    new_result: dict = result._asdict()
+    for k, v in new_result.items():
+        if type(v) == datetime or type(v) == date:
+            new_result[k] = v.isoformat()
+    return new_result
+
+
+def customResultsToDict(results) -> list[dict]:
+    return [_to_dict(result) for result in results]
