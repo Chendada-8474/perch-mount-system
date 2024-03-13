@@ -44,6 +44,7 @@ class DetectedMedia(resources.PerchMountResource):
         species = service.species.get_species_by_taxon_orders(taxon_orders)
         species = utils.taxon_order_as_key(species)
         media = utils.custom_results_to_dict(media)
+        media = utils.add_media_info(media)
         individuals = [individual.to_json() for individual in individuals]
         media_with_individuals = utils.embed_individuals_to_media(media, individuals)
 
@@ -87,7 +88,8 @@ class DetectedMedium(resources.PerchMountResource):
         taxon_orders = utils.get_indiivduals_taxon_orders(individuals)
         species = service.species.get_species_by_taxon_orders(taxon_orders)
         species = utils.taxon_order_as_key(species)
-        medium = medium.to_json()
+        medium = utils.to_dict(medium)
+        medium = utils.add_medium_info(medium)
         medium["individuals"] = [individual.to_json() for individual in individuals]
         medium["species"] = species
         return medium

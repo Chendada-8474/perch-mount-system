@@ -53,12 +53,33 @@ def get_empty_media(
 
 def get_empty_medium_by_id(empty_medium_id: str) -> model.EmptyMedia:
     with service.session.begin() as session:
-        result = (
-            session.query(model.EmptyMedia)
+        query = (
+            session.query(
+                model.EmptyMedia.empty_medium_id,
+                model.EmptyMedia.section,
+                model.EmptyMedia.medium_datetime,
+                model.EmptyMedia.path,
+                model.Sections.check_date,
+                model.Sections.perch_mount,
+                model.PerchMounts.perch_mount_name,
+                model.Projects.name.label("project_name"),
+            )
             .filter(model.EmptyMedia.empty_medium_id == empty_medium_id)
             .filter(model.EmptyMedia.checked == False)
-            .one_or_none()
         )
+        query = query.join(
+            model.Sections,
+            model.Sections.section_id == model.EmptyMedia.section,
+        )
+        query = query.join(
+            model.PerchMounts,
+            model.PerchMounts.perch_mount_id == model.Sections.perch_mount,
+        )
+        query = query.join(
+            model.Projects,
+            model.Projects.project_id == model.PerchMounts.project,
+        )
+        result = query.one_or_none()
     return result
 
 

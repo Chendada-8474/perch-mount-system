@@ -19,12 +19,9 @@ class Media(resources.PerchMountResource):
     post_parser.add_argument("media", type=list[dict], required=True, location="json")
     put_parser = flask_restful.reqparse.RequestParser()
     put_parser.add_argument("media", type=list[dict], required=True, location="json")
-    put_parser.add_argument(
-        "detected_indices", type=list[str], required=True, location="json"
-    )
 
-    # @flask_jwt_extended.jwt_required()
-    # @cache.cache.cached(timeout=TIMEOUT, make_cache_key=cache.key.key_generate)
+    @flask_jwt_extended.jwt_required()
+    @cache.cache.cached(timeout=TIMEOUT, make_cache_key=cache.key.key_generate)
     def get(self):
         args = dict(flask.request.args)
         args = self._correct_types(args)
@@ -38,6 +35,7 @@ class Media(resources.PerchMountResource):
         species = utils.taxon_order_as_key(species)
 
         media = utils.custom_results_to_dict(media)
+        media = utils.add_media_info(media)
         individuals = [individual.to_json() for individual in individuals]
 
         media_with_individuals = utils.embed_individuals_to_media(media, individuals)
@@ -56,7 +54,7 @@ class Media(resources.PerchMountResource):
     @flask_jwt_extended.jwt_required()
     def put(self):
         args = self.put_parser.parse_args(strict=True)
-        service.media.review(args["detected_indices"], args["media"])
+        service.media.review(args["media"])
         cache.key.evict_same_path_keys()
 
 
@@ -79,7 +77,8 @@ class Medium(flask_restful.Resource):
         species = service.species.get_species_by_taxon_orders(taxon_orders)
         species = utils.taxon_order_as_key(species)
         individuals = [individual.to_json() for individual in individuals]
-        medium = medium.to_json()
+        medium = utils.to_dict(medium)
+        medium = utils.add_medium_info(medium)
         medium["individuals"] = individuals
         medium["species"] = species
         return medium

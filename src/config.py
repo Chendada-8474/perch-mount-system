@@ -22,8 +22,8 @@ class EnvKeys(enum.StrEnum):
     FLASK_SECRET = enum.auto()
     JWT_SECRET = enum.auto()
 
-    MINIO_HOST = enum.auto()
-    MINIO_PORT = enum.auto()
+    MINIO = enum.auto()
+    MINIO_BUCKET = enum.auto()
 
     MYSQL_PASSWORD = enum.auto()
     MYSQL_USER = enum.auto()

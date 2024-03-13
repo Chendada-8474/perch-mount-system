@@ -1,5 +1,7 @@
 from collections import defaultdict
 from datetime import datetime, date
+import pathlib
+import urllib.parse
 
 from src.model import (
     SectionOperators,
@@ -8,6 +10,8 @@ from src.model import (
     DetectedMedia,
     Species,
 )
+
+import src.config
 
 
 def get_habitat_indice(resources: list) -> list[int]:
@@ -72,11 +76,16 @@ def taxon_order_as_key(species: list[Species]) -> dict[int, dict]:
     return key_species
 
 
-def get_indiivduals_taxon_orders(individuals: list[DetectedIndividuals]) -> list[int]:
-    return [sp.taxon_order_by_ai for sp in individuals]
+def get_indiivduals_taxon_orders(individuals: list) -> list[int]:
+    taxon_orders = []
+    for individual in individuals:
+        taxon_orders.append(individual.taxon_order_by_ai)
+        if hasattr(individual, "taxon_order_by_human"):
+            taxon_orders.append(individual.taxon_order_by_human)
+    return taxon_orders
 
 
-def _to_dict(result) -> dict:
+def to_dict(result) -> dict:
     new_result: dict = result._asdict()
     for k, v in new_result.items():
         if type(v) == datetime or type(v) == date:
@@ -85,4 +94,44 @@ def _to_dict(result) -> dict:
 
 
 def custom_results_to_dict(results) -> list[dict]:
-    return [_to_dict(result) for result in results]
+    return [to_dict(result) for result in results]
+
+
+def add_medium_info(medium: dict) -> dict:
+    medium_id_col = _determin_medium_id(medium)
+    medium["extension"] = pathlib.Path(medium["path"]).suffix
+    medium["is_image"] = medium["extension"][1:].lower() in src.config.IMAGE_EXTENSIONS
+    path = str(
+        pathlib.PurePath(
+            src.config.get_env(src.config.EnvKeys.MINIO_BUCKET),
+            medium["project_name"],
+            medium["perch_mount_name"],
+            medium["check_date"],
+            medium[medium_id_col] + medium["extension"],
+        )
+    )
+    medium["s3_path"] = urllib.parse.urljoin(
+        src.config.get_env(src.config.EnvKeys.MINIO), path
+    )
+    return medium
+
+
+def add_media_info(media: list[dict]) -> list[dict]:
+    new_media = []
+    for medium in media:
+        new_medium = add_medium_info(medium)
+        new_media.append(new_medium)
+
+    return new_media
+
+
+def _determin_medium_id(medium: dict) -> str:
+    DETECTED_MEDIUM_ID_COL = "detected_medium_id"
+    EMPTY_MEDIUM_ID_COL = "empty_medium_id"
+    MEDIUM_ID_COL = "medium_id"
+    if DETECTED_MEDIUM_ID_COL in medium:
+        return DETECTED_MEDIUM_ID_COL
+    elif EMPTY_MEDIUM_ID_COL in medium:
+        return EMPTY_MEDIUM_ID_COL
+    else:
+        return MEDIUM_ID_COL

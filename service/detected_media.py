@@ -1,4 +1,5 @@
 import service
+import sqlalchemy
 from src import model
 from service import query_utils
 
@@ -21,7 +22,7 @@ def get_detected_media(
             model.Projects.name.label("project_name"),
         )
 
-        query = query.filter(model.DetectedMedia.reviewed != False)
+        query = query.filter(model.DetectedMedia.reviewed == False)
 
         if section_id:
             query = query.filter(model.DetectedMedia.section == section_id)
@@ -47,13 +48,31 @@ def get_detected_media(
     return results
 
 
-def get_detected_medium_by_id(detected_medium_id: str) -> model.DetectedMedia:
+def get_detected_medium_by_id(detected_medium_id: str):
     with service.session.begin() as session:
-        result = (
-            session.query(model.DetectedMedia)
-            .filter(model.DetectedMedia.detected_medium_id == detected_medium_id)
-            .one_or_none()
+        query = session.query(
+            model.DetectedMedia.detected_medium_id,
+            model.DetectedMedia.empty_checker,
+            model.DetectedMedia.medium_datetime,
+            model.DetectedMedia.path,
+            model.DetectedMedia.section,
+            model.Sections.check_date,
+            model.PerchMounts.perch_mount_name,
+            model.Projects.name.label("project_name"),
+        ).filter(model.DetectedMedia.detected_medium_id == detected_medium_id)
+        query = query.join(
+            model.Sections,
+            model.Sections.section_id == model.DetectedMedia.section,
         )
+        query = query.join(
+            model.PerchMounts,
+            model.PerchMounts.perch_mount_id == model.Sections.perch_mount,
+        )
+        query = query.join(
+            model.Projects,
+            model.Projects.project_id == model.PerchMounts.project,
+        )
+        result = query.one_or_none()
     return result
 
 

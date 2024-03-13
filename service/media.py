@@ -31,7 +31,7 @@ def get_media(
             model.Sections.check_date,
             model.PerchMounts.perch_mount_id,
             model.PerchMounts.perch_mount_name,
-            model.Projects.name.label("projedct_name"),
+            model.Projects.name.label("project_name"),
         )
 
         if section_id:
@@ -101,9 +101,36 @@ def _filter_media_query_by_individual_conditions(
 
 def get_medium_by_id(medium_id: str) -> model.Media:
     with service.session.begin() as session:
-        result = (
-            session.query(model.Media).filter(model.Media.medium_id == medium_id).one()
+        query = session.query(
+            model.Media.medium_id,
+            model.Media.medium_datetime,
+            model.Media.section,
+            model.Media.path,
+            model.Media.empty_checker,
+            model.Media.reviewer,
+            model.Media.event,
+            model.Media.featured_behavior,
+            model.Media.featured_by,
+            model.Media.featured_title,
+            model.Sections.check_date,
+            model.PerchMounts.perch_mount_id,
+            model.PerchMounts.perch_mount_name,
+            model.Projects.name.label("project_name"),
+        ).filter(model.Media.medium_id == medium_id)
+        query = query.join(
+            model.Sections,
+            model.Sections.section_id == model.Media.section,
         )
+        query = query.join(
+            model.PerchMounts,
+            model.PerchMounts.perch_mount_id == model.Sections.perch_mount,
+        )
+        query = query.join(
+            model.Projects,
+            model.Projects.project_id == model.PerchMounts.project,
+        )
+        result = query.one_or_none()
+
     return result
 
 
@@ -171,16 +198,17 @@ def _get_taxon_orders_indice_by_taxon(
     return [row.taxon_order for row in results]
 
 
-def review(detected_indice: list[str], media: list[dict]):
-    new_meida, new_individuals = query_utils.detected_meida_to_insert_format(media)
+def review(media: list[dict]):
+    media_with_individuals = query_utils.get_media_with_individuals_and_events(media)
+    new_meida, new_individuals = query_utils.media_to_insert_format(
+        media_with_individuals
+    )
+    media_indices = [medium["detected_medium_id"] for medium in media]
     with service.session.begin() as session:
         try:
             session.query(model.DetectedMedia).filter(
-                model.DetectedMedia.detected_medium_id.in_(detected_indice)
-            ).delete()
-            session.query(model.DetectedIndividuals).filter(
-                model.DetectedIndividuals.medium.in_(detected_indice)
-            ).delete()
+                model.DetectedMedia.detected_medium_id.in_(media_indices)
+            ).update({"reviewed": True})
             session.add_all(new_meida)
             session.flush()
             session.add_all(new_individuals)
