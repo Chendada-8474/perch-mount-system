@@ -42,7 +42,6 @@ def logout():
 def me():
     current_user = flask_jwt_extended.get_jwt_identity()
     claims = flask_jwt_extended.get_jwt()
-    print(current_user)
     return flask.jsonify(
         {
             "user": current_user,

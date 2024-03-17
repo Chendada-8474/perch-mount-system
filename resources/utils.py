@@ -1,3 +1,4 @@
+import base64
 from collections import defaultdict
 from datetime import datetime, date
 import pathlib
@@ -113,6 +114,7 @@ def add_medium_info(medium: dict) -> dict:
     medium["s3_path"] = urllib.parse.urljoin(
         src.config.get_env(src.config.EnvKeys.MINIO), path
     )
+    medium["base32_path"] = _base32_encode(medium["path"])
     return medium
 
 
@@ -135,3 +137,7 @@ def _determin_medium_id(medium: dict) -> str:
         return EMPTY_MEDIUM_ID_COL
     else:
         return MEDIUM_ID_COL
+
+
+def _base32_encode(s: str) -> str:
+    return base64.b32encode(s.encode("UTF-8")).decode("UTF-8")
