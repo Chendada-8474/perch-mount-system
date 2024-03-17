@@ -40,6 +40,7 @@ flask_cors.CORS(
     supports_credentials=True,
     allow_headers="*",
 )
+
 resources.api.init_resources(routing.ROUTES)
 resources.api.init_app(app)
 login.jwt.init_app(app)
@@ -47,25 +48,14 @@ model.db.init_app(app)
 model.migrate.init_app(app, model.db)
 cache.cache.init_app(app)
 
-
-import cache.key
-import cache.redis_client
-
 app.register_blueprint(login.apps.blueprint)
 app.register_blueprint(species_trie.apps.blueprint)
 app.register_blueprint(summary.apps.blueprint)
 
 
-@app.route("/test/a/b/c")
-def test():
-    cache.key.evict_same_path_keys()
-    return flask.request.root_path
-
-
-@app.route("/keys")
-@flask_jwt_extended.jwt_required()
-def keys():
-    return flask.jsonify([str(key) for key in cache.redis_client.client.keys()])
+@app.route("/ping")
+def ping():
+    return "pong"
 
 
 @app.after_request
