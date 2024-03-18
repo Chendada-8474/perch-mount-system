@@ -18,7 +18,7 @@ class EnvKeys(enum.StrEnum):
     EMPTY_CHECK_LIMIT = enum.auto()
     REVIEW_LIMIT = enum.auto()
     DETECTED_EMPTY_CHECK_LIMIT = enum.auto()
-    ACCESS_CCONTROL_ALLOW_ORIGIN = enum.auto()
+    ACCESS_CONTROL_ALLOW_ORIGIN = enum.auto()
     FLASK_SECRET = enum.auto()
     JWT_SECRET = enum.auto()
 

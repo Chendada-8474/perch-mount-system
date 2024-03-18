@@ -35,7 +35,7 @@ app.config["CACHE_REDIS_PORT"] = config.get_env(config.EnvKeys.CACHE_REDIS_PORT)
 flask_cors.CORS(
     app,
     resources={
-        r"/*": {"origins": config.get_env(config.EnvKeys.ACCESS_CCONTROL_ALLOW_ORIGIN)}
+        r"/*": {"origins": config.get_env(config.EnvKeys.ACCESS_CONTROL_ALLOW_ORIGIN)}
     },
     supports_credentials=True,
     allow_headers="*",
