@@ -34,7 +34,6 @@ class EmptyMedia(resources.PerchMountResource):
         cache.key.evict_same_path_keys()
         return {"message": "success"}
 
-    @flask_jwt_extended.jwt_required()
     def put(self):
         args = self.put_parser.parse_args(strict=True)
         service.empty_media.empty_check(args.media)

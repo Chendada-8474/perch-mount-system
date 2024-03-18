@@ -59,7 +59,6 @@ class DetectedMedia(resources.PerchMountResource):
         service.detected_media.add_media_individuals(args["detected_media"])
         cache.key.evict_same_path_keys()
 
-    @flask_jwt_extended.jwt_required()
     def put(self):
         args = self.put_parser.parse_args(strict=True)
         service.detected_media.detect(
