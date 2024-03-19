@@ -1,8 +1,9 @@
-import cache
 import flask
 import flask_cors
 import flask_jwt_extended
 
+import cache
+import cache.key
 import login
 import login.apps
 import login.utils
@@ -56,6 +57,11 @@ app.register_blueprint(summary.apps.blueprint)
 @app.route("/ping")
 def ping():
     return "pong"
+
+
+@app.route("/_clear_cache/<string:group>")
+def clear_cache(group: str):
+    cache.key.evict_group_cache(group)
 
 
 @app.after_request

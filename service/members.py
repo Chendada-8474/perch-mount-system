@@ -4,7 +4,24 @@ from src import model
 
 def get_members() -> list[model.Members]:
     with service.session.begin() as session:
-        results = session.query(model.Members).all()
+        results = (
+            session.query(
+                model.Members.member_id,
+                model.Members.user_name,
+                model.Members.first_name,
+                model.Members.last_name,
+                model.Members.is_admin,
+                model.Members.is_super_admin,
+                model.Members.position,
+                model.Positions.name.label("position_name"),
+            )
+            .join(
+                model.Positions, model.Positions.position_id == model.Members.position
+            )
+            .all()
+        )
+    # with service.session.begin() as session:
+    #     results = session.query(model.Members).all()
     return results
 
 

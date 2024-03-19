@@ -4,6 +4,8 @@ import cache.pathlib
 import cache.redis_client
 from src import config
 
+PREFIX = config.get_env(config.EnvKeys.CACHE_KEY_PREFIX)
+
 
 def key_generate(*_, **__) -> str:
     args = flask.request.args
@@ -22,8 +24,12 @@ def group_of_key(key: str) -> str:
 
 
 def evict_same_path_keys():
-    prefix = config.get_env(config.EnvKeys.CACHE_KEY_PREFIX)
     path = cache.pathlib.CachePath(flask.request.path)
     group = path.ancestor.as_posix()
-    for key in cache.redis_client.client.scan_iter(f"{prefix}{group}*"):
+    for key in cache.redis_client.client.scan_iter(f"{PREFIX}{group}*"):
+        cache.redis_client.client.delete(key)
+
+
+def evict_group_cache(group: str):
+    for key in cache.redis_client.client.scan_iter(f"{PREFIX}{group}*"):
         cache.redis_client.client.delete(key)
