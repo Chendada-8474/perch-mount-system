@@ -67,7 +67,7 @@ class Events(resources.PerchMountResource):
 class Event(resources.PerchMountResource):
     post_parser = flask_restful.reqparse.RequestParser()
     post_parser.add_argument("chinese_name", type=str, required=True)
-    post_parser.add_argument("english_name", type=str, required=True)
+    post_parser.add_argument("english_name", type=str)
 
     @flask_jwt_extended.jwt_required()
     def post(self):
@@ -128,7 +128,7 @@ class Layer(resources.PerchMountResource):
     def get(self, layer_id: int):
         layer = service.layers.get_layer_by_id(layer_id)
         return layer.to_json()
-    
+
     @flask_jwt_extended.jwt_required()
     def post(self):
         args = self.post_parser.parse_args(strict=True)

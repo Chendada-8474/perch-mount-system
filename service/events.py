@@ -17,7 +17,7 @@ def get_event_by_id(event_id: int) -> model.Events:
 
 
 def add_event(chinese_name: str, english_name: str) -> int:
-    new_event = model.Events(model_name=chinese_name, english_name=english_name)
+    new_event = model.Events(chinese_name=chinese_name, english_name=english_name)
     with service.session.begin() as session:
         session.add(new_event)
         session.commit()
