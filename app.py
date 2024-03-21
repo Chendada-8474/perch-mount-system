@@ -26,6 +26,7 @@ app.config["JWT_CSRF_IN_COOKIES"] = True
 app.config["JWT_CSRF_METHODS"] = []
 app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
 app.config["JWT_COOKIE_SECURE"] = True
+app.config["JWT_ACCESS_COOKIE_PATH"] = "/"
 
 app.config["CACHE_TYPE"] = config.get_cache_type()
 app.config["CACHE_KEY_PREFIX"] = config.get_env(config.EnvKeys.CACHE_KEY_PREFIX)
