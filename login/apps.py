@@ -26,7 +26,6 @@ def login():
     response = flask.jsonify({"login": True})
     response.delete_cookie("access_token_cookie")
     flask_jwt_extended.set_access_cookies(response, access_token)
-    print(response)
     return response
 
 
