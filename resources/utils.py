@@ -108,7 +108,11 @@ def add_medium_info(medium: dict) -> dict:
             medium["project_name"],
             medium["perch_mount_name"],
             medium["check_date"],
-            medium[medium_id_col] + medium["extension"],
+            (
+                medium[medium_id_col] + "JPEG"
+                if medium["is_images"]
+                else medium["extension"]
+            ),
         )
     )
     medium["s3_path"] = urllib.parse.urljoin(
