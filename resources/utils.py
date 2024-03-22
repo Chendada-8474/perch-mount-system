@@ -110,7 +110,7 @@ def add_medium_info(medium: dict) -> dict:
             medium["check_date"],
             (
                 medium[medium_id_col] + ".JPEG"
-                if medium["is_images"]
+                if medium["is_image"]
                 else medium["extension"]
             ),
         )
