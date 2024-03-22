@@ -10,6 +10,7 @@ blueprint = flask.Blueprint("summary", __name__)
 @blueprint.route("/perch_mounts/<int:perch_mount_id>/media_count")
 def media_count(perch_mount_id: int):
     results = service.perch_mounts.section_media_count(perch_mount_id)
+    print(results)
     return flask.jsonify(results)
 
 
