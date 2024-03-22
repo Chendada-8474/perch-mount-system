@@ -1,11 +1,16 @@
+from datetime import timedelta
 import flask
 import flask_jwt_extended
 import http
 
+
+from login import jwt_redis_blocklist, jwt
 from login import authenticate
 from login import utils
 
 blueprint = flask.Blueprint("login", __name__)
+
+ACCESS_EXPIRES = timedelta(hours=1)
 
 
 @blueprint.route("/login", methods=[http.HTTPMethod.POST])
@@ -23,18 +28,15 @@ def login():
         identity=username,
         additional_claims=additional_claims,
     )
-    response = flask.jsonify({"login": True})
-    response.delete_cookie("access_token_cookie")
-    flask_jwt_extended.set_access_cookies(response, access_token)
-    print(response)
-    return response
+    return flask.jsonify({"token": access_token})
 
 
-@blueprint.route("/logout", methods=[http.HTTPMethod.POST])
+@blueprint.route("/logout", methods=[http.HTTPMethod.DELETE])
+@flask_jwt_extended.jwt_required()
 def logout():
-    response = flask.jsonify({"msg": "logout successful"})
-    flask_jwt_extended.unset_jwt_cookies(response)
-    return response
+    jti = flask_jwt_extended.get_jwt()["jti"]
+    jwt_redis_blocklist.set(jti, "", ex=ACCESS_EXPIRES)
+    return flask.jsonify(msg="Access token revoked")
 
 
 @blueprint.route("/me", methods=["GET"])
@@ -50,3 +52,10 @@ def me():
             "is_super_admin": claims["is_super_admin"],
         }
     )
+
+
+@jwt.token_in_blocklist_loader
+def check_if_token_is_revoked(jwt_header, jwt_payload: dict):
+    jti = jwt_payload["jti"]
+    token_in_redis = jwt_redis_blocklist.get(jti)
+    return token_in_redis is not None
