@@ -89,6 +89,7 @@ def section_media_count(perch_mount_id: int) -> dict:
             )
             .filter(model.EmptyMedia.section.in_(section_indice))
             .filter(model.EmptyMedia.checked == False)
+            .filter(model.EmptyMedia.section != None)
             .group_by(model.EmptyMedia.section)
         ).all()
 
@@ -101,6 +102,7 @@ def section_media_count(perch_mount_id: int) -> dict:
             )
             .filter(model.DetectedMedia.section.in_(section_indice))
             .filter(model.DetectedMedia.reviewed == False)
+            .filter(model.DetectedMedia.section != None)
             .group_by(model.DetectedMedia.section)
         ).all()
 
@@ -110,6 +112,7 @@ def section_media_count(perch_mount_id: int) -> dict:
                 sqlalchemy.func.count(model.Media.medium_id).label("count"),
             )
             .filter(model.Media.section.in_(section_indice))
+            .filter(model.Media.section != None)
             .group_by(model.Media.section)
         ).all()
 
@@ -120,6 +123,7 @@ def section_media_count(perch_mount_id: int) -> dict:
             )
             .join(model.Individuals, model.Individuals.medium == model.Media.medium_id)
             .filter(model.Individuals.prey == True and not model.Individuals.prey_name)
+            .filter(model.Media.section != None)
             .group_by(model.Media.section)
             .all()
         )
