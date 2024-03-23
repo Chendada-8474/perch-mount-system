@@ -7,7 +7,7 @@ def get_empty_media(
     section_id: int = None,
     perch_mount_id: int = None,
     offset: int = 0,
-    limit: int = 250,
+    limit: int = 100,
     order_by_datetime: bool = True,
 ) -> list[model.EmptyMedia]:
     with service.session.begin() as session:

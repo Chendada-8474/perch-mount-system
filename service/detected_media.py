@@ -8,7 +8,7 @@ def get_detected_media(
     section_id: int = None,
     perch_mount_id: int = None,
     offset: int = 0,
-    limit: int = 250,
+    limit: int = 100,
 ) -> list[model.DetectedMedia]:
     with service.session.begin() as session:
         query = session.query(
