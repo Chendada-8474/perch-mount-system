@@ -42,7 +42,7 @@ def get_detected_media(
             model.Projects,
             model.Projects.project_id == model.PerchMounts.project,
         )
-
+        query = query.order_by(model.DetectedMedia.medium_datetime)
         query = query.offset(offset).limit(limit)
         results = query.all()
     return results

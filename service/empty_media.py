@@ -46,6 +46,7 @@ def get_empty_media(
             model.Projects.project_id == model.PerchMounts.project,
         )
 
+        query = query.order_by(model.EmptyMedia.medium_datetime)
         query = query.offset(offset).limit(limit)
         results = query.all()
     return results
