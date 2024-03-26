@@ -256,4 +256,6 @@ class ExportHistory(db.Model, JsonAbleModel):
     __tablename__ = "export_history"
     export_history_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     exportor = db.Column(db.Integer, db.ForeignKey("members.member_id"))
+    create_time = db.Column(db.DateTime, default=datetime.utcnow)
+    expire_time = db.Column(db.DateTime, nullable=False)
     file_name = db.Column(db.String(50), nullable=False, unique=True)
