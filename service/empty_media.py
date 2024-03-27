@@ -1,5 +1,5 @@
 import service
-from service import query_utils
+from service import utils
 from src import model
 
 
@@ -110,9 +110,11 @@ def delete_checked_empty_media():
 def empty_check(media: list[dict]):
     all_indice = [medium["empty_medium_id"] for medium in media]
     new_media = []
+    empty_paths = []
 
     for medium in media:
         if medium["empty"]:
+            empty_paths.append(medium["path"])
             continue
         new_media.append(
             model.DetectedMedia(
@@ -123,7 +125,6 @@ def empty_check(media: list[dict]):
                 path=medium["path"],
             )
         )
-        all_indice.append(medium["empty_medium_id"])
 
     with service.session.begin() as session:
         try:
@@ -131,6 +132,7 @@ def empty_check(media: list[dict]):
                 model.EmptyMedia.empty_medium_id.in_(all_indice)
             ).update({"checked": True})
             session.add_all(new_media)
+            utils.post_delete_media_task(empty_paths)
             session.commit()
         except:
             session.rollback()

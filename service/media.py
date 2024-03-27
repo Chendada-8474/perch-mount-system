@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Query
 
 import service
+from service import utils
 from service import query_utils
 from src import model
 
@@ -205,6 +206,7 @@ def review(media: list[dict]):
         media_with_individuals
     )
     media_indices = [medium["detected_medium_id"] for medium in media]
+    empty_paths = [medium["path"] for medium in media if medium["individuals"]]
     with service.session.begin() as session:
         try:
             session.query(model.DetectedMedia).filter(
@@ -213,7 +215,10 @@ def review(media: list[dict]):
             session.add_all(new_meida)
             session.flush()
             session.add_all(new_individuals)
+
+            utils.post_delete_media_task(empty_paths)
             session.commit()
+
         except:
             session.rollback()
             raise

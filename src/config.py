@@ -37,6 +37,8 @@ class EnvKeys(enum.StrEnum):
     REDIS_MAXMEMORY = enum.auto()
     REDIS_MAXMEMORY_POLICY = enum.auto()
 
+    FLEET_BEACON_HOST = enum.auto()
+
 
 def get_env(key: EnvKeys) -> str:
     return os.environ.get(f"{PREFIX}_{key.upper()}")
