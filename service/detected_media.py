@@ -1,8 +1,8 @@
 import service
-import sqlalchemy
+
 from src import model
 from service import query_utils
-
+from service import utils
 
 def get_detected_media(
     section_id: int = None,
