@@ -5,6 +5,7 @@ from src import config
 
 
 END_POINT = f"{config.get_env(config.EnvKeys.FLEET_BEACON_HOST)}/delete_media"
+HEADERS = {"Content-Type": "application/json"}
 
 
 def get_detected_medium(medium: dict) -> dict:
@@ -15,6 +16,10 @@ def get_detected_medium(medium: dict) -> dict:
 
 
 def post_delete_media_task(task: list[str]):
-    response = requests.post(END_POINT, data=json.dump(task))
+    response = requests.post(
+        END_POINT,
+        data=json.dumps(task),
+        headers=HEADERS,
+    )
     if not response.ok:
         raise SystemError("post delete media task failed")
