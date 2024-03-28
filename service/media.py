@@ -206,7 +206,9 @@ def review(media: list[dict]):
         media_with_individuals
     )
     media_indices = [medium["detected_medium_id"] for medium in media]
-    empty_paths = [medium["path"] for medium in media if medium["individuals"]]
+    empty_paths = [
+        utils.get_detected_medium(medium) for medium in media if medium["individuals"]
+    ]
     with service.session.begin() as session:
         try:
             session.query(model.DetectedMedia).filter(

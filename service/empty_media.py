@@ -114,7 +114,7 @@ def empty_check(media: list[dict]):
 
     for medium in media:
         if medium["empty"]:
-            empty_paths.append(medium["path"])
+            empty_paths.append(utils.get_detected_medium(medium))
             continue
         new_media.append(
             model.DetectedMedia(
