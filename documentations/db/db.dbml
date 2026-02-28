@@ -60,6 +60,7 @@ Table media {
     deleted_datetime datetime
     status media_status
     type media_type
+    s3_file_name varchar
     nas_path varchar
 }
 
