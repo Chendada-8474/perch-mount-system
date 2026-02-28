@@ -830,6 +830,8 @@ PostNewDataRequestBody:
             $ref: "#/MediaType"
           nas_path:
             type: string
+          s3_file_name:
+            type: string
 
 PostIdentifiedPreyIndividualsRequestBody:
   type: object
