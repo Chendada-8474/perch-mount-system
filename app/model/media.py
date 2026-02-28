@@ -34,6 +34,7 @@ class Media(extensions.db.Model, SerializerMixin):
         sqlalchemy.Enum(enums.MediaTypes), nullable=False
     )
     nas_path = extensions.db.Column(sqlalchemy.String(255))
+    s3_file_name = extensions.db.Column(sqlalchemy.String(255))
     status = extensions.db.Column(
         sqlalchemy.Enum(enums.MediaStatus),
         default="UNDETECTED",
