@@ -4,6 +4,7 @@ from app.services import db
 import app.services.perchai.utils as services_utils
 from app import model
 from app.error_handler import errors
+from app.model import enums
 
 
 def get_individual_by_id(individual_id: uuid.UUID) -> model.Individuals | None:
@@ -189,12 +190,21 @@ def remove_note(individual_id: uuid.UUID):
 
 
 def add_identified_preys(identified_preys: list[dict]):
-    identified_preys = [
-        model.IdentifiedPreyIndividualsContents(**prey) for prey in identified_preys
-    ]
+    preys = []
+    no_prey_individual_ids = []
+
+    for prey in identified_preys:
+        if prey["inaturalist_taxa_id"]:
+            preys.append(model.IdentifiedPreyIndividualsContents(**prey))
+        else:
+            no_prey_individual_ids.append(prey["individual_id"])
+
     with db.session.begin() as session:
         try:
-            session.add_all(identified_preys)
+            session.add_all(preys)
+            session.query(model.Individuals).filter(
+                model.Individuals.id.in_(no_prey_individual_ids)
+            ).update({"prey_status": enums.PreyStatus.NO_PREY})
             session.commit()
         except:
             session.rollback()
