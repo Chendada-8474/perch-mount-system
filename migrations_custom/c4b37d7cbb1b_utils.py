@@ -119,7 +119,7 @@ def upgrade_ext():
         CREATE OR REPLACE FUNCTION update_prey_status_as_identified()
         RETURNS TRIGGER AS $$
         BEGIN
-            UPDATE individuals SET prey_status = 'IDENTIDIED'
+            UPDATE individuals SET prey_status = 'IDENTIFIED'
             WHERE individuals.id = NEW.individual_id;
             RETURN NEW;
         END;
