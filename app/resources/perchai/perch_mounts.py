@@ -60,11 +60,19 @@ class PerchMountClaimBy(flask_restx.Resource):
     def post(self, perch_mount_id: uuid.UUID, parsed_args):
         perchai_service.perch_mounts.update_perch_mount(perch_mount_id, **parsed_args)
 
+        perch_mount = perchai_service.perch_mounts.get_perch_mount_by_id(perch_mount_id)
+
+        return perch_mount.to_dict()
+
     def delete(self, perch_mount_id: uuid.UUID):
         perchai_service.perch_mounts.update_perch_mount(
             perch_mount_id,
             {"claim_by_id": None},
         )
+
+        perch_mount = perchai_service.perch_mounts.get_perch_mount_by_id(perch_mount_id)
+
+        return perch_mount.to_dict()
 
 
 class PerchMountClaimByMe(flask_restx.Resource):
@@ -75,6 +83,9 @@ class PerchMountClaimByMe(flask_restx.Resource):
             perch_mount_id,
             {"claim_by_id": claim_by_id},
         )
+
+        perch_mount = perchai_service.perch_mounts.get_perch_mount_by_id(perch_mount_id)
+        return perch_mount.to_dict()
 
     @flask_jwt_extended.jwt_required()
     def delete(self, perch_mount_id: uuid.UUID):
@@ -88,6 +99,9 @@ class PerchMountClaimByMe(flask_restx.Resource):
             perch_mount_id,
             {"claim_by_id": None},
         )
+
+        perch_mount = perchai_service.perch_mounts.get_perch_mount_by_id(perch_mount_id)
+        return perch_mount.to_dict()
 
 
 class PerchMountActivation(flask_restx.Resource):
@@ -103,11 +117,15 @@ class PerchMountActivation(flask_restx.Resource):
     @admin_authorized.admin_required()
     def post(self, perch_mount_id: uuid.UUID):
         perchai_service.perch_mounts.activate_perch_mount(perch_mount_id)
+        perch_mount = perchai_service.perch_mounts.get_perch_mount_by_id(perch_mount_id)
+        return perch_mount.to_dict()
 
     @flask_jwt_extended.jwt_required()
     @admin_authorized.admin_required()
     def delete(self, perch_mount_id: uuid.UUID):
         perchai_service.perch_mounts.terminate_perch_mount(perch_mount_id)
+        perch_mount = perchai_service.perch_mounts.get_perch_mount_by_id(perch_mount_id)
+        return perch_mount.to_dict()
 
 
 class PerchMountPriority(flask_restx.Resource):

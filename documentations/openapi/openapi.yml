@@ -168,8 +168,15 @@ paths:
         "200":
           $ref: "#/components/responses/PerchMountResponse"
 
-  /perch_mounts/{PerchMountID}/claimer:
-    put:
+  /perch_mounts/{PerchMountID}/claimby:
+    get:
+      tags:
+        - Perch Mount
+      responses:
+        "200":
+          $ref: "#/components/responses/MemberResponse"
+
+    post:
       tags:
         - Perch Mount
       parameters:
@@ -192,8 +199,31 @@ paths:
         "200":
           $ref: "#/components/responses/PerchMountResponse"
 
-  /perch_mounts/{PerchMountID}/termination:
-    put:
+  /perch_mounts/{PerchMountID}/claimby/me:
+    post:
+      tags:
+        - Perch Mount
+      parameters:
+        - $ref: "#/components/parameters/PerchMountIDPathParam"
+      responses:
+        "200":
+          $ref: "#/components/responses/PerchMountsResponse"
+    delete:
+      tags:
+        - Perch Mount
+      responses:
+        "200":
+          $ref: "#/components/responses/PerchMountResponse"
+
+  /perch_mounts/{PerchMountID}/activation:
+    get:
+      tags:
+        - Perch Mount
+      responses:
+        "200":
+          $ref: "#/components/responses/PerchMountActivationPesponse"
+
+    post:
       tags:
         - Perch Mount
       parameters:
@@ -211,7 +241,7 @@ paths:
           $ref: "#/components/responses/PerchMountResponse"
 
   /perch_mounts/{PerchMountID}/priority:
-    put:
+    post:
       tags:
         - Perch Mount
       parameters:
@@ -642,6 +672,8 @@ components:
       $ref: "./responses.yml#/PerchMountsResponse"
     PerchMountResponse:
       $ref: "./responses.yml#/PerchMountResponse"
+    PerchMountActivationPesponse:
+      $ref: "./responses.yml#/PerchMountActivationPesponse"
     ProjectsResponse:
       $ref: "./responses.yml#/ProjectsResponse"
     ProjectResponse:

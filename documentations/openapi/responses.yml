@@ -19,12 +19,9 @@ PerchMountsResponse:
   content:
     application/json:
       schema:
-        type: object
-        properties:
-          perch_mounts:
-            type: array
-            items:
-              $ref: "./schemas.yml#/PerchMount"
+        type: array
+        items:
+          $ref: "./schemas.yml#/PerchMount"
 
 PerchMountResponse:
   description: get a perch mount
@@ -32,6 +29,14 @@ PerchMountResponse:
     application/json:
       schema:
         $ref: "./schemas.yml#/PerchMount"
+
+PerchMountActivationPesponse:
+  description:
+  content:
+    application/json:
+      schema:
+        type: boolean
+        example: true
 
 ProjectsResponse:
   description: get project list
