@@ -38,12 +38,9 @@ ProjectsResponse:
   content:
     application/json:
       schema:
-        type: object
-        properties:
-          projects:
-            type: array
-            items:
-              $ref: "./schemas.yml#/Project"
+        type: array
+        items:
+          $ref: "./schemas.yml#/Project"
 
 ProjectResponse:
   description: get a project
