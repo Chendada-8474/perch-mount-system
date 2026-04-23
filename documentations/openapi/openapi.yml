@@ -26,18 +26,18 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/MembersResponse"
-    post:
-      tags:
-        - Member
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PostMemberRequestBody"
-      responses:
-        "200":
-          $ref: "#/components/responses/MemberResponse"
+    # post:
+    #   tags:
+    #     - Member
+    #   requestBody:
+    #     required: true
+    #     content:
+    #       application/json:
+    #         schema:
+    #           $ref: "#/components/schemas/PostMemberRequestBody"
+    #   responses:
+    #     "200":
+    #       $ref: "#/components/responses/MemberResponse"
 
   /members/{MemberID}:
     get:
@@ -62,6 +62,47 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/MemberResponse"
+
+  /members/{MemberID}/activation:
+    post:
+      description: Activate member with member ID
+      tags:
+        - Member
+      responses:
+        "200":
+          $ref: "#/components/responses/MemberResponse"
+    delete:
+      description: Deactivate member with member ID
+      tags:
+        - Member
+      responses:
+        "200":
+          $ref: "#/components/responses/MemberResponse"
+
+  /members/{MemberID}/block:
+    post:
+      description: Block member with member ID
+      tags:
+        - Member
+      responses:
+        "200":
+          $ref: "#/components/responses/MemberResponse"
+    delete:
+      description: Unblock member with member ID
+      tags:
+        - Member
+      responses:
+        "200":
+          $ref: "#/components/responses/MemberResponse"
+
+  /members/{MemberID}/claims:
+    get:
+      description: Get all the perch mounts that are claimed by this member
+      tags:
+        - Member
+      responses:
+        "200":
+          $ref: "#/components/responses/PerchMountsResponse"
 
   /projects:
     get:

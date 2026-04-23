@@ -10,12 +10,9 @@ MembersResponse:
   content:
     application/json:
       schema:
-        type: object
-        properties:
-          members:
-            type: array
-            items:
-              $ref: "./schemas.yml#/Member"
+        type: array
+        items:
+          $ref: "./schemas.yml#/Member"
 
 PerchMountsResponse:
   description: get perch mount list
