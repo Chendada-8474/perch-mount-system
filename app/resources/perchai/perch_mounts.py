@@ -111,7 +111,7 @@ class PerchMountActivation(flask_restx.Resource):
         )
         if perch_mount is None:
             raise errors.ResourceNotFoundError(model.PerchMounts.__name__)
-        return perch_mount.terminated
+        return not perch_mount.terminated
 
     @flask_jwt_extended.jwt_required()
     @admin_authorized.admin_required()
@@ -134,10 +134,16 @@ class PerchMountPriority(flask_restx.Resource):
             perch_mount_id, {"is_priority": True}
         )
 
+        perch_mount = perchai_service.perch_mounts.get_perch_mount_by_id(perch_mount_id)
+        return perch_mount.to_dict()
+
     def delete(self, perch_mount_id):
         perchai_service.perch_mounts.update_perch_mount(
             perch_mount_id, {"is_priority": False}
         )
+
+        perch_mount = perchai_service.perch_mounts.get_perch_mount_by_id(perch_mount_id)
+        return perch_mount.to_dict()
 
 
 class PerchMountsPendingCounts(flask_restx.Resource):

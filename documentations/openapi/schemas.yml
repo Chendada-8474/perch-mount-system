@@ -150,6 +150,54 @@ PerchMount:
     note:
       type: string
 
+PerchMountCount:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    perch_mount_name:
+      type: string 
+    is_priority:
+      type: boolean
+    claim_by_id:
+      type: string
+      format: uuid
+    claimer_name:
+      type: string
+    claim_picture_url:
+      type: string
+    undetected_count:
+      type: number
+    unchecked_count:
+      type: number
+    unreviewed_count:
+      type: number
+    reviewed_count:
+      type: number
+    accidental_count:
+      type: number
+
+PerchMountMonthlyCount:
+  type: object
+  properties:
+    year_month:
+      type: string
+    year:
+      type: number
+    month:
+      type: number
+    undetected:
+      type: number
+    unchecked:
+      type: number
+    unreviewed:
+      type: number
+    reviewed:
+      type: number
+    accidental:
+      type: number
+
 UndetectedMedium:
   type: object
   properties:

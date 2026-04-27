@@ -207,7 +207,7 @@ paths:
         - $ref: "#/components/parameters/PerchMountIDPathParam"
       responses:
         "200":
-          $ref: "#/components/responses/PerchMountsResponse"
+          $ref: "#/components/responses/PerchMountResponse"
     delete:
       tags:
         - Perch Mount
@@ -221,7 +221,7 @@ paths:
         - Perch Mount
       responses:
         "200":
-          $ref: "#/components/responses/PerchMountActivationPesponse"
+          $ref: "#/components/responses/PerchMountActivationResponse"
 
     post:
       tags:
@@ -257,6 +257,30 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/PerchMountResponse"
+
+  /perch_mounts/pending_counts:
+    get:
+      tags:
+        - Perch Mount
+      responses:
+        "200":
+          $ref: "#/components/responses/PerchMountCountsResponse"
+
+  /perch_mounts/{PerchMountID}/pending_counts:
+    get:
+      tags:
+        - Perch Mount
+      responses:
+        "200":
+          $ref: "#/components/responses/PerchMountCountResponse"
+
+  /perch_mounts/{PerchMountID}/monthly_counts:
+    get:
+      tags:
+        - Perch Mount
+      responses:
+        "200":
+          $ref: "#/components/responses/PerchMountMonthlyCountsResponse"
 
   /sections:
     get:
@@ -672,8 +696,14 @@ components:
       $ref: "./responses.yml#/PerchMountsResponse"
     PerchMountResponse:
       $ref: "./responses.yml#/PerchMountResponse"
-    PerchMountActivationPesponse:
-      $ref: "./responses.yml#/PerchMountActivationPesponse"
+    PerchMountActivationResponse:
+      $ref: "./responses.yml#/PerchMountActivationResponse"
+    PerchMountCountResponse:
+      $ref: "./responses.yml#/PerchMountCountResponse"
+    PerchMountCountsResponse:
+      $ref: "./responses.yml#/PerchMountCountsResponse"
+    PerchMountMonthlyCountsResponse:
+      $ref: "./responses.yml#/PerchMountMonthlyCountsResponse"
     ProjectsResponse:
       $ref: "./responses.yml#/ProjectsResponse"
     ProjectResponse:

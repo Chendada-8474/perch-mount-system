@@ -30,13 +30,39 @@ PerchMountResponse:
       schema:
         $ref: "./schemas.yml#/PerchMount"
 
-PerchMountActivationPesponse:
+PerchMountActivationResponse:
   description:
   content:
     application/json:
       schema:
         type: boolean
         example: true
+
+PerchMountCountResponse:
+  description:
+  content:
+    application/json:
+      schema:
+        $ref: "./schemas.yml#/PerchMountCount"
+
+PerchMountCountsResponse:
+  description:
+  content:
+    application/json:
+      schema:
+        type: array
+        items:
+          $ref: "./schemas.yml#/PerchMountCount"
+
+PerchMountMonthlyCountsResponse:
+  description:
+  content:
+    application/json:
+      schema:
+        type: array
+        items:
+          $ref: "./schemas.yml#/PerchMountMonthlyCount"
+
 
 ProjectsResponse:
   description: get project list
