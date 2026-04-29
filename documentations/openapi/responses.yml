@@ -85,12 +85,9 @@ SectionsResponse:
   content:
     application/json:
       schema:
-        type: object
-        properties:
-          sections:
-            type: array
-            items:
-              $ref: "./schemas.yml#/Section"
+        type: array
+        items:
+          $ref: "./schemas.yml#/Section"
 
 SectionResponse:
   description: get section list

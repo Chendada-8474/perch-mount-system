@@ -655,6 +655,22 @@ PatchSectionRequestBody:
     note:
       type: string
 
+PutSectionSwapperIDsRequestBody:
+  type: object
+  properties:
+    swapper_ids:
+      type: array
+      items:
+        type: string
+        format: uuid
+
+PatchSectionTimeRequestBody:
+  type: object
+  properties:
+    start_time:
+      type: string
+      formst: date-time
+
 PostUnreviewedMediaByDetectedRequestBody:
   type: object
   properties:

@@ -332,6 +332,34 @@ paths:
         "200":
           $ref: "#/components/responses/SectionResponse"
 
+  /sections/{SectionID}/swappers:
+    put:
+      tags:
+        - Section
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PutSectionSwapperIDsRequestBody"
+      responses:
+        "200":
+          $ref: "#/components/responses/SectionResponse"
+
+  /sections/{SectionID}/time:
+    patch:
+      tags:
+        - Section
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchSectionTimeRequestBody"
+      responses:
+        "200":
+          $ref: "#/components/responses/SectionResponse"
+
   /media:
     get:
       tags:
@@ -595,6 +623,10 @@ components:
       $ref: "./schemas.yml#/PostSectionRequestBody"
     PatchSectionRequestBody:
       $ref: "./schemas.yml#/PatchSectionRequestBody"
+    PutSectionSwapperIDsRequestBody:
+      $ref: "./schemas.yml#/PutSectionSwapperIDsRequestBody"
+    PatchSectionTimeRequestBody:
+      $ref: "./schemas.yml#/PatchSectionTimeRequestBody"
     PostUnreviewedMediaByDetectedRequestBody:
       $ref: "./schemas.yml#/PostUnreviewedMediaByDetectedRequestBody"
     PostUnreviewedMediaByEmptyCheckedRequestBody:

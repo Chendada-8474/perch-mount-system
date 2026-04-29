@@ -54,6 +54,8 @@ class SectionSwappers(flask_restx.Resource):
         perchai_service.sections.update_section_swappers(
             section_id, parsed_args["swapper_ids"]
         )
+        section = perchai_service.sections.get_section_by_id(section_id)
+        return section.to_dict()
 
 
 class SectionTime(flask_restx.Resource):
@@ -64,3 +66,5 @@ class SectionTime(flask_restx.Resource):
         perchai_service.sections.shift_section_times(
             section_id, parsed_args["start_time"]
         )
+        section = perchai_service.sections.get_section_by_id(section_id)
+        return section.to_dict()
