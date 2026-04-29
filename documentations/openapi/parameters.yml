@@ -89,7 +89,7 @@ PerchMountTerminatedQuery:
     type: boolean
 
 MediaStatusQuery:
-  name: media_status
+  name: status
   in: query
   required: true
   schema:
@@ -97,7 +97,7 @@ MediaStatusQuery:
     enum: [undetected, unreviewed, unchecked, reviewed, accidental]
 
 IndividualsPreyIdentifiedStatusQuery:
-  name: prey_identified_status
+  name: prey_status
   in: query
   required: false
   schema:
@@ -131,7 +131,7 @@ IndividualsIsTaggedQuery:
     type: boolean
 
 IndividualsRingNumberSearchQuery:
-  name: ring_number
+  name: ring_number_search
   in: query
   required: false
   schema:
@@ -182,6 +182,20 @@ OffsetQuery:
 
 LimitQuery:
   name: Limit
+  in: query
+  required: false
+  schema:
+    type: integer
+
+YearQuery:
+  name: year
+  in: query
+  required: false
+  schema:
+    type: integer
+
+MonthQuery:
+  name: month
   in: query
   required: false
   schema:
@@ -322,3 +336,6 @@ SpeciesTaxonOrderPathParam:
   schema:
     type: string
     format: uuid
+
+
+  

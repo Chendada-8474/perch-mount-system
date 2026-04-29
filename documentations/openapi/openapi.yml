@@ -377,6 +377,8 @@ paths:
         - $ref: "#/components/parameters/TaxonOrdersByAIQuery"
         - $ref: "#/components/parameters/OffsetQuery"
         - $ref: "#/components/parameters/LimitQuery"
+        - $ref: "#/components/parameters/YearQuery"
+        - $ref: "#/components/parameters/MonthQuery"
 
       responses:
         "200":
@@ -448,7 +450,7 @@ paths:
         "200":
           $ref: "#/components/responses/MeidumPostResponse"
 
-  /new_data:
+  /uploaded_media:
     post:
       tags:
         - Media
@@ -457,10 +459,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PostNewDataRequestBody"
+              $ref: "#/components/schemas/PostUploadedMediaRequestBody"
       responses:
         "200":
-          $ref: "#/components/responses/PostNewDataResponse"
+          $ref: "#/components/responses/MeidumPostResponse"
+
+  
 
   /individuals/{IndividualID}:
     get:
@@ -635,8 +639,8 @@ components:
       $ref: "./schemas.yml#/PostReviewMediaRequestBody"
     PostAccidentalMediaRequestBody:
       $ref: "./schemas.yml#/PostAccidentalMediaRequestBody"
-    PostNewDataRequestBody:
-      $ref: "./schemas.yml#/PostNewDataRequestBody"
+    PostUploadedMediaRequestBody:
+      $ref: "./schemas.yml#/PostUploadedMediaRequestBody"
     PostIdentifiedPreyIndividualsRequestBody:
       $ref: "./schemas.yml#/PostIdentifiedPreyIndividualsRequestBody"
 
@@ -681,6 +685,10 @@ components:
       $ref: "./parameters.yml#/OffsetQuery"
     LimitQuery:
       $ref: "./parameters.yml#/LimitQuery"
+    YearQuery:
+      $ref: "./parameters.yml#/YearQuery"
+    MonthQuery:
+      $ref: "./parameters.yml#/MonthQuery"
     SpeciesTaxonOrdersQuery:
       $ref: "./parameters.yml#/SpeciesTaxonOrdersQuery"
     SpeciesConservationStatusQuery:

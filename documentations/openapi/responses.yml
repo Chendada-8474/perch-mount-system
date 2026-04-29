@@ -101,16 +101,13 @@ MediaResponse:
   content:
     application/json:
       schema:
-        type: object
-        properties:
-          media:
-            type: array
-            items:
-              oneOf:
-                - $ref: "./schemas.yml#/UndetectedMedium"
-                - $ref: "./schemas.yml#/UnckechedMedium"
-                - $ref: "./schemas.yml#/UnreviewedMedium"
-                - $ref: "./schemas.yml#/ReviewedMedium"
+        type: array
+        items:
+          oneOf:
+            - $ref: "./schemas.yml#/UndetectedMedium"
+            - $ref: "./schemas.yml#/UncheckedMedium"
+            - $ref: "./schemas.yml#/UnreviewedMedium"
+            - $ref: "./schemas.yml#/ReviewedMedium"
 
 MediumResponse:
   description: get a medium
@@ -119,7 +116,7 @@ MediumResponse:
       schema:
         oneOf:
           - $ref: "./schemas.yml#/UndetectedMedium"
-          - $ref: "./schemas.yml#/UnckechedMedium"
+          - $ref: "./schemas.yml#/UncheckedMedium"
           - $ref: "./schemas.yml#/UnreviewedMedium"
           - $ref: "./schemas.yml#/ReviewedMedium"
 

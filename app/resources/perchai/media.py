@@ -55,6 +55,7 @@ class MediumStatus(flask_restx.Resource):
 
 class MediumFeature(flask_restx.Resource):
     @flask_jwt_extended.jwt_required()
+    @resource_utils.parse_args(parsers.MediumFeature.patch)
     def patch(self, medium_id: uuid.UUID, parsed_args: dict):
         perchai_service.media.update_media_feature(medium_id, parsed_args)
         medium = perchai_service.media.get_medium_by_id(medium_id)

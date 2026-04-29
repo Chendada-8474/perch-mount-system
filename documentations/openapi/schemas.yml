@@ -218,7 +218,7 @@ UndetectedMedium:
     nas_path:
       type: string
 
-UnckechedMedium:
+UncheckedMedium:
   properties:
     id:
       type: string
@@ -672,230 +672,183 @@ PatchSectionTimeRequestBody:
       formst: date-time
 
 PostUnreviewedMediaByDetectedRequestBody:
-  type: object
-  properties:
-    media:
-      type: array
-      items:
-        type: object
-        properties:
-          medium_id:
-            type: string
-            format: uuid
-          detected_time:
-            type: string
-            format: date-time
-          individuals:
-            type: array
-            items:
-              type: object
-              properties:
-                taxon_order_by_ai:
-                  type: integer
-                xmin:
-                  type: number
-                  format: float
-                  maximum: 1
-                  minimum: 0
-                xmax:
-                  type: number
-                  format: float
-                  maximum: 1
-                  minimum: 0
-                ymin:
-                  type: number
-                  format: float
-                  maximum: 1
-                  minimum: 0
-                ymax:
-                  type: number
-                  format: float
-                  maximum: 1
-                  minimum: 0
-              required:
-                - taxon_order_by_ai
-                - xmin
-                - xmax
-                - ymin
-                - ymax
-        required:
-          - medium_id
-          - detected_time
-          - individuals
-  required:
-    - media
+  type: array
+  items:
+    type: object
+    properties:
+      medium_id:
+        type: string
+        format: uuid
+      detected_time:
+        type: string
+        format: date-time
+      individuals:
+        type: array
+        items:
+          type: object
+          properties:
+            taxon_order_by_ai:
+              type: integer
+            xmin:
+              type: number
+              format: float
+              maximum: 1
+              minimum: 0
+            xmax:
+              type: number
+              format: float
+              maximum: 1
+              minimum: 0
+            ymin:
+              type: number
+              format: float
+              maximum: 1
+              minimum: 0
+            ymax:
+              type: number
+              format: float
+              maximum: 1
+              minimum: 0
+          required:
+            - taxon_order_by_ai
+            - xmin
+            - xmax
+            - ymin
+            - ymax
+    required:
+      - medium_id
+      - detected_time
+      - individuals
 
 PostUnreviewedMediaByEmptyCheckedRequestBody:
-  type: object
-  properties:
-    media:
-      type: array
-      items:
-        type: object
-        properties:
-          medium_id:
-            type: string
-            format: uuid
-          detected_time:
-            type: string
-            format: date-time
-          empty_checked_time:
-            type: string
-            format: date-time
-          empty_checker_id:
-            type: string
-            format: uuid
-        required:
-          - medium_id
-          - detected_time
-  required:
-    - media
+  type: array
+  items:
+    type: object
+    properties:
+      medium_id:
+        type: string
+        format: uuid
+      detected_time:
+        type: string
+        format: date-time
+      empty_checked_time:
+        type: string
+        format: date-time
+      empty_checker_id:
+        type: string
+        format: uuid
+    required:
+      - medium_id
+      - detected_time
 
 PostReviewMediaRequestBody:
-  type: object
-  properties:
-    media:
-      type: array
-      items:
-        type: object
-        properties:
-          medium_id:
-            type: string
-            format: uuid
-          reviewed_time:
-            type: string
-            format: date-time
-          reviewer_id:
-            type: string
-            format: uuid
-          featured_by_id:
-            type: string
-            format: uuid
-          event_id:
-            type: string
-            format: uuid
-          behavior_id:
-            type: string
-            format: uuid
-          individuals:
-            type: array
-            items:
-              type: object
-              properties:
-                individual_id:
-                  type: string
-                  format: uuid
-                taxon_order_by_human:
-                  type: integer
-                xmin:
-                  type: number
-                  format: float
-                  maximum: 1
-                  minimum: 0
-                xmax:
-                  type: number
-                  format: float
-                  maximum: 1
-                  minimum: 0
-                ymin:
-                  type: number
-                  format: float
-                  maximum: 1
-                  minimum: 0
-                ymax:
-                  type: number
-                  format: float
-                  maximum: 1
-                  minimum: 0
-                prey:
-                  type: boolean
-                is_tagged:
-                  type: boolean
-                with_ring:
-                  type: boolean
-                ring_number:
-                  type: string
-              required:
-                - individual_id
-                - taxon_order_by_human
-                - xmin
-                - xmax
-                - ymin
-                - ymax
-                - prey
-                - is_tagged
-                - with_ring
-        required:
-          - medium_id
-          - reviewed_time
-          - reviewer_id
-          - individuals
-  required:
-    - media
+  type: array
+  items:
+    type: object
+    properties:
+      medium_id:
+        type: string
+        format: uuid
+      reviewed_time:
+        type: string
+        format: date-time
+      reviewer_id:
+        type: string
+        format: uuid
+      featured_by_id:
+        type: string
+        format: uuid
+      event_id:
+        type: string
+        format: uuid
+      behavior_id:
+        type: string
+        format: uuid
+      individuals:
+        type: array
+        items:
+          type: object
+          properties:
+            individual_id:
+              type: string
+              format: uuid
+            taxon_order_by_human:
+              type: integer
+            xmin:
+              type: number
+              format: float
+              maximum: 1
+              minimum: 0
+            xmax:
+              type: number
+              format: float
+              maximum: 1
+              minimum: 0
+            ymin:
+              type: number
+              format: float
+              maximum: 1
+              minimum: 0
+            ymax:
+              type: number
+              format: float
+              maximum: 1
+              minimum: 0
+            prey:
+              type: boolean
+            is_tagged:
+              type: boolean
+            with_ring:
+              type: boolean
+            ring_number:
+              type: string
+          required:
+            - individual_id
+            - taxon_order_by_human
+            - xmin
+            - xmax
+            - ymin
+            - ymax
+            - prey
+            - is_tagged
+            - with_ring
+    required:
+      - medium_id
+      - reviewed_time
+      - reviewer_id
+      - individuals
 
 PostAccidentalMediaRequestBody:
-  type: object
-  properties:
-    media:
-      type: array
-      items:
-        type: object
-        properties:
-          medium_id:
-            type: string
-            format: uuid
-          empty_checked_time:
-            type: string
-            format: date-time
-          empty_checker_id:
-            type: string
-            format: uuid
-        required:
-          - medium_id
-          - empty_checked_time
-          - empty_checker_id
-  required:
-    - media
+  type: array
+  items:
+    type: object
+    properties:
+      medium_id:
+        type: string
+        format: uuid
+      empty_checked_time:
+        type: string
+        format: date-time
+      empty_checker_id:
+        type: string
+        format: uuid
+    required:
+      - medium_id
+      - empty_checked_time
+      - empty_checker_id
 
-PostNewDataRequestBody:
-  type: object
-  properties:
-    section:
-      type: object
-      properties:
-        perch_mount_id:
-          type: string
-          format: uuid
-        mount_type_id:
-          type: string
-          format: uuid
-        camera_id:
-          type: string
-          format: uuid
-        swapper_date:
-          type: string
-          format: date-time
-        ground_camera:
-          type: boolean
-        valid:
-          type: boolean
-    media:
-      type: array
-      items:
-        type: object
-        properties:
-          medium_time:
-            type: string
-            format: date-time
-          detected_time:
-            type: string
-            format: date-time
-          type:
-            $ref: "#/MediaType"
-          nas_path:
-            type: string
-          s3_file_name:
-            type: string
+PostUploadedMediaRequestBody:
+  type: array
+  items:
+    type: object
+    properties:
+      medium_time:
+        type: string
+        format: date-time
+      medium_type:
+        $ref: "#/MediaType"
+      nas_path:
+        type: string
 
 PostIdentifiedPreyIndividualsRequestBody:
   type: object
