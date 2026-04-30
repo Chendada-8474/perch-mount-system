@@ -464,18 +464,22 @@ paths:
         "200":
           $ref: "#/components/responses/MeidumPostResponse"
 
-  
-
-  /individuals/{IndividualID}:
+  /individuals:
     get:
       tags:
         - Individuals
       parameters:
-        - $ref: "#/components/parameters/IndividualIDPathParam"
+        - $ref: "#/components/parameters/IndividualsPreyIdentifiedStatusQuery"
+        - $ref: "#/components/parameters/PerchMountIDsQuery"
+        - $ref: "#/components/parameters/SectionIDsQuery"
+        - $ref: "#/components/parameters/YearQuery"
+        - $ref: "#/components/parameters/MonthQuery"
+        - $ref: "#/components/parameters/LimitQuery"
       responses:
         "200":
-          $ref: "#/components/responses/IndividualResponse"
+          $ref: "#/components/responses/IndividualsResponse"
 
+  /individuals/{IndividualID}:
     patch:
       tags:
         - Individuals
@@ -484,8 +488,62 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/IndividualResponse"
+        
+  /individuals/{IndividualID}/prey:
+    post:
+      tags:
+        - Individuals
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostIndividualPreyRequestBody"
+      responses:
+        "200":
+          $ref: "#/components/responses/IndividualResponse"
+    patch:
+      tags:
+        - Individuals
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostIndividualPreyRequestBody"
+      responses:
+        "200":
+          $ref: "#/components/responses/IndividualResponse"
 
-  /individuals/preys:
+    delete:
+      tags:
+        - Individuals
+      responses:
+        "200":
+          $ref: "#/components/responses/IndividualResponse"
+
+  /individuals/{IndividualID}/note:
+    put:
+      tags:
+        - Individuals
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PutIndividualNoteRequestBody"
+      responses:
+        "200":
+          $ref: "#/components/responses/IndividualResponse"
+    delete:
+      tags:
+        - Individuals
+      responses:
+        "200":
+          $ref: "#/components/responses/IndividualResponse"
+
+
+  /identified_preys:
     post:
       tags:
         - Individuals
@@ -498,6 +556,7 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/IndividualResponse"
+
 
   /behaviors:
     get:
@@ -643,6 +702,10 @@ components:
       $ref: "./schemas.yml#/PostUploadedMediaRequestBody"
     PostIdentifiedPreyIndividualsRequestBody:
       $ref: "./schemas.yml#/PostIdentifiedPreyIndividualsRequestBody"
+    PutIndividualNoteRequestBody:
+      $ref: "./schemas.yml#/PutIndividualNoteRequestBody"
+    PostIndividualPreyRequestBody:
+      $ref: "./schemas.yml#/PostIndividualPreyRequestBody"
 
   parameters:
     MemberPositionIDsQuery:
@@ -760,6 +823,8 @@ components:
       $ref: "./responses.yml#/MeidumPostResponse"
     IndividualResponse:
       $ref: "./responses.yml#/IndividualResponse"
+    IndividualsResponse:
+      $ref: "./responses.yml#/IndividualsResponse"
     PostNewDataResponse:
       $ref: "./responses.yml#/PostNewDataResponse"
     BehaviorResponse:

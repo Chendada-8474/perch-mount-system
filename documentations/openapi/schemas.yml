@@ -399,7 +399,7 @@ IndividualPrey:
     individual_id:
       type: string
       format: uuid
-    prey_inat_taxa_id:
+    inaturalist_taxa_id:
       type: integer
     prey_inidentified_by_id:
       type: string
@@ -857,3 +857,18 @@ PostIdentifiedPreyIndividualsRequestBody:
       type: array
       items:
         $ref: "#/IndividualPrey"
+
+PutIndividualNoteRequestBody:
+  type: object
+  properties:
+    note:
+      type: string
+
+PostIndividualPreyRequestBody:
+  type: object
+  properties:
+    inaturalist_taxa_id:
+      type: number
+    identifier_id:
+      type: string
+      format: uuid

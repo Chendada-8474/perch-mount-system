@@ -131,13 +131,25 @@ MeidumPostResponse:
             example: successed
 
 IndividualResponse:
-  description: get a reviewed individual
+  description: get a individual
   content:
     application/json:
       schema:
         oneOf:
           - $ref: "./schemas.yml#/UnreviewedIndividual"
           - $ref: "./schemas.yml#/ReviewedIndividual"
+
+IndividualsResponse:
+  description: get many individuals
+  content:
+    application/json:
+      schema:
+        type: array
+        items:
+          oneOf:
+            - $ref: "./schemas.yml#/UnreviewedIndividual"
+            - $ref: "./schemas.yml#/ReviewedIndividual"
+
 
 PostNewDataResponse:
   description: new data
@@ -223,7 +235,7 @@ PositionsResponse:
       schema:
         type: array
         items:
-          type: string
+          $ref: "./schemas.yml#/MemberPositions"
 
 HabitatsResponse:
   description: get habitat list
