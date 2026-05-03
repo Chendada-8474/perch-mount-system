@@ -62,6 +62,7 @@ class MediumFeature(flask_restx.Resource):
         return medium.to_dict()
 
 
+# TODO: Need to implement a way to let new data handler got a permission to call this api.
 class UploadedMedia(flask_restx.Resource):
     # @flask_jwt_extended.jwt_required()
     @resource_utils.parse_args(parsers.UploadedMedia.post)
