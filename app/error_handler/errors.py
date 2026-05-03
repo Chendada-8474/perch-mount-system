@@ -82,3 +82,10 @@ class ResourceNotFoundError(NotFoundError):
     def __init__(self, resource_name: str):
         message = f"{resource_name} not found."
         super().__init__(message)
+
+
+class SectionAlreadyGotDataError(BadRequestError):
+    def __init__(
+        self, message="This section already got data. It's not a new section."
+    ):
+        super().__init__(message)

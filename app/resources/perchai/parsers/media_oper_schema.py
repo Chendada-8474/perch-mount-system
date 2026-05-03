@@ -27,6 +27,7 @@ class MediumSchema(marshmallow.Schema):
 
 
 class UploadedMediumSchema(MediumSchema):
+    id = marshmallow.fields.UUID()
     medium_datetime = marshmallow.fields.DateTime(format="iso", required=True)
     medium_type = marshmallow.fields.String(required=True)
     s3_file_name = marshmallow.fields.String(required=True)

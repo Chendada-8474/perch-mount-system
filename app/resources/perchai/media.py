@@ -63,9 +63,13 @@ class MediumFeature(flask_restx.Resource):
 
 
 class UploadedMedia(flask_restx.Resource):
-    @flask_jwt_extended.jwt_required()
+    # @flask_jwt_extended.jwt_required()
     @resource_utils.parse_args(parsers.UploadedMedia.post)
     def post(self, section_id: uuid.UUID, parsed_args):
+        section = perchai_service.sections.get_section_by_id(section_id)
+        if section.start_time:
+            raise errors.SectionAlreadyGotDataError()
+
         perchai_service.media_operation.add_uploaded_media(section_id, parsed_args)
 
 

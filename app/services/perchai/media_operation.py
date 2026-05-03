@@ -23,8 +23,8 @@ def add_uploaded_media(
         model_medium = model.Media(**medium)
         model_medium.medium_type = model_medium.medium_type.upper()
         model_media.append(model_medium)
-        start_time = min(model_medium.medium_datetime)
-        end_time = max(model_medium.medium_datetime)
+        start_time = min(model_medium.medium_datetime, start_time)
+        end_time = max(model_medium.medium_datetime, end_time)
 
     _find_media_section_id(model_media, section_id)
     with db.session.begin() as session:
