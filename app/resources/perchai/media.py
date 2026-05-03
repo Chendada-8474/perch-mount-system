@@ -65,8 +65,8 @@ class MediumFeature(flask_restx.Resource):
 class UploadedMedia(flask_restx.Resource):
     @flask_jwt_extended.jwt_required()
     @resource_utils.parse_args(parsers.UploadedMedia.post)
-    def post(self, parsed_args):
-        perchai_service.media_operation.add_uploaded_media(**parsed_args)
+    def post(self, section_id: uuid.UUID, parsed_args):
+        perchai_service.media_operation.add_uploaded_media(section_id, parsed_args)
 
 
 class DetectedMedia(flask_restx.Resource):

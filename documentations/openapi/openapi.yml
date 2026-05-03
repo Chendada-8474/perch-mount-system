@@ -450,10 +450,12 @@ paths:
         "200":
           $ref: "#/components/responses/MeidumPostResponse"
 
-  /uploaded_media:
+  /sections/{SectionID}/uploaded_media:
     post:
       tags:
         - Media
+      parameters:
+        - $ref: "#/components/parameters/SectionIDPathParam"
       requestBody:
         required: true
         content:

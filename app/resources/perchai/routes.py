@@ -1,7 +1,6 @@
 from app.resources import perchai
 from app.resources import routing
 
-
 _project_id = routing.RouteVar(name="project_id", type_="uuid")
 _taxon_order = routing.RouteVar(name="taxon_order", type_="int")
 _section_id = routing.RouteVar(name="section_id", type_="uuid")
@@ -68,6 +67,10 @@ ROUTES = [
                     routing.Route(
                         route="time",
                         resources=[perchai.SectionTime],
+                    ),
+                    routing.Route(
+                        route="uploaded_media",
+                        resources=[perchai.UploadedMedia],
                     ),
                 ],
             ),
@@ -181,10 +184,6 @@ ROUTES = [
         children=[
             routing.Route(route=_taxon_order.param, resources=[perchai.ASpecies])
         ],
-    ),
-    routing.Route(
-        route="uploaded_media",
-        resources=[perchai.UploadedMedia],
     ),
     routing.Route(
         route="detected_media",
