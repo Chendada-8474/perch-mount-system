@@ -29,7 +29,7 @@ class MediumSchema(marshmallow.Schema):
 class UploadedMediumSchema(MediumSchema):
     medium_datetime = marshmallow.fields.DateTime(format="iso", required=True)
     medium_type = marshmallow.fields.String(required=True)
-    nas_path = marshmallow.fields.String(required=True)
+    s3_file_name = marshmallow.fields.String(required=True)
 
 
 class UploadedData(MediumSchema):

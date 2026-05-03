@@ -21,6 +21,7 @@ def add_uploaded_media(
 
     for medium in media:
         model_medium = model.Media(**medium)
+        model_medium.medium_type = model_medium.medium_type.upper()
         model_media.append(model_medium)
         start_time = min(model_medium.medium_datetime)
         end_time = max(model_medium.medium_datetime)
