@@ -16,6 +16,15 @@ services:
     command: >
       bash -c "apt-get update && apt-get install -y postgresql-17-cron && docker-entrypoint.sh postgres"
     restart: always
+  perch-mount-system:
+    image: perch-mount-system:latest
+    container_name: perch-mount-system
+    volumes:
+      - ./env:/app/.env
+      - ./flask_secret:./app/flask_secret
+      - ./jwt_secret:./app/jwt_secret
+    ports:
+      - 5000:5000
   redis:
     image: docker.io/redis:7
     container_name: flask_redis
