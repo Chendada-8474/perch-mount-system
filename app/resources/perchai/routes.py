@@ -167,6 +167,14 @@ ROUTES = [
                         resources=[perchai.MemberActivation],
                     ),
                     routing.Route(
+                        route="admin",
+                        resources=[perchai.MemberAdmin],
+                    ),
+                    routing.Route(
+                        route="super_admin",
+                        resources=[perchai.MemberSuperAdmin],
+                    ),
+                    routing.Route(
                         route="claims",
                         resources=[perchai.MemberClaimedPerchMouns],
                     ),

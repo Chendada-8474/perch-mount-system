@@ -67,6 +67,31 @@ class MemberActivation(flask_restx.Resource):
         return member.to_dict()
 
 
+class MemberAdmin(flask_restx.Resource):
+    @flask_jwt_extended.jwt_required()
+    @admin_authorized.admin_required()
+    def post(self, member_id: uuid.UUID):
+        perchai_service.members.grant_admin_privileges(member_id)
+        member = perchai_service.members.get_member_by_id(member_id)
+        return member.to_dict()
+
+    @flask_jwt_extended.jwt_required()
+    @admin_authorized.super_admin_required()
+    def delete(self, member_id: uuid.UUID):
+        perchai_service.members.ungrant_admin_privileges(member_id)
+        member = perchai_service.members.get_member_by_id(member_id)
+        return member.to_dict()
+
+
+class MemberSuperAdmin(flask_restx.Resource):
+    @flask_jwt_extended.jwt_required()
+    @admin_authorized.super_admin_required()
+    def post(self, member_id: uuid.UUID):
+        perchai_service.members.ungrant_admin_privileges(member_id)
+        member = perchai_service.members.get_member_by_id(member_id)
+        return member.to_dict()
+
+
 class MemberClaimedPerchMouns(flask_restx.Resource):
     def get(self, member_id: uuid.UUID):
         filter = perchai_service.utils.query_filter.PerchMountFilter(

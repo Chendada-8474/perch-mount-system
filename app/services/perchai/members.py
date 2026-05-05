@@ -131,6 +131,36 @@ def deactivate_member(member_id: uuid.UUID):
     update_member_by_id(member_id, {"activated": False})
 
 
+def grant_admin_privileges(member_id: uuid.UUID):
+    is_super_admin = _is_member_super_admin(member_id)
+
+    if is_super_admin is None:
+        raise errors.ResourceNotFoundError()
+    if is_super_admin:
+        raise errors.SuperAdminUnpatchableError()
+
+    update_member_by_id(member_id, {"is_admin": True})
+
+
+def ungrant_admin_privileges(member_id: uuid.UUID):
+    is_super_admin = _is_member_super_admin(member_id)
+
+    if is_super_admin is None:
+        raise errors.ResourceNotFoundError()
+    if is_super_admin:
+        raise errors.SuperAdminUnpatchableError()
+
+    update_member_by_id(member_id, {"is_admin": False})
+
+
+def grant_super_admin_privileges(member_id: uuid.UUID):
+    update_member_by_id(member_id, {"is_admin": True, "is_super_admin": True})
+
+
+def ungrant_super_admin_privileges(member_id: uuid.UUID):
+    update_member_by_id(member_id, {"is_super_admin": False})
+
+
 def _is_member_super_admin(member_id: uuid.UUID) -> bool | None:
     with db.session.begin() as session:
         member: model.Members = (

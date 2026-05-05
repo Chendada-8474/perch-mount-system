@@ -95,6 +95,34 @@ paths:
         "200":
           $ref: "#/components/responses/MemberResponse"
 
+  /members/{MemberID}/admin:
+    post:
+      description: Grant user admin privileges
+      tags:
+        - Member
+      responses:
+        "200":
+          $ref: "#/components/responses/MemberResponse"
+    delete:
+      description: Unrant user admin privileges
+      tags:
+        - Member
+      responses:
+        "200":
+          $ref: "#/components/responses/MemberResponse"
+
+
+  /members/{MemberID}/super_admin:
+    post:
+      description: Grant user super admin privileges
+      tags:
+        - Member
+      responses:
+        "200":
+          $ref: "#/components/responses/MemberResponse"
+
+
+
   /members/{MemberID}/claims:
     get:
       description: Get all the perch mounts that are claimed by this member
