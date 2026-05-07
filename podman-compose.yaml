@@ -14,7 +14,8 @@ services:
       # - ./postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     command: >
-      bash -c "apt-get update && apt-get install -y postgresql-17-cron && docker-entrypoint.sh postgres"
+      bash -c "apt-get update && apt-get install -y postgresql-17-cron &&
+      docker-entrypoint.sh postgres"
     restart: always
   perch-mount-system:
     image: perch-mount-system:latest
@@ -30,7 +31,7 @@ services:
     container_name: flask_redis
     ports:
       - "6379:6379"
-    command: ["redis-server", "--appendonly", "yes"]
+    command: [ "redis-server", "--appendonly", "yes" ]
     # volumes:
     #   - redis_data:/data
     restart: always
