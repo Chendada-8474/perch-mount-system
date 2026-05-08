@@ -46,6 +46,16 @@ def get_super_admins() -> list[model.Members]:
     return super_admins
 
 
+def get_member_by_gmail(gmail: str) -> model.Members | None:
+    with db.session.begin() as session:
+        member = (
+            session.query(model.Members)
+            .filter(sqlalchemy.or_(model.Members.gmail == gmail))
+            .one_or_none()
+        )
+    return member
+
+
 def get_member_by_sub_and_gmail(sub: str, email: str) -> model.Members | None:
     with db.session.begin() as session:
         member = (
@@ -186,9 +196,10 @@ def _is_member_super_admin(member_id: uuid.UUID) -> bool | None:
 
 
 def init_first_member(gmail: str, first_name: str, last_name: str):
+    member = get_member_by_gmail(gmail)
     super_admins = get_super_admins()
 
-    if super_admins:
+    if super_admins or member:
         return
 
     first_member = model.Members(
