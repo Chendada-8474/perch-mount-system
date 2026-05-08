@@ -3,7 +3,6 @@ import enum
 from datetime import timedelta
 import dotenv
 
-
 dotenv.load_dotenv()
 
 PREFIX = "PERCH_MOUNT"
@@ -21,6 +20,10 @@ class EnvKeys(enum.StrEnum):
     ACCESS_CONTROL_ALLOW_ORIGIN = enum.auto()
     FLASK_SECRET = enum.auto()
     JWT_SECRET = enum.auto()
+
+    FIRST_USER_GMAIL = enum.auto()
+    FIRST_USER_FIRST_NAME = enum.auto()
+    FIRST_USER_LAST_NAME = enum.auto()
 
     MINIO = enum.auto()
     MINIO_HTTPS_HOST = enum.auto()

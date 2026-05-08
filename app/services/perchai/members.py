@@ -36,6 +36,16 @@ def get_member_by_id(member_id: uuid.UUID) -> model.Members | None:
     return member
 
 
+def get_super_admins() -> list[model.Members]:
+    with db.session.begin() as session:
+        super_admins = (
+            session.query(model.Members)
+            .filter(model.Members.is_super_admin == True)
+            .all()
+        )
+    return super_admins
+
+
 def get_member_by_sub_and_gmail(sub: str, email: str) -> model.Members | None:
     with db.session.begin() as session:
         member = (
@@ -173,3 +183,22 @@ def _is_member_super_admin(member_id: uuid.UUID) -> bool | None:
         return
 
     return member.is_super_admin
+
+
+def init_first_member(gmail: str, first_name: str, last_name: str):
+    super_admins = get_super_admins()
+
+    if super_admins:
+        return
+
+    first_member = model.Members(
+        gmail=gmail,
+        first_name=first_name,
+        last_name=last_name,
+        is_admin=True,
+        is_super_admin=True,
+        activated=True,
+    )
+    with db.session.begin() as session:
+        session.add(first_member)
+        session.commit()
