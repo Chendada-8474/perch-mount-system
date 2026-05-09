@@ -10,8 +10,6 @@ from app.resources.perchai import blueprint as perchai_blueprint
 from app.resources.data_export import blueprint as data_export_blueprint
 from app.resources.features import blueprint as features_blueprint
 
-from app import init_data
-
 
 def create_app(config_object="config.Config") -> Flask:
     app = Flask(__name__)
@@ -28,7 +26,5 @@ def create_app(config_object="config.Config") -> Flask:
     app.register_blueprint(error_handler_blueprint)
     app.register_blueprint(login_blueprint)
     app.register_blueprint(features_blueprint, url_prefix="/api/features")
-
-    init_data.add_first_user()
 
     return app

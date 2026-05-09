@@ -6,4 +6,4 @@ COPY . .
 
 RUN pip install -r requirements.txt && pip install gunicorn
 
-CMD flask db upgrade
+CMD flask db upgrade && python3 app/init_data.py

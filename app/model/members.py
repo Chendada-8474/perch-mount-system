@@ -34,7 +34,6 @@ class Members(extensions.db.Model, SerializerMixin):
     display_name = extensions.db.Column(sqlalchemy.String(ColumnSize.DISPLAY_NAME))
     user_name = extensions.db.Column(
         sqlalchemy.String(ColumnSize.USER_NAME),
-        unique=True,
     )
     first_name = extensions.db.Column(
         sqlalchemy.String(ColumnSize.FIRST_NAME),
